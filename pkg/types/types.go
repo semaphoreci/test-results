@@ -84,6 +84,7 @@ func (suite *Suite) Aggregate() {
 			summary.Passed++
 		}
 	}
+
 	suite.Summary = summary
 }
 
@@ -92,6 +93,8 @@ func (suites *Suites) Aggregate() {
 	summary := Summary{}
 
 	for _, suite := range suites.Suites {
+		suite.Aggregate()
+
 		summary.Duration += suite.Summary.Duration
 		summary.Skipped += suite.Summary.Skipped
 		summary.Error += suite.Summary.Error

@@ -12,7 +12,7 @@ type XMLTestSuite struct {
 	Errors int `xml:"errors,attr"`
 	Failures int `xml:"failures,attr"`
 	Tests int `xml:"tests,attr"`
-	TestsCases []XMLTestCase `xml:"testcase"`
+	TestCases []XMLTestCase `xml:"testcase"`
 	Time float64 `xml:"time,attr"`
 }
 
@@ -20,7 +20,7 @@ type XMLTestSuite struct {
 type XMLTestCase struct {
 	Name string `xml:"name,attr"`
 	File string `xml:"file,attr"`
-	ClassName string `xml:"classname,attr"`
+	Classname string `xml:"classname,attr"`
 	Time float64 `xml:"time,attr"`
 	Failure *XMLFailure `xml:"failure"`
 }
