@@ -6,14 +6,14 @@ import (
 	types "github.com/semaphoreci/test-results/pkg/types"
 )
 
-// ParserExUnit ...
-type ParserExUnit struct {
+// ExUnit ...
+type ExUnit struct {
 	Parser
 }
 
 // NewSuites interface for generic parser
-func (me ParserExUnit) NewSuites(testsuites types.XMLTestSuites) types.Suites {
-	var parser ParserGeneric
+func (me ExUnit) NewSuites(testsuites types.XMLTestSuites) types.Suites {
+	var parser Generic
 	suites := parser.NewSuites(testsuites)
 
 	suites.Name = me.Name()
@@ -22,14 +22,14 @@ func (me ParserExUnit) NewSuites(testsuites types.XMLTestSuites) types.Suites {
 }
 
 // NewSuite ...
-func (me ParserExUnit) NewSuite(suites types.Suites, testsuite types.XMLTestSuite) types.Suite {
-	var parser ParserGeneric
+func (me ExUnit) NewSuite(suites types.Suites, testsuite types.XMLTestSuite) types.Suite {
+	var parser Generic
 	return parser.NewSuite(suites, testsuite)
 }
 
 // NewTest ...
-func (me ParserExUnit) NewTest(suites types.Suites, suite types.Suite, testcase types.XMLTestCase) types.Test {
-	var parser ParserGeneric
+func (me ExUnit) NewTest(suites types.Suites, suite types.Suite, testcase types.XMLTestCase) types.Test {
+	var parser Generic
 	test := parser.NewTest(suites, suite, testcase)
 
 	test.Classname = testcase.Classname
@@ -39,12 +39,12 @@ func (me ParserExUnit) NewTest(suites types.Suites, suite types.Suite, testcase 
 }
 
 // Name interface for generic parser
-func (me ParserExUnit) Name() string {
+func (me ExUnit) Name() string {
 	return "ExUnit"
 }
 
 // Applicable interface for generic parser
-func (me ParserExUnit) Applicable(xmltestsuites types.XMLTestSuites) bool {
+func (me ExUnit) Applicable(xmltestsuites types.XMLTestSuites) bool {
 	for _, xmlTestSuite := range xmltestsuites.TestSuites {
 		if strings.Contains(strings.ToLower(xmlTestSuite.Name), "elixir") {
 			return true

@@ -1,75 +1,22 @@
+/*
+Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
 package main
 
-import (
-	"encoding/json"
-	"encoding/xml"
-	"io/ioutil"
-	"log"
-	"os"
-
-	"github.com/semaphoreci/test-results/pkg/parsers"
-	"github.com/semaphoreci/test-results/pkg/types"
-)
-
-// Parse ...
-func Parse(parser parsers.Parser, xmltestsuites types.XMLTestSuites) types.Suites {
-	suites := parser.NewSuites(xmltestsuites)
-
-	for _, xmltestsuite := range xmltestsuites.TestSuites {
-		suite := parser.NewSuite(suites, xmltestsuite)
-
-		for _, xmltestcase := range xmltestsuite.TestCases {
-			testcase := parser.NewTest(suites, suite, xmltestcase)
-			suite.Tests = append(suite.Tests, testcase)
-		}
-
-		suites.Suites = append(suites.Suites, suite)
-	}
-
-	suites.Aggregate()
-
-
-	return suites
-}
+import "github.com/semaphoreci/test-results/cmd"
 
 func main() {
-	start := types.XMLTestSuites{}
-
-	xmlFile, err := os.Open("test/exunit.xml")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer xmlFile.Close()
-
-
-	byteValue, _ := ioutil.ReadAll(xmlFile)
-
-	if err := xml.Unmarshal(byteValue, &start); err != nil {
-		log.Fatal(err)
-	}
-
-
-
-	var myParsers []parsers.Parser
-	myParsers = append(myParsers, parsers.ParserExUnit{})
-	myParsers = append(myParsers, parsers.ParserMocha{})
-	myParsers = append(myParsers, parsers.ParserGeneric{})
-
-	var selectedParser parsers.Parser
-
-	for _, parser := range myParsers {
-		if(parser.Applicable(start)) {
-			selectedParser = parser
-			break;
-		}
-	}
-	results := Parse(selectedParser, start)
-
-	file, err := json.Marshal(results)
-	if err != nil {
-		log.Fatal(err)
-	}
-
- _ = ioutil.WriteFile("test/exunit.json", file, 0644)
-
+	cmd.Execute()
 }

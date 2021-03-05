@@ -6,14 +6,14 @@ import (
 	types "github.com/semaphoreci/test-results/pkg/types"
 )
 
-// ParserMocha ...
-type ParserMocha struct {
+// Mocha ...
+type Mocha struct {
 	Parser
 }
 
 // NewSuites interface for generic parser
-func (me ParserMocha) NewSuites(testsuites types.XMLTestSuites) types.Suites {
-	var parser ParserGeneric
+func (me Mocha) NewSuites(testsuites types.XMLTestSuites) types.Suites {
+	var parser Generic
 	suites := parser.NewSuites(testsuites)
 
 	suites.Name = me.Name()
@@ -22,24 +22,24 @@ func (me ParserMocha) NewSuites(testsuites types.XMLTestSuites) types.Suites {
 }
 
 // NewSuite ...
-func (me ParserMocha) NewSuite(suites types.Suites, testsuite types.XMLTestSuite) types.Suite {
-	var parser ParserGeneric
+func (me Mocha) NewSuite(suites types.Suites, testsuite types.XMLTestSuite) types.Suite {
+	var parser Generic
 	return parser.NewSuite(suites, testsuite)
 }
 
 // NewTest ...
-func (me ParserMocha) NewTest(suites types.Suites, suite types.Suite, testcase types.XMLTestCase) types.Test {
-	var parser ParserGeneric
+func (me Mocha) NewTest(suites types.Suites, suite types.Suite, testcase types.XMLTestCase) types.Test {
+	var parser Generic
 	return parser.NewTest(suites, suite, testcase)
 }
 
 // Name interface for generic parser
-func (me ParserMocha) Name() string {
+func (me Mocha) Name() string {
 	return "Mocha"
 }
 
 // Applicable interface for generic parser
-func (me ParserMocha) Applicable(xmltestsuites types.XMLTestSuites) bool {
+func (me Mocha) Applicable(xmltestsuites types.XMLTestSuites) bool {
 	for _, xmlTestSuite := range xmltestsuites.TestSuites {
 		if strings.Contains(strings.ToLower(xmlTestSuite.Name), "mocha") {
 			return true
