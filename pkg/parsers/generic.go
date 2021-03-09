@@ -23,11 +23,11 @@ func NewGeneric() Generic {
 // Parse ...
 func (p Generic) Parse(path string) (*parser.TestResults, error) {
 	var results parser.TestResults
-	var reader bytes.Reader
+	var reader *bytes.Reader
 	// Preload path with loader. If nothing is found in file cache - load it up from path.
 	reader, found := fileloader.Load(path, nil)
 
-	if found == false {
+	if found == false && reader == nil {
 		file, err := ioutil.ReadFile(path)
 		if err != nil {
 			return nil, err
@@ -39,7 +39,7 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 
 	xmlElement := parser.NewXMLElement()
 
-	err := xmlElement.Parse(&reader)
+	err := xmlElement.Parse(reader)
 	if err != nil {
 		return nil, err
 	}
