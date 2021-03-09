@@ -1,0 +1,2251 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite errors="0" failures="96" name="Elixir.Calculator.AdderTest" tests="154" time="0.0015">
+    <properties>
+      <property name="date" value="2021-01-25T16:38:21.578463Z" />
+      <property name="seed" value="541556" />
+    </properties>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 3 = 1 0.9269337563685592" time="0.0000">
+      <failure message="Assertion with == failed">  1) test fails with 4 + 3 = 1 0.9269337563685592 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 3) == 1
+     left:  7
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 4 = 5 0.7425599122652476" time="0.0000">
+      <failure message="Assertion with == failed">  2) test fails with 9 + 4 = 5 0.7425599122652476 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 4) == 5
+     left:  13
+     right: 5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 0 + 3 = -3 0.5550937740305246" time="0.0000">
+      <failure message="Assertion with == failed">  3) test fails with 0 + 3 = -3 0.5550937740305246 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(0, 3) == -3
+     left:  3
+     right: -3
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 2 + 8 = 10 0.7214726116110991" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 4 = 7 0.40410696161116166" time="0.0000">
+      <failure message="Assertion with == failed">  5) test fails with 9 + 4 = 7 0.40410696161116166 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 4) == 7
+     left:  13
+     right: 7
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 7 = 3 0.7696636337231401" time="0.0000">
+      <failure message="Assertion with == failed">  6) test fails with 4 + 7 = 3 0.7696636337231401 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 7) == 3
+     left:  11
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 9 = 13 0.12324249778231067" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 9 = 1 0.260885406570899" time="0.0000">
+      <failure message="Assertion with == failed">  8) test fails with 2 + 9 = 1 0.260885406570899 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 9) == 1
+     left:  11
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 9 = 3 0.47228969885577443" time="0.0000">
+      <failure message="Assertion with == failed">  9) test fails with 3 + 9 = 3 0.47228969885577443 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 9) == 3
+     left:  12
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 4 = 5 0.6689058912184951" time="0.0000">
+      <failure message="Assertion with == failed"> 10) test fails with 9 + 4 = 5 0.6689058912184951 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 4) == 5
+     left:  13
+     right: 5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 0 + 2 = -2 0.7440076148464481" time="0.0000">
+      <failure message="Assertion with == failed"> 11) test fails with 0 + 2 = -2 0.7440076148464481 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(0, 2) == -2
+     left:  2
+     right: -2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 1 = 2 0.25303134491905" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 5 = 11 0.625296700759468" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 3 = 2 0.47574703033345145" time="0.0000">
+      <failure message="Assertion with == failed"> 14) test fails with 5 + 3 = 2 0.47574703033345145 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 3) == 2
+     left:  8
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 4 = 5 0.6265902263461729" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 8 = 1 0.24881570738956182" time="0.0000">
+      <failure message="Assertion with == failed"> 16) test fails with 1 + 8 = 1 0.24881570738956182 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 8) == 1
+     left:  9
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 3 = 4 0.3781626489178017" time="0.0000">
+      <failure message="Assertion with == failed"> 17) test fails with 9 + 3 = 4 0.3781626489178017 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 3) == 4
+     left:  12
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 10 = 11 0.20978619158697087" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 9 = 15 0.846784067728539" time="0.0000">
+      <failure message="Assertion with == failed"> 19) test fails with 8 + 9 = 15 0.846784067728539 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(8, 9) == 15
+     left:  17
+     right: 15
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 4 = 0 0.38771359762861746" time="0.0000">
+      <failure message="Assertion with == failed"> 20) test fails with 8 + 4 = 0 0.38771359762861746 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(8, 4) == 0
+     left:  12
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 0 = 1 0.9354854479427063" time="0.0000">
+      <failure message="Assertion with == failed"> 21) test fails with 3 + 0 = 1 0.9354854479427063 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 0) == 1
+     left:  3
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 10 + 5 = 15 0.9546409473822649" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 2 = 9 0.8806807314683843" time="0.0000">
+      <failure message="Assertion with == failed"> 23) test fails with 9 + 2 = 9 0.8806807314683843 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 2) == 9
+     left:  11
+     right: 9
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 8 = 3 0.23671359103945888" time="0.0000">
+      <failure message="Assertion with == failed"> 24) test fails with 2 + 8 = 3 0.23671359103945888 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 8) == 3
+     left:  10
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 8 = -5 0.5221487222915623" time="0.0000">
+      <failure message="Assertion with == failed"> 25) test fails with 3 + 8 = -5 0.5221487222915623 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 8) == -5
+     left:  11
+     right: -5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 2 = 4 0.10201032170721658" time="0.0000">
+      <failure message="Assertion with == failed"> 26) test fails with 6 + 2 = 4 0.10201032170721658 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 2) == 4
+     left:  8
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 5 = -4 0.16964198798120267" time="0.0000">
+      <failure message="Assertion with == failed"> 27) test fails with 1 + 5 = -4 0.16964198798120267 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 5) == -4
+     left:  6
+     right: -4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 8 = 10 0.31510611173921454" time="0.0000">
+      <failure message="Assertion with == failed"> 28) test fails with 5 + 8 = 10 0.31510611173921454 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 8) == 10
+     left:  13
+     right: 10
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 2 = 6 0.6272486481317251" time="0.0000">
+      <failure message="Assertion with == failed"> 29) test fails with 8 + 2 = 6 0.6272486481317251 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(8, 2) == 6
+     left:  10
+     right: 6
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 7 + 4 = 11 0.34490301686740743" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 5 = -2 0.7965032284444054" time="0.0000">
+      <failure message="Assertion with == failed"> 31) test fails with 3 + 5 = -2 0.7965032284444054 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 5) == -2
+     left:  8
+     right: -2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 9 = 13 0.539665704382461" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 4 = 3 0.23271202727924012" time="0.0000">
+      <failure message="Assertion with == failed"> 33) test fails with 7 + 4 = 3 0.23271202727924012 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 4) == 3
+     left:  11
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 3 = 3 0.11664550415837127" time="0.0000">
+      <failure message="Assertion with == failed"> 34) test fails with 6 + 3 = 3 0.11664550415837127 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 3) == 3
+     left:  9
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 4 = 2 0.162160829474151" time="0.0000">
+      <failure message="Assertion with == failed"> 35) test fails with 2 + 4 = 2 0.162160829474151 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 4) == 2
+     left:  6
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 9 + 9 = 18 0.5353285849096904" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 9 = 4 0.12696162846956116" time="0.0000">
+      <failure message="Assertion with == failed"> 37) test fails with 7 + 9 = 4 0.12696162846956116 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 9) == 4
+     left:  16
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 6 + 1 = 7 0.04978352673492348" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 4 = 4 0.3346843931631618" time="0.0000">
+      <failure message="Assertion with == failed"> 39) test fails with 8 + 4 = 4 0.3346843931631618 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(8, 4) == 4
+     left:  12
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 7 = 10 0.5232055394939729" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 4 = 7 0.35209089449695463" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 4 = 7 0.711009562518312" time="0.0000">
+      <failure message="Assertion with == failed"> 42) test fails with 9 + 4 = 7 0.711009562518312 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 4) == 7
+     left:  13
+     right: 7
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 0 = 3 0.5450933807689242" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 5 = -4 0.7638688167330918" time="0.0000">
+      <failure message="Assertion with == failed"> 44) test fails with 1 + 5 = -4 0.7638688167330918 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 5) == -4
+     left:  6
+     right: -4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 3 = 4 0.11201371929800263" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 4 = 0 0.30178738778672554" time="0.0000">
+      <failure message="Assertion with == failed"> 46) test fails with 4 + 4 = 0 0.30178738778672554 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 4) == 0
+     left:  8
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 1 = 2 0.5877309907054401" time="0.0000">
+      <failure message="Assertion with == failed"> 47) test fails with 3 + 1 = 2 0.5877309907054401 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 1) == 2
+     left:  4
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 7 = -6 0.2238945396288914" time="0.0000">
+      <failure message="Assertion with == failed"> 48) test fails with 1 + 7 = -6 0.2238945396288914 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 7) == -6
+     left:  8
+     right: -6
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 5 = 0 0.4890934069459615" time="0.0000">
+      <failure message="Assertion with == failed"> 49) test fails with 5 + 5 = 0 0.4890934069459615 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 5) == 0
+     left:  10
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 9 = 3 0.8920409835224468" time="0.0000">
+      <failure message="Assertion with == failed"> 50) test fails with 5 + 9 = 3 0.8920409835224468 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 9) == 3
+     left:  14
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 2 + 1 = 3 0.9404042961560253" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 10 = 5 0.6038385662276758" time="0.0000">
+      <failure message="Assertion with == failed"> 52) test fails with 2 + 10 = 5 0.6038385662276758 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 10) == 5
+     left:  12
+     right: 5
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 4 = 8 0.3480220524412643" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 10 + 1 = 11 0.20035056949721286" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 6 = -1 0.31802709313107613" time="0.0000">
+      <failure message="Assertion with == failed"> 55) test fails with 5 + 6 = -1 0.31802709313107613 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 6) == -1
+     left:  11
+     right: -1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 2 = 1 0.9926209942236872" time="0.0000">
+      <failure message="Assertion with == failed"> 56) test fails with 3 + 2 = 1 0.9926209942236872 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 2) == 1
+     left:  5
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 0 = 2 0.6260876864557101" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 7 = -5 0.06197508861723855" time="0.0000">
+      <failure message="Assertion with == failed"> 58) test fails with 2 + 7 = -5 0.06197508861723855 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 7) == -5
+     left:  9
+     right: -5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 2 = 1 0.8166589466779655" time="0.0000">
+      <failure message="Assertion with == failed"> 59) test fails with 3 + 2 = 1 0.8166589466779655 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 2) == 1
+     left:  5
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 9 = 13 0.2464619639180755" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 4 = -1 0.043363879756161405" time="0.0000">
+      <failure message="Assertion with == failed"> 61) test fails with 3 + 4 = -1 0.043363879756161405 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 4) == -1
+     left:  7
+     right: -1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 2 = 3 0.44839189930049195" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 7 = 0 0.9757550221997862" time="0.0000">
+      <failure message="Assertion with == failed"> 63) test fails with 4 + 7 = 0 0.9757550221997862 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 7) == 0
+     left:  11
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 9 + 0 = 9 0.279604385075202" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 7 + 4 = 11 0.4349682174892634" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 2 = 3 0.21389032091503168" time="0.0000">
+      <failure message="Assertion with == failed"> 66) test fails with 5 + 2 = 3 0.21389032091503168 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 2) == 3
+     left:  7
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 10 = 15 0.3354765805152544" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 6 = 2 0.0915695339040683" time="0.0000">
+      <failure message="Assertion with == failed"> 68) test fails with 4 + 6 = 2 0.0915695339040683 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 6) == 2
+     left:  10
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 10 + 2 = 7 0.3084458831824656" time="0.0000">
+      <failure message="Assertion with == failed"> 69) test fails with 10 + 2 = 7 0.3084458831824656 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(10, 2) == 7
+     left:  12
+     right: 7
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 10 = 12 0.9043730136353659" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 7 = -5 0.7481565159488975" time="0.0000">
+      <failure message="Assertion with == failed"> 71) test fails with 2 + 7 = -5 0.7481565159488975 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 7) == -5
+     left:  9
+     right: -5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 8 = 11 0.1850204176674869" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 6 = -5 0.478230381249806" time="0.0000">
+      <failure message="Assertion with == failed"> 73) test fails with 1 + 6 = -5 0.478230381249806 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 6) == -5
+     left:  7
+     right: -5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 8 = 13 0.5209269952743669" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 4 = 0 0.8701288136589378" time="0.0000">
+      <failure message="Assertion with == failed"> 75) test fails with 4 + 4 = 0 0.8701288136589378 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 4) == 0
+     left:  8
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 7 = -6 0.036457080661478014" time="0.0000">
+      <failure message="Assertion with == failed"> 76) test fails with 1 + 7 = -6 0.036457080661478014 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 7) == -6
+     left:  8
+     right: -6
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 7 = 0 0.22829902493882326" time="0.0000">
+      <failure message="Assertion with == failed"> 77) test fails with 7 + 7 = 0 0.22829902493882326 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 7) == 0
+     left:  14
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 9 + 2 = 11 0.09962820740703904" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 5 = 1 0.14198639103548727" time="0.0000">
+      <failure message="Assertion with == failed"> 79) test fails with 3 + 5 = 1 0.14198639103548727 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 5) == 1
+     left:  8
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 2 = 4 0.34971711244079373" time="0.0000">
+      <failure message="Assertion with == failed"> 80) test fails with 6 + 2 = 4 0.34971711244079373 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 2) == 4
+     left:  8
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 0 + 4 = 3 0.7119307190530973" time="0.0000">
+      <failure message="Assertion with == failed"> 81) test fails with 0 + 4 = 3 0.7119307190530973 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(0, 4) == 3
+     left:  4
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 3 = 0 0.47658732838455686" time="0.0000">
+      <failure message="Assertion with == failed"> 82) test fails with 2 + 3 = 0 0.47658732838455686 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 3) == 0
+     left:  5
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 3 = 8 0.4097570949170576" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 2 + 10 = 12 0.8835528781813936" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 3 = 4 0.01026622480567918" time="0.0000">
+      <failure message="Assertion with == failed"> 85) test fails with 7 + 3 = 4 0.01026622480567918 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 3) == 4
+     left:  10
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 9 = -2 0.22822721333891205" time="0.0000">
+      <failure message="Assertion with == failed"> 86) test fails with 7 + 9 = -2 0.22822721333891205 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 9) == -2
+     left:  16
+     right: -2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 10 + 1 = 11 0.35276892543344285" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 3 = -2 0.5686352234878337" time="0.0000">
+      <failure message="Assertion with == failed"> 88) test fails with 1 + 3 = -2 0.5686352234878337 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 3) == -2
+     left:  4
+     right: -2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 8 = 3 0.9581813551102754" time="0.0000">
+      <failure message="Assertion with == failed"> 89) test fails with 1 + 8 = 3 0.9581813551102754 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 8) == 3
+     left:  9
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 7 = 2 0.8294217244441308" time="0.0000">
+      <failure message="Assertion with == failed"> 90) test fails with 9 + 7 = 2 0.8294217244441308 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 7) == 2
+     left:  16
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 7 + 4 = 11 0.3378567305108625" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 0 + 5 = -5 0.07959575437269761" time="0.0000">
+      <failure message="Assertion with == failed"> 92) test fails with 0 + 5 = -5 0.07959575437269761 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(0, 5) == -5
+     left:  5
+     right: -5
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 0 = 1 0.8939376619226851" time="0.0000">
+      <failure message="Assertion with == failed"> 93) test fails with 5 + 0 = 1 0.8939376619226851 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 0) == 1
+     left:  5
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 0 + 0 = 0 0.47024447242326384" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 2 + 0 = 2 0.12001998133362479" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 3 = 1 0.10883672865657856" time="0.0000">
+      <failure message="Assertion with == failed"> 96) test fails with 2 + 3 = 1 0.10883672865657856 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 3) == 1
+     left:  5
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 10 + 2 = 8 0.582270523435744" time="0.0000">
+      <failure message="Assertion with == failed"> 97) test fails with 10 + 2 = 8 0.582270523435744 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(10, 2) == 8
+     left:  12
+     right: 8
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 7 = 7 0.2985570198592755" time="0.0000">
+      <failure message="Assertion with == failed"> 98) test fails with 6 + 7 = 7 0.2985570198592755 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 7) == 7
+     left:  13
+     right: 7
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 1 = 1 0.013547515552109868" time="0.0000">
+      <failure message="Assertion with == failed"> 99) test fails with 2 + 1 = 1 0.013547515552109868 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 1) == 1
+     left:  3
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 4 = -2 0.7719525504424386" time="0.0000">
+      <failure message="Assertion with == failed">100) test fails with 2 + 4 = -2 0.7719525504424386 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 4) == -2
+     left:  6
+     right: -2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 10 + 4 = 2 0.217385637347962" time="0.0000">
+      <failure message="Assertion with == failed">101) test fails with 10 + 4 = 2 0.217385637347962 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(10, 4) == 2
+     left:  14
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 1 = 4 0.2565383093707685" time="0.0000">
+      <failure message="Assertion with == failed">102) test fails with 5 + 1 = 4 0.2565383093707685 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 1) == 4
+     left:  6
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 2 = 5 0.051540170810846164" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 10 = 14 0.04022730056916246" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 6 = 7 0.04609747138447762" time="0.0000">
+      <failure message="Assertion with == failed">105) test fails with 4 + 6 = 7 0.04609747138447762 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 6) == 7
+     left:  10
+     right: 7
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 10 + 0 = 10 0.4582264150368288" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 0 = 1 0.4384824335744024" time="0.0000">
+      <failure message="Assertion with == failed">107) test fails with 3 + 0 = 1 0.4384824335744024 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 0) == 1
+     left:  3
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 7 + 2 = 9 0.8887684560546877" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 0 + 7 = 7 0.2610638698415404" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 6 = 0 0.4024232150881456" time="0.0000">
+      <failure message="Assertion with == failed">110) test fails with 6 + 6 = 0 0.4024232150881456 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 6) == 0
+     left:  12
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 7 = 9 0.8080607018082521" time="0.0000">
+      <failure message="Assertion with == failed">111) test fails with 7 + 7 = 9 0.8080607018082521 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 7) == 9
+     left:  14
+     right: 9
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 3 = 7 0.7354583327738049" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 7 = 3 0.4212132724545663" time="0.0000">
+      <failure message="Assertion with == failed">113) test fails with 1 + 7 = 3 0.4212132724545663 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 7) == 3
+     left:  8
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 5 = 10 0.9431226605562139" time="0.0000">
+      <failure message="Assertion with == failed">114) test fails with 6 + 5 = 10 0.9431226605562139 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 5) == 10
+     left:  11
+     right: 10
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 2 = 7 0.8724083374056582" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 8 + 2 = 10 0.34467303409262084" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 9 = -4 0.6062444971395768" time="0.0000">
+      <failure message="Assertion with == failed">117) test fails with 5 + 9 = -4 0.6062444971395768 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 9) == -4
+     left:  14
+     right: -4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 4 = 2 0.03571630142189641" time="0.0000">
+      <failure message="Assertion with == failed">118) test fails with 2 + 4 = 2 0.03571630142189641 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 4) == 2
+     left:  6
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 0 = 0 0.19686862636864944" time="0.0000">
+      <failure message="Assertion with == failed">119) test fails with 1 + 0 = 0 0.19686862636864944 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 0) == 0
+     left:  1
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 0 = 2 0.8719873887864884" time="0.0000">
+      <failure message="Assertion with == failed">120) test fails with 8 + 0 = 2 0.8719873887864884 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(8, 0) == 2
+     left:  8
+     right: 2
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 2 = 1 0.017465770970468975" time="0.0000">
+      <failure message="Assertion with == failed">121) test fails with 6 + 2 = 1 0.017465770970468975 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 2) == 1
+     left:  8
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 10 = 6 0.8912646163023322" time="0.0000">
+      <failure message="Assertion with == failed">122) test fails with 8 + 10 = 6 0.8912646163023322 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(8, 10) == 6
+     left:  18
+     right: 6
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 10 = 8 0.9406301043750521" time="0.0000">
+      <failure message="Assertion with == failed">123) test fails with 7 + 10 = 8 0.9406301043750521 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 10) == 8
+     left:  17
+     right: 8
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 0 = 1 0.3589470251762612" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 1 = 4 0.8214121413093457" time="0.0000">
+      <failure message="Assertion with == failed">125) test fails with 5 + 1 = 4 0.8214121413093457 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 1) == 4
+     left:  6
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 5 = 8 0.9062085188143726" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 3 + 3 = 6 0.6670139583221006" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 0 = 3 0.2721717771590121" time="0.0000">
+      <failure message="Assertion with == failed">128) test fails with 4 + 0 = 3 0.2721717771590121 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 0) == 3
+     left:  4
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 6 = 11 0.15635658306954636" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="doctest Calculator.Adder.run/2 (1)" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 2 + 10 = 5 0.4785499111274344" time="0.0000">
+      <failure message="Assertion with == failed">131) test fails with 2 + 10 = 5 0.4785499111274344 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(2, 10) == 5
+     left:  12
+     right: 5
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 2 = 7 0.38279465516723366" time="0.0000">
+      <failure message="Assertion with == failed">132) test fails with 9 + 2 = 7 0.38279465516723366 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 2) == 7
+     left:  11
+     right: 7
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 8 + 4 = 12 0.4388254221723312" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 5 + 7 = -2 0.44926100928339696" time="0.0000">
+      <failure message="Assertion with == failed">134) test fails with 5 + 7 = -2 0.44926100928339696 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(5, 7) == -2
+     left:  12
+     right: -2
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 2 + 5 = 7 0.06303420263646686" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 9 + 5 = 0 0.27767596147759" time="0.0000">
+      <failure message="Assertion with == failed">136) test fails with 9 + 5 = 0 0.27767596147759 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(9, 5) == 0
+     left:  14
+     right: 0
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 3 + 4 = -1 0.023898371190296253" time="0.0000">
+      <failure message="Assertion with == failed">137) test fails with 3 + 4 = -1 0.023898371190296253 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(3, 4) == -1
+     left:  7
+     right: -1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 6 + 5 = 11 0.2835109803037291" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 7 + 9 = 3 0.9933657275174956" time="0.0000">
+      <failure message="Assertion with == failed">139) test fails with 7 + 9 = 3 0.9933657275174956 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(7, 9) == 3
+     left:  16
+     right: 3
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 10 + 7 = 17 0.9563282276594229" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 9 = 14 0.6273120948786793" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 8 + 9 = 17 0.4428175501940147" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 5 = 1 0.4196031995843459" time="0.0000">
+      <failure message="Assertion with == failed">143) test fails with 6 + 5 = 1 0.4196031995843459 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 5) == 1
+     left:  11
+     right: 1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 7 + 1 = 8 0.7086618174311183" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 5 + 2 = 7 0.2263421393318218" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 7 = -3 0.2984276499101596" time="0.0000">
+      <failure message="Assertion with == failed">146) test fails with 4 + 7 = -3 0.2984276499101596 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 7) == -3
+     left:  11
+     right: -3
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 4 + 7 = 9 0.7064061421681599" time="0.0000">
+      <failure message="Assertion with == failed">147) test fails with 4 + 7 = 9 0.7064061421681599 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(4, 7) == 9
+     left:  11
+     right: 9
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 8 + 0 = 8 0.3977561767446284" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 10 + 1 = 9 0.4075007650059682" time="0.0000">
+      <failure message="Assertion with == failed">149) test fails with 10 + 1 = 9 0.4075007650059682 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(10, 1) == 9
+     left:  11
+     right: 9
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 4 + 7 = 11 0.4840107056974172" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 6 + 2 = 4 0.335729709875939" time="0.0000">
+      <failure message="Assertion with == failed">151) test fails with 6 + 2 = 4 0.335729709875939 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(6, 2) == 4
+     left:  8
+     right: 4
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 0 + 8 = 6 0.12319967316777825" time="0.0000">
+      <failure message="Assertion with == failed">152) test fails with 0 + 8 = 6 0.12319967316777825 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(0, 8) == 6
+     left:  8
+     right: 6
+     stacktrace:
+       test/calculator/adder_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test succeeds with 1 + 7 = 8 0.4955715143701812" time="0.0000" />
+    <testcase file="test/calculator/adder_test.exs" classname="Elixir.Calculator.AdderTest" name="test fails with 1 + 2 = -1 0.4269325551477474" time="0.0005">
+      <failure message="Assertion with == failed">154) test fails with 1 + 2 = -1 0.4269325551477474 (Calculator.AdderTest)
+     test/calculator/adder_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Adder.run(1, 2) == -1
+     left:  3
+     right: -1
+     stacktrace:
+       test/calculator/adder_test.exs:16: (test)
+</failure>
+    </testcase>
+  </testsuite>
+  <testsuite errors="0" failures="94" name="Elixir.Calculator.SubtractorTest" tests="154" time="0.0025">
+    <properties>
+      <property name="date" value="2021-01-25T16:38:21.578463Z" />
+      <property name="seed" value="541556" />
+    </properties>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 2 + 7 = 9 0.7722063207808202" time="0.0000">
+      <failure message="Assertion with == failed">  1) test fails with 2 + 7 = 9 0.7722063207808202 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(2, 7) == 9
+     left:  -5
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 7 = 14 0.6699001115092631" time="0.0000">
+      <failure message="Assertion with == failed">  2) test fails with 7 + 7 = 14 0.6699001115092631 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 7) == 14
+     left:  0
+     right: 14
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 4 = 8 0.20832179017467256" time="0.0000">
+      <failure message="Assertion with == failed">  3) test fails with 4 + 4 = 8 0.20832179017467256 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 4) == 8
+     left:  0
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 1 = 5 0.29627596339558093" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 10 = 8 0.7221525495273992" time="0.0000">
+      <failure message="Assertion with == failed">  5) test fails with 6 + 10 = 8 0.7221525495273992 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 10) == 8
+     left:  -4
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 3 = 3 0.07874504216337463" time="0.0000">
+      <failure message="Assertion with == failed">  6) test fails with 0 + 3 = 3 0.07874504216337463 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 3) == 3
+     left:  -3
+     right: 3
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 3 + 7 = -4 0.40540717187098363" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 9 = 9 0.07749958093224674" time="0.0000">
+      <failure message="Assertion with == failed">  8) test fails with 0 + 9 = 9 0.07749958093224674 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 9) == 9
+     left:  -9
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 2 + 10 = 6 0.053152296039618574" time="0.0000">
+      <failure message="Assertion with == failed">  9) test fails with 2 + 10 = 6 0.053152296039618574 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(2, 10) == 6
+     left:  -8
+     right: 6
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 4 = 4 0.8861214339343759" time="0.0000">
+      <failure message="Assertion with == failed"> 10) test fails with 0 + 4 = 4 0.8861214339343759 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 4) == 4
+     left:  -4
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 6 = 10 0.2003063406084269" time="0.0000">
+      <failure message="Assertion with == failed"> 11) test fails with 4 + 6 = 10 0.2003063406084269 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 6) == 10
+     left:  -2
+     right: 10
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 2 = 0 0.14081299610167386" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 3 + 9 = 8 0.5732380501224765" time="0.0000">
+      <failure message="Assertion with == failed"> 13) test fails with 3 + 9 = 8 0.5732380501224765 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(3, 9) == 8
+     left:  -6
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 3 = 3 0.694898701736912" time="0.0000">
+      <failure message="Assertion with == failed"> 14) test fails with 0 + 3 = 3 0.694898701736912 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 3) == 3
+     left:  -3
+     right: 3
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 9 = -7 0.22273503424224528" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 7 = 11 0.9466979219966024" time="0.0000">
+      <failure message="Assertion with == failed"> 16) test fails with 10 + 7 = 11 0.9466979219966024 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 7) == 11
+     left:  3
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 0 = 1 0.5462829069047809" time="0.0000">
+      <failure message="Assertion with == failed"> 17) test fails with 4 + 0 = 1 0.5462829069047809 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 0) == 1
+     left:  4
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 5 + 1 = 4 0.90281429234282" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 3 + 2 = 4 0.9755381877486438" time="0.0000">
+      <failure message="Assertion with == failed"> 19) test fails with 3 + 2 = 4 0.9755381877486438 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(3, 2) == 4
+     left:  1
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 7 = 5 0.33676879603419807" time="0.0000">
+      <failure message="Assertion with == failed"> 20) test fails with 4 + 7 = 5 0.33676879603419807 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 7) == 5
+     left:  -3
+     right: 5
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 1 = 7 0.9912850803017246" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 4 + 9 = -5 0.671778921900896" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 7 = 1 0.10060917957275162" time="0.0000">
+      <failure message="Assertion with == failed"> 23) test fails with 0 + 7 = 1 0.10060917957275162 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 7) == 1
+     left:  -7
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 9 = 7 0.8950399341527474" time="0.0000">
+      <failure message="Assertion with == failed"> 24) test fails with 6 + 9 = 7 0.8950399341527474 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 9) == 7
+     left:  -3
+     right: 7
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 0 = 0 0.015327617791404902" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 2 = 11 0.6858695328768656" time="0.0000">
+      <failure message="Assertion with == failed"> 26) test fails with 9 + 2 = 11 0.6858695328768656 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 2) == 11
+     left:  7
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 8 = 12 0.63280106071139" time="0.0000">
+      <failure message="Assertion with == failed"> 27) test fails with 4 + 8 = 12 0.63280106071139 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 8) == 12
+     left:  -4
+     right: 12
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 1 + 6 = 1 0.4629336330013649" time="0.0000">
+      <failure message="Assertion with == failed"> 28) test fails with 1 + 6 = 1 0.4629336330013649 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(1, 6) == 1
+     left:  -5
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 1 + 10 = 11 0.04179607099124527" time="0.0000">
+      <failure message="Assertion with == failed"> 29) test fails with 1 + 10 = 11 0.04179607099124527 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(1, 10) == 11
+     left:  -9
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 8 + 9 = -1 0.5189234948684285" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 10 = 19 0.43533670834339877" time="0.0000">
+      <failure message="Assertion with == failed"> 31) test fails with 9 + 10 = 19 0.43533670834339877 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 10) == 19
+     left:  -1
+     right: 19
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 9 + 9 = 0 0.5643768679301177" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 4 = 14 0.8621510717810619" time="0.0000">
+      <failure message="Assertion with == failed"> 33) test fails with 10 + 4 = 14 0.8621510717810619 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 4) == 14
+     left:  6
+     right: 14
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 10 = 17 0.10943830227829887" time="0.0000">
+      <failure message="Assertion with == failed"> 34) test fails with 7 + 10 = 17 0.10943830227829887 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 10) == 17
+     left:  -3
+     right: 17
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 2 = 1 0.7493861788037076" time="0.0000">
+      <failure message="Assertion with == failed"> 35) test fails with 5 + 2 = 1 0.7493861788037076 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 2) == 1
+     left:  3
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 10 + 5 = 5 0.4171119596864652" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 1 + 9 = 0 0.9675530535772384" time="0.0000">
+      <failure message="Assertion with == failed"> 37) test fails with 1 + 9 = 0 0.9675530535772384 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(1, 9) == 0
+     left:  -8
+     right: 0
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 6 = -4 0.13333678650053615" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 7 = 15 0.5457765527305707" time="0.0000">
+      <failure message="Assertion with == failed"> 39) test fails with 8 + 7 = 15 0.5457765527305707 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 7) == 15
+     left:  1
+     right: 15
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 3 + 10 = -7 0.5438772233062228" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 1 + 2 = -1 0.8095573591594916" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 8 = 8 0.4136507306976551" time="0.0000">
+      <failure message="Assertion with == failed"> 42) test fails with 5 + 8 = 8 0.4136507306976551 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 8) == 8
+     left:  -3
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 5 + 7 = -2 0.8484794963599135" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 6 = 13 0.043083380745954636" time="0.0000">
+      <failure message="Assertion with == failed"> 44) test fails with 7 + 6 = 13 0.043083380745954636 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 6) == 13
+     left:  1
+     right: 13
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 7 = -5 0.7707742041237943" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 0 = 9 0.5350585475890637" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 2 + 5 = 7 0.025037904812507006" time="0.0000">
+      <failure message="Assertion with == failed"> 47) test fails with 2 + 5 = 7 0.025037904812507006 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(2, 5) == 7
+     left:  -3
+     right: 7
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 5 = 11 0.04444623262805303" time="0.0000">
+      <failure message="Assertion with == failed"> 48) test fails with 6 + 5 = 11 0.04444623262805303 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 5) == 11
+     left:  1
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 8 = 6 0.45860656289329627" time="0.0000">
+      <failure message="Assertion with == failed"> 49) test fails with 0 + 8 = 6 0.45860656289329627 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 8) == 6
+     left:  -8
+     right: 6
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 5 = 10 0.5185197188486534" time="0.0000">
+      <failure message="Assertion with == failed"> 50) test fails with 5 + 5 = 10 0.5185197188486534 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 5) == 10
+     left:  0
+     right: 10
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 9 + 10 = -1 0.3747512464609576" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 8 = 3 0.6586587911013747" time="0.0000">
+      <failure message="Assertion with == failed"> 52) test fails with 8 + 8 = 3 0.6586587911013747 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 8) == 3
+     left:  0
+     right: 3
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 2 = 0 0.6204678232347922" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 4 + 10 = -6 0.3029002731308422" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 5 = 5 0.4850292336973592" time="0.0000">
+      <failure message="Assertion with == failed"> 55) test fails with 0 + 5 = 5 0.4850292336973592 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 5) == 5
+     left:  -5
+     right: 5
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 4 = 4 0.3698915347029499" time="0.0000">
+      <failure message="Assertion with == failed"> 56) test fails with 0 + 4 = 4 0.3698915347029499 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 4) == 4
+     left:  -4
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 3 + 1 = 4 0.37996167923162827" time="0.0000">
+      <failure message="Assertion with == failed"> 57) test fails with 3 + 1 = 4 0.37996167923162827 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(3, 1) == 4
+     left:  2
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 1 = 11 0.25735201974926314" time="0.0000">
+      <failure message="Assertion with == failed"> 58) test fails with 10 + 1 = 11 0.25735201974926314 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 1) == 11
+     left:  9
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 7 = 9 0.5668682239768283" time="0.0000">
+      <failure message="Assertion with == failed"> 59) test fails with 10 + 7 = 9 0.5668682239768283 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 7) == 9
+     left:  3
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 0 + 4 = -4 0.44663587777989644" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 4 = 9 0.8334023921069172" time="0.0000">
+      <failure message="Assertion with == failed"> 61) test fails with 5 + 4 = 9 0.8334023921069172 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 4) == 9
+     left:  1
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 8 + 5 = 3 0.5361229571655314" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 4 = 0 0.5734348391492553" time="0.0000">
+      <failure message="Assertion with == failed"> 63) test fails with 9 + 4 = 0 0.5734348391492553 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 4) == 0
+     left:  5
+     right: 0
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 0 + 2 = -2 0.9115562544469028" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 7 + 2 = 5 0.31060158969567664" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 3 + 1 = 4 0.8796629262683339" time="0.0000">
+      <failure message="Assertion with == failed"> 66) test fails with 3 + 1 = 4 0.8796629262683339 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(3, 1) == 4
+     left:  2
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 9 + 0 = 9 0.30678786184755125" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 2 = 2 0.48512017267081076" time="0.0000">
+      <failure message="Assertion with == failed"> 68) test fails with 0 + 2 = 2 0.48512017267081076 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(0, 2) == 2
+     left:  -2
+     right: 2
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 4 = 1 0.9827076051941198" time="0.0000">
+      <failure message="Assertion with == failed"> 69) test fails with 4 + 4 = 1 0.9827076051941198 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 4) == 1
+     left:  0
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 10 = 15 0.4292819183510993" time="0.0000">
+      <failure message="Assertion with == failed"> 70) test fails with 6 + 10 = 15 0.4292819183510993 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 10) == 15
+     left:  -4
+     right: 15
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 2 + 2 = 4 0.2236080405634817" time="0.0000">
+      <failure message="Assertion with == failed"> 71) test fails with 2 + 2 = 4 0.2236080405634817 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(2, 2) == 4
+     left:  0
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 1 + 8 = -7 0.5303562008135341" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 5 = 9 0.24650433901806046" time="0.0000">
+      <failure message="Assertion with == failed"> 73) test fails with 4 + 5 = 9 0.24650433901806046 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 5) == 9
+     left:  -1
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 7 + 3 = 4 0.821284161837602" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 8 = 16 0.739797145540201" time="0.0000">
+      <failure message="Assertion with == failed"> 75) test fails with 8 + 8 = 16 0.739797145540201 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 8) == 16
+     left:  0
+     right: 16
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 10 = 19 0.7465302998490072" time="0.0000">
+      <failure message="Assertion with == failed"> 76) test fails with 9 + 10 = 19 0.7465302998490072 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 10) == 19
+     left:  -1
+     right: 19
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 2 + 6 = 8 0.3543779063507021" time="0.0000">
+      <failure message="Assertion with == failed"> 77) test fails with 2 + 6 = 8 0.3543779063507021 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(2, 6) == 8
+     left:  -4
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 1 + 10 = -9 0.43424932158366136" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 5 = 2 0.8712332170674643" time="0.0000">
+      <failure message="Assertion with == failed"> 79) test fails with 10 + 5 = 2 0.8712332170674643 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 5) == 2
+     left:  5
+     right: 2
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 9 = 14 0.03633524396191101" time="0.0000">
+      <failure message="Assertion with == failed"> 80) test fails with 5 + 9 = 14 0.03633524396191101 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 9) == 14
+     left:  -4
+     right: 14
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 5 = 9 0.002274622239651136" time="0.0000">
+      <failure message="Assertion with == failed"> 81) test fails with 4 + 5 = 9 0.002274622239651136 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 5) == 9
+     left:  -1
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 3 + 5 = 0 0.6680069627700818" time="0.0000">
+      <failure message="Assertion with == failed"> 82) test fails with 3 + 5 = 0 0.6680069627700818 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(3, 5) == 0
+     left:  -2
+     right: 0
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 9 + 0 = 9 0.5954605329832783" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 0 + 1 = -1 0.2532481866793135" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 8 = 15 0.7311324386779803" time="0.0000">
+      <failure message="Assertion with == failed"> 85) test fails with 7 + 8 = 15 0.7311324386779803 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 8) == 15
+     left:  -1
+     right: 15
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 9 = 18 0.22413005991045432" time="0.0000">
+      <failure message="Assertion with == failed"> 86) test fails with 9 + 9 = 18 0.22413005991045432 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 9) == 18
+     left:  0
+     right: 18
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 4 = 2 0.19379267774062725" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 1 + 7 = 8 0.9510476789474542" time="0.0000">
+      <failure message="Assertion with == failed"> 88) test fails with 1 + 7 = 8 0.9510476789474542 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(1, 7) == 8
+     left:  -6
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 7 = 0 0.42058135451757306" time="0.0000">
+      <failure message="Assertion with == failed"> 89) test fails with 8 + 7 = 0 0.42058135451757306 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 7) == 0
+     left:  1
+     right: 0
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 3 = 10 0.5948307190868883" time="0.0000">
+      <failure message="Assertion with == failed"> 90) test fails with 7 + 3 = 10 0.5948307190868883 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 3) == 10
+     left:  4
+     right: 10
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 9 + 4 = 5 0.018061233329689452" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 8 = 13 0.18381322799245192" time="0.0000">
+      <failure message="Assertion with == failed"> 92) test fails with 5 + 8 = 13 0.18381322799245192 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 8) == 13
+     left:  -3
+     right: 13
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 10 = 11 0.8747165304807241" time="0.0000">
+      <failure message="Assertion with == failed"> 93) test fails with 8 + 10 = 11 0.8747165304807241 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 10) == 11
+     left:  -2
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 8 = 17 0.3662545999895812" time="0.0000">
+      <failure message="Assertion with == failed"> 94) test fails with 9 + 8 = 17 0.3662545999895812 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 8) == 17
+     left:  1
+     right: 17
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 3 = 3 0.32069370660388585" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 5 = 1 0.8054088705366382" time="0.0000">
+      <failure message="Assertion with == failed"> 96) test fails with 4 + 5 = 1 0.8054088705366382 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 5) == 1
+     left:  -1
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 4 = 12 0.8591209626986296" time="0.0000">
+      <failure message="Assertion with == failed"> 97) test fails with 8 + 4 = 12 0.8591209626986296 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 4) == 12
+     left:  4
+     right: 12
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 7 = 5 0.04213112790633011" time="0.0000">
+      <failure message="Assertion with == failed"> 98) test fails with 10 + 7 = 5 0.04213112790633011 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 7) == 5
+     left:  3
+     right: 5
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 2 = 6 0.00221848855621376" time="0.0000">
+      <failure message="Assertion with == failed"> 99) test fails with 4 + 2 = 6 0.00221848855621376 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 2) == 6
+     left:  2
+     right: 6
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 0 = 10 0.017028960217112976" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 8 = 1 0.3842269347700409" time="0.0000">
+      <failure message="Assertion with == failed">101) test fails with 5 + 8 = 1 0.3842269347700409 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 8) == 1
+     left:  -3
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 1 = 9 0.11825671127722615" time="0.0000">
+      <failure message="Assertion with == failed">102) test fails with 8 + 1 = 9 0.11825671127722615 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 1) == 9
+     left:  7
+     right: 9
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 8 + 7 = 1 0.065791045107092" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 0 = 6 0.5211509385799581" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 3 + 6 = 1 0.6141337003324727" time="0.0000">
+      <failure message="Assertion with == failed">105) test fails with 3 + 6 = 1 0.6141337003324727 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(3, 6) == 1
+     left:  -3
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 0 + 0 = 0 0.2155638922901978" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 2 + 8 = 0 0.3453191304676212" time="0.0000">
+      <failure message="Assertion with == failed">107) test fails with 2 + 8 = 0 0.3453191304676212 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(2, 8) == 0
+     left:  -6
+     right: 0
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 8 + 6 = 2 0.54480483766303" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 3 + 10 = -7 0.5625030644528396" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 3 = 12 0.8004135254599343" time="0.0000">
+      <failure message="Assertion with == failed">110) test fails with 9 + 3 = 12 0.8004135254599343 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 3) == 12
+     left:  6
+     right: 12
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 4 = 1 0.10581675485921316" time="0.0000">
+      <failure message="Assertion with == failed">111) test fails with 7 + 4 = 1 0.10581675485921316 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 4) == 1
+     left:  3
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 5 + 5 = 0 0.3229022116298602" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 7 = 7 0.386515760748234" time="0.0000">
+      <failure message="Assertion with == failed">113) test fails with 7 + 7 = 7 0.386515760748234 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 7) == 7
+     left:  0
+     right: 7
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 3 = 1 0.6078447671801055" time="0.0000">
+      <failure message="Assertion with == failed">114) test fails with 5 + 3 = 1 0.6078447671801055 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 3) == 1
+     left:  2
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 4 + 2 = 2 0.7584242763706323" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 7 = -1 0.6482348996016822" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 3 = 7 0.4700096912304482" time="0.0000">
+      <failure message="Assertion with == failed">117) test fails with 4 + 3 = 7 0.4700096912304482 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 3) == 7
+     left:  1
+     right: 7
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 9 = 4 0.881590163510863" time="0.0000">
+      <failure message="Assertion with == failed">118) test fails with 4 + 9 = 4 0.881590163510863 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 9) == 4
+     left:  -5
+     right: 4
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 9 = 8 0.0581768162224775" time="0.0001">
+      <failure message="Assertion with == failed">119) test fails with 7 + 9 = 8 0.0581768162224775 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(7, 9) == 8
+     left:  -2
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 1 + 8 = 8 0.7453366947368343" time="0.0000">
+      <failure message="Assertion with == failed">120) test fails with 1 + 8 = 8 0.7453366947368343 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(1, 8) == 8
+     left:  -7
+     right: 8
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 7 = 6 0.1845643806313353" time="0.0000">
+      <failure message="Assertion with == failed">121) test fails with 6 + 7 = 6 0.1845643806313353 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 7) == 6
+     left:  -1
+     right: 6
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 10 = 13 0.7329349211438823" time="0.0000">
+      <failure message="Assertion with == failed">122) test fails with 6 + 10 = 13 0.7329349211438823 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 10) == 13
+     left:  -4
+     right: 13
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 4 = 4 0.6880763738263084" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 1 + 1 = 0 0.66685171248572" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 0 = 7 0.7888600930108847" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 0 = 6 0.8989954133769813" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 7 + 8 = -1 0.27043367677052077" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 1 = 2 0.3316760574529236" time="0.0000">
+      <failure message="Assertion with == failed">128) test fails with 5 + 1 = 2 0.3316760574529236 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 1) == 2
+     left:  4
+     right: 2
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 4 = -2 0.56226119465762" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="doctest Calculator.Subtractor.run/2 (1)" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 0 = 6 0.6776823042923332" time="0.0000">
+      <failure message="Assertion with == failed">131) test fails with 8 + 0 = 6 0.6776823042923332 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 0) == 6
+     left:  8
+     right: 6
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 9 = 18 0.07471032648303322" time="0.0000">
+      <failure message="Assertion with == failed">132) test fails with 9 + 9 = 18 0.07471032648303322 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 9) == 18
+     left:  0
+     right: 18
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 10 + 7 = 3 0.027051001331887203" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 8 + 5 = 13 0.49412126549061575" time="0.0000">
+      <failure message="Assertion with == failed">134) test fails with 8 + 5 = 13 0.49412126549061575 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(8, 5) == 13
+     left:  3
+     right: 13
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 5 + 2 = 3 0.5105912351736708" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 1 = 1 0.6438313151131192" time="0.0000">
+      <failure message="Assertion with == failed">136) test fails with 4 + 1 = 1 0.6438313151131192 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 1) == 1
+     left:  3
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 10 + 7 = 17 0.7947987740262286" time="0.0000">
+      <failure message="Assertion with == failed">137) test fails with 10 + 7 = 17 0.7947987740262286 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(10, 7) == 17
+     left:  3
+     right: 17
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 6 + 0 = 6 0.6079098204645408" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 1 + 0 = 0 0.28068624027162525" time="0.0000">
+      <failure message="Assertion with == failed">139) test fails with 1 + 0 = 0 0.28068624027162525 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(1, 0) == 0
+     left:  1
+     right: 0
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 10 + 10 = 0 0.6557016451256844" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 0 + 0 = 0 0.05148398404636789" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 7 + 2 = 5 0.5300603064259929" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 9 + 3 = 12 0.9030830463974012" time="0.0000">
+      <failure message="Assertion with == failed">143) test fails with 9 + 3 = 12 0.9030830463974012 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(9, 3) == 12
+     left:  6
+     right: 12
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 0 + 10 = -10 0.19963245052176248" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 2 + 5 = -3 0.5107336288742088" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 7 + 0 = 7 0.5218555090804252" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 6 + 1 = 1 0.5401455778442681" time="0.0000">
+      <failure message="Assertion with == failed">147) test fails with 6 + 1 = 1 0.5401455778442681 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(6, 1) == 1
+     left:  5
+     right: 1
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 6 = 11 0.0183520943667822" time="0.0000">
+      <failure message="Assertion with == failed">148) test fails with 5 + 6 = 11 0.0183520943667822 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 6) == 11
+     left:  -1
+     right: 11
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 4 = 3 0.7865725561267773" time="0.0000">
+      <failure message="Assertion with == failed">149) test fails with 5 + 4 = 3 0.7865725561267773 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 4) == 3
+     left:  1
+     right: 3
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 9 + 8 = 1 0.6418485084210076" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 10 = 14 0.289775344418607" time="0.0000">
+      <failure message="Assertion with == failed">151) test fails with 4 + 10 = 14 0.289775344418607 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 10) == 14
+     left:  -6
+     right: 14
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 5 + 6 = 6 0.4098367177271768" time="0.0000">
+      <failure message="Assertion with == failed">152) test fails with 5 + 6 = 6 0.4098367177271768 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:22
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(5, 6) == 6
+     left:  -1
+     right: 6
+     stacktrace:
+       test/calculator/subtractor_test.exs:23: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test succeeds with 8 + 8 = 0 0.04862791264396604" time="0.0000" />
+    <testcase file="test/calculator/subtractor_test.exs" classname="Elixir.Calculator.SubtractorTest" name="test fails with 4 + 8 = 12 0.8061588801837586" time="0.0015">
+      <failure message="Assertion with == failed">154) test fails with 4 + 8 = 12 0.8061588801837586 (Calculator.SubtractorTest)
+     test/calculator/subtractor_test.exs:15
+     Assertion with == failed
+     code:  assert Calculator.Subtractor.run(4, 8) == 12
+     left:  -4
+     right: 12
+     stacktrace:
+       test/calculator/subtractor_test.exs:16: (test)
+</failure>
+    </testcase>
+  </testsuite>
+  <testsuite errors="0" failures="2" name="Elixir.CalculatorTest" tests="3" time="0.0017">
+    <properties>
+      <property name="date" value="2021-01-25T16:38:21.578463Z" />
+      <property name="seed" value="541556" />
+    </properties>
+    <testcase file="test/calculator_test.exs" classname="Elixir.CalculatorTest" name="test greets the world" time="0.0000" />
+    <testcase file="test/calculator_test.exs" classname="Elixir.CalculatorTest" name="test also fails" time="0.0017">
+      <failure message="error: function Calculator.foo/0 is undefined or private">  2) test also fails (CalculatorTest)
+     test/calculator_test.exs:16
+     ** (UndefinedFunctionError) function Calculator.foo/0 is undefined or private
+     code: assert Calculator.foo() == 0
+     stacktrace:
+       (calculator 0.1.0) Calculator.foo()
+       test/calculator_test.exs:17: (test)
+</failure>
+    </testcase>
+    <testcase file="test/calculator_test.exs" classname="Elixir.CalculatorTest" name="test fails" time="0.0000">
+      <failure message="Assertion with == failed">  3) test fails (CalculatorTest)
+     test/calculator_test.exs:11
+     Assertion with == failed
+     code:  assert Calculator.hello() == :hello
+     left:  :world
+     right: :hello
+     stacktrace:
+       test/calculator_test.exs:12: (test)
+</failure>
+    </testcase>
+  </testsuite>
+</testsuites>

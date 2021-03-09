@@ -1,0 +1,40 @@
+version: v1.0
+name: Initial Pipeline
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Test
+    task:
+      jobs:
+        - name: Build for testing
+          commands:
+            - checkout
+            - mix local.hex --force
+            - mix local.rebar --force
+            - cache restore
+            - 'mix do deps.get, compile --warnings-as-errors'
+            - cache store
+            - mix test --trace
+            - artifact push workflow junit.xml
+      env_vars:
+        - name: MIX_ENV
+          value: test
+  - name: Build
+    task:
+      env_vars:
+        - name: MIX_ENV
+          value: production
+      jobs:
+        - name: Build for deployment
+          commands:
+            - checkout
+            - mix local.hex --force
+            - mix local.rebar --force
+            - cache restore
+            - 'mix do deps.get, compile --warnings-as-errors'
+            - cache store
+            - make
+            - artifact pull workflow junit.xml
+            - ./result_parser publish junit.xml

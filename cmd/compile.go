@@ -20,10 +20,8 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/semaphoreci/test-results/pkg/parsers"
-	"github.com/semaphoreci/test-results/pkg/types"
 	"github.com/spf13/cobra"
 )
 
@@ -40,45 +38,28 @@ var compileCmd = &cobra.Command{
 		inFile := args[0]
 		outFile := args[1]
 
-		inFileInfo, err := os.Stat(inFile)
-		if err != nil {
-			log.Fatal("File doesn't exist")
-		}
-
-		allResults := []types.Suites{}
-
-		switch inFileInfo.IsDir() {
-		case true:
-			err := filepath.Walk(inFile, func(path string, info os.FileInfo, err error) error {
-				if err != nil {
-					return err
-				}
-
-				if filepath.Ext(path) == ".xml" {
-					start := parsers.LoadXML(path)
-					parser := parsers.FindParser(name, start)
-					allResults = append(allResults, parsers.Parse(parser, start))
-				}
-				return nil
-			})
-
-			if err != nil {
-				log.Println(err)
-			}
-		case false:
-			start := parsers.LoadXML(inFile)
-			parser := parsers.FindParser(name, start)
-			allResults = append(allResults, parsers.Parse(parser, start))
-		}
-
-		results := parsers.MergeResults(allResults)
-
-		file, err := json.Marshal(results)
+		_, err := os.Stat(inFile)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		_ = ioutil.WriteFile(outFile, file, 0644)
+		parser := parsers.NewGeneric()
+
+		testResults, err := parser.Parse(inFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		file, err := json.Marshal(testResults)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		// Todo: Check if file can be created at location
+		err = ioutil.WriteFile(outFile, file, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
