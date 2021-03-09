@@ -1,5 +1,5 @@
 version: v1.0
-name: Initial Pipeline
+name: Go
 agent:
   machine:
     type: e1-standard-2
@@ -8,33 +8,13 @@ blocks:
   - name: Test
     task:
       jobs:
-        - name: Build for testing
+        - name: go test
           commands:
+            - sem-version go 1.11
+            - export GO111MODULE=on
+            - export GOPATH=~/go
+            - 'export PATH=/home/semaphore/go/bin:$PATH'
             - checkout
-            - mix local.hex --force
-            - mix local.rebar --force
-            - cache restore
-            - 'mix do deps.get, compile --warnings-as-errors'
-            - cache store
-            - mix test --trace
-            - artifact push workflow junit.xml
-      env_vars:
-        - name: MIX_ENV
-          value: test
-  - name: Build
-    task:
-      env_vars:
-        - name: MIX_ENV
-          value: production
-      jobs:
-        - name: Build for deployment
-          commands:
-            - checkout
-            - mix local.hex --force
-            - mix local.rebar --force
-            - cache restore
-            - 'mix do deps.get, compile --warnings-as-errors'
-            - cache store
-            - make
-            - artifact pull workflow junit.xml
-            - ./result_parser publish junit.xml
+            - go get ./...
+            - go test ./...
+            - go build -v .
