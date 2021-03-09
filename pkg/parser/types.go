@@ -69,12 +69,11 @@ type Suite struct {
 
 // NewSuite ...
 func NewSuite() Suite {
-	return Suite{
-		Properties: Properties{},
-	}
+	return Suite{}
 }
 
 // Aggregate all tests in suite
+// TODO: add flag to skip aggregating already present data
 func (suite *Suite) Aggregate() {
 	summary := Summary{}
 
@@ -93,25 +92,7 @@ func (suite *Suite) Aggregate() {
 		}
 	}
 
-	if suite.Summary.Duration == 0 {
-		(*suite).Summary.Duration = summary.Duration
-	}
-
-	if suite.Summary.Skipped == 0 {
-		(*suite).Summary.Skipped = summary.Skipped
-	}
-
-	if suite.Summary.Failed == 0 {
-		(*suite).Summary.Failed = summary.Failed
-	}
-
-	if suite.Summary.Error == 0 {
-		(*suite).Summary.Error = summary.Error
-	}
-
-	if suite.Summary.Passed == 0 {
-		(*suite).Summary.Passed = summary.Passed
-	}
+	(*suite).Summary = summary
 }
 
 // Test ...

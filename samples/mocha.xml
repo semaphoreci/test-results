@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="0.0070" tests="60" failures="38">
+  <testsuite name="Root Suite" timestamp="2021-01-25T16:15:58" tests="0" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Calculator" timestamp="2021-01-25T16:15:58" tests="0" file="/home/skipi/workspace/calculator/js/test/adder.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Adder#run" timestamp="2021-01-25T16:15:58" tests="30" file="/home/skipi/workspace/calculator/js/test/adder.js" time="0.0060" failures="20">
+    <testcase name="Calculator Adder#run does proper calculations for (9 + 7 = 16)" time="0.0000" classname="does proper calculations for (9 + 7 = 16)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (5 + 8 = 13)" time="0.0000" classname="does proper calculations for (5 + 8 = 13)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (7 + 6 = 13)" time="0.0000" classname="does proper calculations for (7 + 6 = 13)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (3 + 4 = 7)" time="0.0000" classname="does proper calculations for (3 + 4 = 7)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (3 + 2 = 5)" time="0.0000" classname="does proper calculations for (3 + 2 = 5)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (0 + 7 = 7)" time="0.0000" classname="does proper calculations for (0 + 7 = 7)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (8 + 7 = 15)" time="0.0000" classname="does proper calculations for (8 + 7 = 15)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (8 + 7 = 15)" time="0.0000" classname="does proper calculations for (8 + 7 = 15)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (5 + 7 = 12)" time="0.0000" classname="does proper calculations for (5 + 7 = 12)">
+    </testcase>
+    <testcase name="Calculator Adder#run does proper calculations for (6 + 1 = 7)" time="0.0000" classname="does proper calculations for (6 + 1 = 7)">
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (6 + 7 = -1)" time="0.0020" classname="fails with wrong data (6 + 7 = -1)">
+      <failure message="-1 == 13" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -1 == 13
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (4 + 7 = -3)" time="0.0000" classname="fails with wrong data (4 + 7 = -3)">
+      <failure message="-3 == 11" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -3 == 11
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (1 + 4 = -3)" time="0.0000" classname="fails with wrong data (1 + 4 = -3)">
+      <failure message="-3 == 5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -3 == 5
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (4 + 6 = -2)" time="0.0000" classname="fails with wrong data (4 + 6 = -2)">
+      <failure message="-2 == 10" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -2 == 10
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (4 + 3 = 1)" time="0.0010" classname="fails with wrong data (4 + 3 = 1)">
+      <failure message="1 == 7" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 1 == 7
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (6 + 3 = 3)" time="0.0000" classname="fails with wrong data (6 + 3 = 3)">
+      <failure message="3 == 9" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 3 == 9
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (4 + 9 = -5)" time="0.0000" classname="fails with wrong data (4 + 9 = -5)">
+      <failure message="-5 == 13" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -5 == 13
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (3 + 8 = -5)" time="0.0010" classname="fails with wrong data (3 + 8 = -5)">
+      <failure message="-5 == 11" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -5 == 11
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (0 + 9 = -9)" time="0.0000" classname="fails with wrong data (0 + 9 = -9)">
+      <failure message="-9 == 9" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -9 == 9
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails with wrong data (4 + 9 = -5)" time="0.0000" classname="fails with wrong data (4 + 9 = -5)">
+      <failure message="-5 == 13" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -5 == 13
+    at Context.<anonymous> (test/adder.js:20:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (0 + 5 = -8)" time="0.0010" classname="fails randomly (0 + 5 = -8)">
+      <failure message="-8 == 5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -8 == 5
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (8 + 0 = 1)" time="0.0000" classname="fails randomly (8 + 0 = 1)">
+      <failure message="1 == 8" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 1 == 8
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (7 + 1 = 0)" time="0.0000" classname="fails randomly (7 + 1 = 0)">
+      <failure message="0 == 8" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 0 == 8
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (8 + 6 = -20)" time="0.0000" classname="fails randomly (8 + 6 = -20)">
+      <failure message="-20 == 14" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -20 == 14
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (9 + 8 = -5)" time="0.0000" classname="fails randomly (9 + 8 = -5)">
+      <failure message="-5 == 17" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -5 == 17
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (9 + 6 = -17)" time="0.0000" classname="fails randomly (9 + 6 = -17)">
+      <failure message="-17 == 15" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -17 == 15
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (2 + 2 = 19)" time="0.0000" classname="fails randomly (2 + 2 = 19)">
+      <failure message="19 == 4" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 19 == 4
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (1 + 3 = -2)" time="0.0010" classname="fails randomly (1 + 3 = -2)">
+      <failure message="-2 == 4" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -2 == 4
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (6 + 5 = 2)" time="0.0000" classname="fails randomly (6 + 5 = 2)">
+      <failure message="2 == 11" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 2 == 11
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Adder#run fails randomly (0 + 5 = -1)" time="0.0000" classname="fails randomly (0 + 5 = -1)">
+      <failure message="-1 == 5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -1 == 5
+    at Context.<anonymous> (test/adder.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Calculator" timestamp="2021-01-25T16:15:58" tests="0" file="/home/skipi/workspace/calculator/js/test/subtractor.js" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Subtractor#run" timestamp="2021-01-25T16:15:58" tests="30" file="/home/skipi/workspace/calculator/js/test/subtractor.js" time="0.0010" failures="18">
+    <testcase name="Calculator Subtractor#run does proper calculations for (2 + 6 = 8)" time="0.0000" classname="does proper calculations for (2 + 6 = 8)">
+      <failure message="8 == -4" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 8 == -4
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (1 + 4 = 5)" time="0.0000" classname="does proper calculations for (1 + 4 = 5)">
+      <failure message="5 == -3" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 5 == -3
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (8 + 7 = 15)" time="0.0000" classname="does proper calculations for (8 + 7 = 15)">
+      <failure message="15 == 1" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 15 == 1
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (7 + 2 = 9)" time="0.0000" classname="does proper calculations for (7 + 2 = 9)">
+      <failure message="9 == 5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 9 == 5
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (9 + 6 = 15)" time="0.0000" classname="does proper calculations for (9 + 6 = 15)">
+      <failure message="15 == 3" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 15 == 3
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (8 + 3 = 11)" time="0.0010" classname="does proper calculations for (8 + 3 = 11)">
+      <failure message="11 == 5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 11 == 5
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (9 + 0 = 9)" time="0.0000" classname="does proper calculations for (9 + 0 = 9)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (3 + 8 = 11)" time="0.0000" classname="does proper calculations for (3 + 8 = 11)">
+      <failure message="11 == -5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 11 == -5
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (8 + 6 = 14)" time="0.0000" classname="does proper calculations for (8 + 6 = 14)">
+      <failure message="14 == 2" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 14 == 2
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run does proper calculations for (6 + 5 = 11)" time="0.0000" classname="does proper calculations for (6 + 5 = 11)">
+      <failure message="11 == 1" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 11 == 1
+    at Context.<anonymous> (test/subtractor.js:12:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (0 + 2 = -2)" time="0.0000" classname="fails with wrong data (0 + 2 = -2)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (0 + 6 = -6)" time="0.0000" classname="fails with wrong data (0 + 6 = -6)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (7 + 9 = -2)" time="0.0000" classname="fails with wrong data (7 + 9 = -2)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (3 + 1 = 2)" time="0.0000" classname="fails with wrong data (3 + 1 = 2)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (8 + 6 = 2)" time="0.0000" classname="fails with wrong data (8 + 6 = 2)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (0 + 6 = -6)" time="0.0000" classname="fails with wrong data (0 + 6 = -6)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (6 + 9 = -3)" time="0.0000" classname="fails with wrong data (6 + 9 = -3)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (5 + 1 = 4)" time="0.0000" classname="fails with wrong data (5 + 1 = 4)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (5 + 4 = 1)" time="0.0000" classname="fails with wrong data (5 + 4 = 1)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails with wrong data (5 + 4 = 1)" time="0.0000" classname="fails with wrong data (5 + 4 = 1)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (4 + 5 = -1)" time="0.0000" classname="fails randomly (4 + 5 = -1)">
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (5 + 5 = 14)" time="0.0000" classname="fails randomly (5 + 5 = 14)">
+      <failure message="14 == 0" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 14 == 0
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (3 + 7 = -12)" time="0.0000" classname="fails randomly (3 + 7 = -12)">
+      <failure message="-12 == -4" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -12 == -4
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (9 + 4 = -7)" time="0.0000" classname="fails randomly (9 + 4 = -7)">
+      <failure message="-7 == 5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -7 == 5
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (4 + 1 = -20)" time="0.0000" classname="fails randomly (4 + 1 = -20)">
+      <failure message="-20 == 3" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -20 == 3
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (8 + 7 = -13)" time="0.0000" classname="fails randomly (8 + 7 = -13)">
+      <failure message="-13 == 1" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -13 == 1
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (4 + 9 = 6)" time="0.0000" classname="fails randomly (4 + 9 = 6)">
+      <failure message="6 == -5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 6 == -5
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (0 + 5 = 12)" time="0.0000" classname="fails randomly (0 + 5 = 12)">
+      <failure message="12 == -5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: 12 == -5
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (7 + 7 = -14)" time="0.0000" classname="fails randomly (7 + 7 = -14)">
+      <failure message="-14 == 0" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -14 == 0
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+    <testcase name="Calculator Subtractor#run fails randomly (3 + 8 = -20)" time="0.0000" classname="fails randomly (3 + 8 = -20)">
+      <failure message="-20 == -5" type="AssertionError"><![CDATA[AssertionError [ERR_ASSERTION]: -20 == -5
+    at Context.<anonymous> (test/subtractor.js:28:18)
+    at processImmediate (internal/timers.js:439:21)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>

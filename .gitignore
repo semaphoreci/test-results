@@ -15,4 +15,5 @@
 # vendor/
 .vscode
 bin
-samples
+samplesdist/
+dist
