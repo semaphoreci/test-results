@@ -18,7 +18,6 @@ limitations under the License.
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -64,7 +63,12 @@ var publishCmd = &cobra.Command{
 		}
 
 		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "-d", "test-results/junit.json")
-		fmt.Printf(artifactsPush.String())
+		err = artifactsPush.Run()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		artifactsPush = exec.Command("artifact", "push", "job", inFile, "-d", "test-results/junit.xml")
 		err = artifactsPush.Run()
 		if err != nil {
 			log.Fatal(err)

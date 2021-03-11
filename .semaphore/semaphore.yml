@@ -10,7 +10,6 @@ blocks:
     task:
       prologue:
         commands:
-          # set go version
           - sem-version go 1.15
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
@@ -22,8 +21,6 @@ blocks:
             - go get ./...
             - go test ./...
 
-# On Semaphore 2.0 deployment and delivery is managed with promotions,
-# which may be automatic or manual and optionally depend on conditions.
 promotions:
     - name: Release
       pipeline_file: goreleaser.yml
