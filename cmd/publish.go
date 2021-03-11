@@ -18,26 +18,24 @@ limitations under the License.
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
 
 	"github.com/semaphoreci/test-results/pkg/parsers"
 	"github.com/spf13/cobra"
 )
 
-var name string
-var parser string
-
-// compileCmd represents the compile command
-var compileCmd = &cobra.Command{
-	Use:   "compile [xml-file] [json-file]",
-	Short: "parses xml file to well defined json schema",
-	Long:  `Parses xml file to well defined json schema`,
-	Args:  cobra.MinimumNArgs(2),
+// publishCmd represents the publish command
+var publishCmd = &cobra.Command{
+	Use:   "publish [xml-file]",
+	Short: "parses xml file to well defined json schema and publishes results to artifacts storage",
+	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		inFile := args[0]
-		outFile := args[1]
 
 		_, err := os.Stat(inFile)
 		if err != nil {
@@ -57,8 +55,17 @@ var compileCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
+		tmpFile, err := ioutil.TempFile("/tmp", "test-results")
+
 		// Todo: Check if file can be created at location
-		err = ioutil.WriteFile(outFile, file, 0644)
+		_, err = tmpFile.Write(file)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "test-results/junit.json")
+		fmt.Printf(artifactsPush.String())
+		err = artifactsPush.Run()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -66,7 +73,5 @@ var compileCmd = &cobra.Command{
 }
 
 func init() {
-	compileCmd.Flags().StringVarP(&name, "name", "N", "suite", "name of the suite")
-	compileCmd.Flags().StringVarP(&parser, "parser", "p", "auto", "override parser to be used")
-	rootCmd.AddCommand(compileCmd)
+	rootCmd.AddCommand(publishCmd)
 }
