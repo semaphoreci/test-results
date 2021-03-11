@@ -63,7 +63,7 @@ var publishCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "test-results/junit.json")
+		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "-d", "test-results/junit.json")
 		fmt.Printf(artifactsPush.String())
 		err = artifactsPush.Run()
 		if err != nil {
