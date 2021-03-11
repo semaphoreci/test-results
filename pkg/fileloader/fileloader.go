@@ -13,7 +13,7 @@ func Load(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 
 func decode(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 	foundReader, exists := readers[path]
-	if exists {
+	if exists && foundReader != nil {
 		return foundReader, true
 	}
 	readers[path] = reader

@@ -47,6 +47,7 @@ var compileCmd = &cobra.Command{
 		parser := parsers.NewGeneric()
 
 		testResults, err := parser.Parse(inFile)
+
 		if err != nil {
 			log.Fatal(err)
 		}

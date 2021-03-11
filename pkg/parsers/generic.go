@@ -27,8 +27,9 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 	// Preload path with loader. If nothing is found in file cache - load it up from path.
 	reader, found := fileloader.Load(path, nil)
 
-	if found == false && reader == nil {
+	if found == false {
 		file, err := ioutil.ReadFile(path)
+
 		if err != nil {
 			return nil, err
 		}
