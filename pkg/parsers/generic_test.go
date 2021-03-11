@@ -40,12 +40,14 @@ func Test_newTestResults(t *testing.T) {
 
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
-			<testsuite id="1234" name="foo" time="0.1234" tests="10" failures="5" errors="1">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
+			<testsuites name="foo" time="0.1234" tests="10" failures="5" errors="1">
+				<testsuite>
+					<testcase name="bar">
+					</testcase>
+					<testcase name="baz">
+					</testcase>
+				</testsuite>
+			</testsuites>
 	`))
 
 	err := element.Parse(reader)
