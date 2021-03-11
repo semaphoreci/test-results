@@ -1,0 +1,21 @@
+version: "v1.0"
+name: GoReleaser
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: "Release"
+    task:
+      secrets:
+        - name: sem-robot-ghtoken
+      prologue:
+        commands:
+          - sem-version go 1.15
+          - "export GOPATH=~/go"
+          - "export PATH=/home/semaphore/go/bin:$PATH"
+          - checkout
+      jobs:
+      - name: goreleaser
+        commands:
+          - curl -sL https://git.io/goreleaser | bash
