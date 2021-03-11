@@ -3,6 +3,7 @@ package parsers
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/semaphoreci/test-results/pkg/fileloader"
 	"github.com/semaphoreci/test-results/pkg/parser"
@@ -39,7 +40,7 @@ func Test_newTestResults(t *testing.T) {
 
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
-			<testsuite name="foo" id="1234">
+			<testsuite id="1234" name="foo" time="0.1234" tests="10" failures="5" errors="1">
 				<testcase name="bar">
 				</testcase>
 				<testcase name="baz">
@@ -47,5 +48,18 @@ func Test_newTestResults(t *testing.T) {
 			</testsuite>
 	`))
 
-	element.Parse(reader)
+	err := element.Parse(reader)
+	assert.Nil(t, err)
+
+	testResults := newTestResults(element)
+
+	duration, _ := time.ParseDuration("0.1234s")
+	assert.Equal(t, "foo", testResults.Name)
+	assert.Equal(t, duration, testResults.Summary.Duration)
+	assert.Equal(t, 10, testResults.Summary.Total)
+	assert.Equal(t, 5, testResults.Summary.Failed)
+	assert.Equal(t, 1, testResults.Summary.Error)
+	assert.Equal(t, 4, testResults.Summary.Passed)
+	assert.Equal(t, false, testResults.IsDisabled)
+	assert.Equal(t, 1, len(testResults.Suites))
 }

@@ -84,6 +84,7 @@ func newTestResults(xml parser.XMLElement) parser.TestResults {
 			testResults.IsDisabled = parseBool(value)
 		}
 	}
+	testResults.Summary.Passed = testResults.Summary.Total - testResults.Summary.Error - testResults.Summary.Failed
 
 	return testResults
 }
