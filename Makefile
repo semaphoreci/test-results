@@ -6,19 +6,14 @@ run:
 build:
 	CGO_ENABLED=0 go build -o bin/testresults
 
-run_platform:
-	$(MAKE) build
-	docker build -t test-results-$(PLATFORM) -f dockerfiles/Dockerfile.$(PLATFORM) .
-	docker run --rm -ti test-results-$(PLATFORM) $(CMD)
+release.major:
+	git fetch --tags
+	latest=$$(git tag | sort --version-sort | tail -n 1); new=$$(echo $$latest | cut -c 2- | awk -F '.' '{ print "v" $$1+1 ".0.0" }');          echo $$new; git tag $$new; git push origin $$new
 
-run_alpine:
-	$(MAKE) run_platform PLATFORM=alpine CMD=/bin/ash
+release.minor:
+	git fetch --tags
+	latest=$$(git tag | sort --version-sort | tail -n 1); new=$$(echo $$latest | cut -c 2- | awk -F '.' '{ print "v" $$1 "." $$2 + 1 ".0" }');  echo $$new; git tag $$new; git push origin $$new
 
-run_ubuntu1804:
-	$(MAKE) run_platform PLATFORM=ubuntu1804 CMD=/bin/bash
-
-run_ubuntu2004:
-	$(MAKE) run_platform PLATFORM=ubuntu2004 CMD=/bin/bash
-
-run_arch:
-	$(MAKE) run_platform PLATFORM=arch CMD=/bin/bash
+release.patch:
+	git fetch --tags
+	latest=$$(git tag | sort --version-sort | tail -n 1); new=$$(echo $$latest | cut -c 2- | awk -F '.' '{ print "v" $$1 "." $$2 "." $$3+1 }'); echo $$new; git tag $$new; git push origin $$new
