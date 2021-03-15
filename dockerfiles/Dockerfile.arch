@@ -1,8 +1,0 @@
-FROM archlinux
-
-ENV PATH /tmp/bin:$PATH
-
-WORKDIR /test
-
-ADD ./bin /tmp/bin
-ADD ./samples ./samples
