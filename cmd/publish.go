@@ -19,10 +19,10 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 
+	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parsers"
 	"github.com/spf13/cobra"
 )
@@ -38,7 +38,7 @@ var publishCmd = &cobra.Command{
 
 		_, err := os.Stat(inFile)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("publish-cmd", "Input file read failed: %v", err)
 		}
 
 		parser := parsers.NewGeneric()
@@ -46,12 +46,12 @@ var publishCmd = &cobra.Command{
 		testResults, err := parser.Parse(inFile)
 
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("publish-cmd", "Parsing failed: %v", err)
 		}
 
 		file, err := json.Marshal(testResults)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("publish-cmd", "JSON marshaling failed: %v", err)
 		}
 
 		tmpFile, err := ioutil.TempFile("/tmp", "test-results")
@@ -59,19 +59,19 @@ var publishCmd = &cobra.Command{
 		// Todo: Check if file can be created at location
 		_, err = tmpFile.Write(file)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("publish-cmd", "Output file write failed: %v", err)
 		}
 
 		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "-d", "test-results/junit.json")
 		err = artifactsPush.Run()
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("publish-cmd", "Pushing artifacts failed: %v", err)
 		}
 
 		artifactsPush = exec.Command("artifact", "push", "job", inFile, "-d", "test-results/junit.xml")
 		err = artifactsPush.Run()
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("publish-cmd", "Pushing artifacts failed: %v", err)
 		}
 	},
 }

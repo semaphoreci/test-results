@@ -19,9 +19,9 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 
+	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parsers"
 	"github.com/spf13/cobra"
 )
@@ -41,7 +41,7 @@ var compileCmd = &cobra.Command{
 
 		_, err := os.Stat(inFile)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("compile-cmd", "Input file read failed: %v", err)
 		}
 
 		parser := parsers.NewGeneric()
@@ -49,18 +49,18 @@ var compileCmd = &cobra.Command{
 		testResults, err := parser.Parse(inFile)
 
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("compile-cmd", "Parsing failed: %v", err)
 		}
 
 		file, err := json.Marshal(testResults)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("compile-cmd", "JSON marshaling failed: %v", err)
 		}
 
 		// Todo: Check if file can be created at location
 		err = ioutil.WriteFile(outFile, file, 0644)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error("compile-cmd", "Output file write failed: %v", err)
 		}
 	},
 }

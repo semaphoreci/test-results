@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/semaphoreci/test-results/pkg/fileloader"
+	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
 )
 
@@ -31,6 +32,7 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 		file, err := ioutil.ReadFile(path)
 
 		if err != nil {
+			logger.Error("parsers", "Reading file failed: %v", err)
 			return nil, err
 		}
 
@@ -42,13 +44,16 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 
 	err := xmlElement.Parse(reader)
 	if err != nil {
+		logger.Error("parsers", "Parsing XML failed: %v", err)
 		return nil, err
 	}
 
 	switch xmlElement.Tag() {
 	case "testsuites":
+		logger.Log("parsers", "Root <testsuites> element found")
 		results = newTestResults(xmlElement)
 	case "testsuite":
+		logger.Log("parsers", "No root <testsuites> element found")
 		results = parser.NewTestResults()
 		results.Name = "Generic Parser"
 		results.Suites = []parser.Suite{newSuite(xmlElement)}
@@ -216,6 +221,7 @@ func parseTime(s string) time.Duration {
 	// append 's' to end of input to use `time` built in duration parser
 	d, err := time.ParseDuration(s + "s")
 	if err != nil {
+		logger.Warn("parsers", "Duration parsing failed: %v", err)
 		return 0
 	}
 
@@ -225,6 +231,7 @@ func parseTime(s string) time.Duration {
 func parseInt(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
+		logger.Warn("parsers", "Integer parsing failed: %v", err)
 		return 0
 	}
 	return i
@@ -233,6 +240,7 @@ func parseInt(s string) int {
 func parseBool(s string) bool {
 	b, err := strconv.ParseBool(s)
 	if err != nil {
+		logger.Warn("parsers", "Boolean parsing failed: %v", err)
 		return false
 	}
 	return b

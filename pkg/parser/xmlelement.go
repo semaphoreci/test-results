@@ -3,6 +3,8 @@ package parser
 import (
 	"bytes"
 	"encoding/xml"
+
+	"github.com/semaphoreci/test-results/pkg/logger"
 )
 
 // XMLElement ...
@@ -33,6 +35,7 @@ func (me *XMLElement) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error
 	type alias XMLElement
 
 	if err := d.DecodeElement((*alias)(me), &start); err != nil {
+		logger.Error("xmlelement", "Decoding element failed: %v", err)
 		return err
 	}
 
@@ -42,8 +45,10 @@ func (me *XMLElement) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error
 
 // Parse ...
 func (me *XMLElement) Parse(reader *bytes.Reader) error {
+	logger.Log("xmlelement", "Parsing element started")
 	decoder := xml.NewDecoder(reader)
 	if err := decoder.Decode(&me); err != nil {
+		logger.Error("xmlelement", "Parsing failed: %v", err)
 		return err
 	}
 	return nil
