@@ -13,16 +13,28 @@ import (
 
 // Generic ...
 type Generic struct {
-	parser.Parser
+	logFields logger.Fields
 }
 
 // NewGeneric ...
 func NewGeneric() Generic {
-	return Generic{}
+	return Generic{logger.Fields{"app": "parser.generic"}}
+}
+
+// IsApplicable ...
+func (me Generic) IsApplicable(path string) bool {
+	return true
+}
+
+// GetName ...
+func (me Generic) GetName() string {
+	return "generic"
 }
 
 // Parse ...
-func (p Generic) Parse(path string) (*parser.TestResults, error) {
+func (me Generic) Parse(path string) parser.TestResults {
+	me.logFields["path"] = path
+
 	var results parser.TestResults
 	var reader *bytes.Reader
 	// Preload path with loader. If nothing is found in file cache - load it up from path.
@@ -32,8 +44,9 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 		file, err := ioutil.ReadFile(path)
 
 		if err != nil {
-			logger.Error("parsers", "Reading file failed: %v", err)
-			return nil, err
+			logger.Error(me.logFields, "Reading file failed: %v", err)
+			// TODO: Add status with reading file failure
+			return results
 		}
 
 		b := bytes.NewReader(file)
@@ -44,16 +57,17 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 
 	err := xmlElement.Parse(reader)
 	if err != nil {
-		logger.Error("parsers", "Parsing XML failed: %v", err)
-		return nil, err
+		logger.Error(me.logFields, "Parsing XML failed: %v", err)
+		// TODO: Add status with parsing XML failure
+		return results
 	}
 
 	switch xmlElement.Tag() {
 	case "testsuites":
-		logger.Log("parsers", "Root <testsuites> element found")
+		logger.Debug(me.logFields, "Root <testsuites> element found")
 		results = newTestResults(xmlElement)
 	case "testsuite":
-		logger.Log("parsers", "No root <testsuites> element found")
+		logger.Debug(me.logFields, "No root <testsuites> element found")
 		results = parser.NewTestResults()
 		results.Name = "Generic Parser"
 		results.Suites = []parser.Suite{newSuite(xmlElement)}
@@ -61,7 +75,7 @@ func (p Generic) Parse(path string) (*parser.TestResults, error) {
 
 	results.Aggregate()
 
-	return &results, nil
+	return results
 }
 
 func newTestResults(xml parser.XMLElement) parser.TestResults {
@@ -221,7 +235,7 @@ func parseTime(s string) time.Duration {
 	// append 's' to end of input to use `time` built in duration parser
 	d, err := time.ParseDuration(s + "s")
 	if err != nil {
-		logger.Warn("parsers", "Duration parsing failed: %v", err)
+		logger.Warn(logger.Fields{}, "Duration parsing failed: %v", err)
 		return 0
 	}
 
@@ -231,7 +245,7 @@ func parseTime(s string) time.Duration {
 func parseInt(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		logger.Warn("parsers", "Integer parsing failed: %v", err)
+		logger.Warn(logger.Fields{}, "Integer parsing failed: %v", err)
 		return 0
 	}
 	return i
@@ -240,7 +254,7 @@ func parseInt(s string) int {
 func parseBool(s string) bool {
 	b, err := strconv.ParseBool(s)
 	if err != nil {
-		logger.Warn("parsers", "Boolean parsing failed: %v", err)
+		logger.Warn(logger.Fields{}, "Boolean parsing failed: %v", err)
 		return false
 	}
 	return b

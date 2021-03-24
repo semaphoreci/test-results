@@ -36,31 +36,36 @@ var compileCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		var logFields = logger.Fields{"app": "compile"}
+		logger.LogEntry.SetLevel(logger.DebugLevel)
 		inFile := args[0]
 		outFile := args[1]
 
 		_, err := os.Stat(inFile)
+
 		if err != nil {
-			logger.Error("compile-cmd", "Input file read failed: %v", err)
+			logger.Error(logFields, "Input file read failed: %v", err)
+		} else {
+			logger.Info(logFields, "File successfuly read: %s", inFile)
 		}
 
 		parser := parsers.NewGeneric()
 
-		testResults, err := parser.Parse(inFile)
-
-		if err != nil {
-			logger.Error("compile-cmd", "Parsing failed: %v", err)
-		}
+		testResults := parser.Parse(inFile)
 
 		file, err := json.Marshal(testResults)
 		if err != nil {
-			logger.Error("compile-cmd", "JSON marshaling failed: %v", err)
+			logger.Error(logFields, "JSON marshaling failed: %v", err)
+		} else {
+			logger.Info(logFields, "JSON marshaling completed: %s", inFile)
 		}
 
 		// Todo: Check if file can be created at location
 		err = ioutil.WriteFile(outFile, file, 0644)
 		if err != nil {
-			logger.Error("compile-cmd", "Output file write failed: %v", err)
+			logger.Error(logFields, "Output file write failed: %v", err)
+		} else {
+			logger.Info(logFields, "File saved to: %s", outFile)
 		}
 	},
 }

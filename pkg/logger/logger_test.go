@@ -1,77 +1,95 @@
 package logger
 
 import (
+	"fmt"
 	"testing"
 
-	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSetLogger(t *testing.T) {
-	rawLogger, _ := test.NewNullLogger()
+func Test_SetLogger(t *testing.T) {
+	logger, _ := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
 
-	SetLogger(rawLogger)
-	logger := GetLogger()
-
-	assert.Equal(t, rawLogger, logger, "allows logger overriding")
+	assert.Equal(t, logger, LogEntry.logger, "Should properly set logger")
 }
 
-func TestGetLogger(t *testing.T) {
-	logger := GetLogger()
-	assert.IsType(t, &logrus.Logger{}, logger, "is working without setting logger")
+func Test_GetLogger(t *testing.T) {
+	logger, _ := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
+
+	assert.Equal(t, logger, LogEntry.GetLogger(), "Should properly get logger")
 }
 
-func TestLog(t *testing.T) {
-	rawLogger, hook := test.NewNullLogger()
-	SetLogger(rawLogger)
+func Test_Debug(t *testing.T) {
+	logger, hook := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
+	LogEntry.SetLevel(DebugLevel)
 
-	Log("filereader", "formatted string")
-
-	assert.Equal(t, logrus.InfoLevel, hook.LastEntry().Level, "should have correct level")
-	assert.Equal(t, "formatted string\n", hook.LastEntry().Message, "should log properly")
-	assert.Equal(t, "filereader", hook.LastEntry().Data["module"], "should have correct fields set")
-	hook.Reset()
+	Debug(Fields{"foo": "bar", "bar": "foo"}, "Debug")
+	assert.Equal(t, "Debug\n", hook.LastEntry().Message)
+	assert.Equal(t, Fields{"foo": "bar", "bar": "foo"}, Fields(hook.LastEntry().Data))
 }
 
-func TestDebug(t *testing.T) {
-	rawLogger, hook := test.NewNullLogger()
+func Test_Warn(t *testing.T) {
+	logger, hook := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
+	LogEntry.SetLevel(WarnLevel)
 
-	rawLogger.Level = logrus.DebugLevel
-
-	SetLogger(rawLogger)
-	Debug("filereader", "formatted string")
-
-	assert.Equal(t, logrus.DebugLevel, hook.LastEntry().Level, "should have correct level")
-	assert.Equal(t, "formatted string\n", hook.LastEntry().Message, "should log properly")
-	assert.Equal(t, "filereader", hook.LastEntry().Data["module"], "should have correct fields set")
-	hook.Reset()
+	Warn(Fields{"foo": "bar", "bar": "foo"}, "Warn")
+	assert.Equal(t, "Warn\n", hook.LastEntry().Message)
+	assert.Equal(t, Fields{"foo": "bar", "bar": "foo"}, Fields(hook.LastEntry().Data))
 }
 
-func TestWarn(t *testing.T) {
-	rawLogger, hook := test.NewNullLogger()
+func Test_Error(t *testing.T) {
+	logger, hook := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
+	LogEntry.SetLevel(ErrorLevel)
 
-	rawLogger.Level = logrus.WarnLevel
-
-	SetLogger(rawLogger)
-	Warn("filereader", "formatted string")
-
-	assert.Equal(t, logrus.WarnLevel, hook.LastEntry().Level, "should have correct level")
-	assert.Equal(t, "formatted string\n", hook.LastEntry().Message, "should log properly")
-	assert.Equal(t, "filereader", hook.LastEntry().Data["module"], "should have correct fields set")
-	hook.Reset()
+	Error(Fields{"foo": "bar", "bar": "foo"}, "Error")
+	assert.Equal(t, "Error\n", hook.LastEntry().Message)
+	assert.Equal(t, Fields{"foo": "bar", "bar": "foo"}, Fields(hook.LastEntry().Data))
 }
 
-func TestError(t *testing.T) {
-	rawLogger, hook := test.NewNullLogger()
+func Test_Info(t *testing.T) {
+	logger, hook := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
+	LogEntry.SetLevel(InfoLevel)
 
-	rawLogger.Level = logrus.ErrorLevel
+	Info(Fields{"foo": "bar", "bar": "foo"}, "Info")
+	assert.Equal(t, "Info\n", hook.LastEntry().Message)
+	assert.Equal(t, Fields{"foo": "bar", "bar": "foo"}, Fields(hook.LastEntry().Data))
+}
 
-	SetLogger(rawLogger)
-	Error("filereader", "formatted string")
+func Test_Log(t *testing.T) {
+	levels := []Level{InfoLevel, WarnLevel, ErrorLevel, DebugLevel, TraceLevel}
 
-	assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level, "should have correct level")
-	assert.Equal(t, "formatted string\n", hook.LastEntry().Message, "should log properly")
-	assert.Equal(t, "filereader", hook.LastEntry().Data["module"], "should have correct fields set")
-	hook.Reset()
+	testCases := []struct {
+		desc   string
+		msg    string
+		fields Fields
+	}{
+		{
+			desc:   "Works in info Level",
+			msg:    "Testing logs ...",
+			fields: Fields{"foo": "bar", "bar": "foo"},
+		},
+	}
+
+	logger, hook := test.NewNullLogger()
+	LogEntry.SetLogger(logger)
+
+	for _, tC := range testCases {
+		for _, level := range levels {
+			t.Run(tC.desc+" on level "+fmt.Sprint(level), func(t *testing.T) {
+				LogEntry.SetLevel(level)
+				LogEntry.Log(level, tC.fields, tC.msg)
+				assert.Equal(t, tC.msg+"\n", hook.LastEntry().Message)
+				assert.Equal(t, tC.fields, Fields(hook.LastEntry().Data))
+
+				hook.Reset()
+			})
+		}
+	}
 }

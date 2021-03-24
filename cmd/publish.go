@@ -34,24 +34,21 @@ var publishCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		var logFields = logger.Fields{"app": "publish_cmd"}
 		inFile := args[0]
 
 		_, err := os.Stat(inFile)
 		if err != nil {
-			logger.Error("publish-cmd", "Input file read failed: %v", err)
+			logger.Error(logFields, "Input file read failed: %v", err)
 		}
 
 		parser := parsers.NewGeneric()
 
-		testResults, err := parser.Parse(inFile)
-
-		if err != nil {
-			logger.Error("publish-cmd", "Parsing failed: %v", err)
-		}
+		testResults := parser.Parse(inFile)
 
 		file, err := json.Marshal(testResults)
 		if err != nil {
-			logger.Error("publish-cmd", "JSON marshaling failed: %v", err)
+			logger.Error(logFields, "JSON marshaling failed: %v", err)
 		}
 
 		tmpFile, err := ioutil.TempFile("/tmp", "test-results")
@@ -59,19 +56,19 @@ var publishCmd = &cobra.Command{
 		// Todo: Check if file can be created at location
 		_, err = tmpFile.Write(file)
 		if err != nil {
-			logger.Error("publish-cmd", "Output file write failed: %v", err)
+			logger.Error(logFields, "Output file write failed: %v", err)
 		}
 
 		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "-d", "test-results/junit.json")
 		err = artifactsPush.Run()
 		if err != nil {
-			logger.Error("publish-cmd", "Pushing artifacts failed: %v", err)
+			logger.Error(logFields, "Pushing artifacts failed: %v", err)
 		}
 
 		artifactsPush = exec.Command("artifact", "push", "job", inFile, "-d", "test-results/junit.xml")
 		err = artifactsPush.Run()
 		if err != nil {
-			logger.Error("publish-cmd", "Pushing artifacts failed: %v", err)
+			logger.Error(logFields, "Pushing artifacts failed: %v", err)
 		}
 	},
 }

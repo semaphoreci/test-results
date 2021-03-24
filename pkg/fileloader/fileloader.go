@@ -14,12 +14,14 @@ func Load(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 }
 
 func decode(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
+	fields := logger.Fields{"path": path, "app": "fileloader"}
+
 	foundReader, exists := readers[path]
 	if exists && foundReader != nil {
-		logger.Log("fileloader", "FileLoader: Path %s read from cache", path)
+		logger.Info(fields, "Path read from cache")
 		return foundReader, true
 	}
 	readers[path] = reader
-	logger.Debug("fileloader", "FileLoader: No path %s in cache", path)
+	logger.Debug(fields, "No path in cache")
 	return reader, false
 }
