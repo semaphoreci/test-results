@@ -1,12 +1,9 @@
 package parsers
 
 import (
-	"bytes"
-	"io/ioutil"
 	"strconv"
 	"time"
 
-	"github.com/semaphoreci/test-results/pkg/fileloader"
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
 )
@@ -36,41 +33,23 @@ func (me Generic) Parse(path string) parser.TestResults {
 	me.logFields["path"] = path
 
 	var results parser.TestResults
-	var reader *bytes.Reader
-	// Preload path with loader. If nothing is found in file cache - load it up from path.
-	reader, found := fileloader.Load(path, nil)
 
-	if found == false {
-		file, err := ioutil.ReadFile(path)
+	xmlElement, err := LoadXML(path)
 
-		if err != nil {
-			logger.Error(me.logFields, "Reading file failed: %v", err)
-			// TODO: Add status with reading file failure
-			return results
-		}
-
-		b := bytes.NewReader(file)
-		reader, _ = fileloader.Load(path, b)
-	}
-
-	xmlElement := parser.NewXMLElement()
-
-	err := xmlElement.Parse(reader)
 	if err != nil {
-		logger.Error(me.logFields, "Parsing XML failed: %v", err)
-		// TODO: Add status with parsing XML failure
+		logger.Error(me.logFields, "Loading XML failed: %v", err)
 		return results
 	}
 
 	switch xmlElement.Tag() {
 	case "testsuites":
 		logger.Debug(me.logFields, "Root <testsuites> element found")
-		results = newTestResults(xmlElement)
+		results = newTestResults(*xmlElement)
 	case "testsuite":
 		logger.Debug(me.logFields, "No root <testsuites> element found")
 		results = parser.NewTestResults()
 		results.Name = "Generic Parser"
-		results.Suites = []parser.Suite{newSuite(xmlElement)}
+		results.Suites = append(results.Suites, newSuite(*xmlElement))
 	}
 
 	results.Aggregate()
@@ -109,24 +88,13 @@ func newTestResults(xml parser.XMLElement) parser.TestResults {
 	return testResults
 }
 
-func newSuites(elements []parser.XMLElement) []parser.Suite {
-	var suites []parser.Suite
-
-	for _, element := range elements {
-		suites = append(suites, newSuite(element))
-	}
-
-	return suites
-}
-
 func newSuite(xml parser.XMLElement) parser.Suite {
 	suite := parser.NewSuite()
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "properties":
-			properties := newProperties(node)
-			suite.Properties = properties
+			suite.Properties = parseProperties(node)
 		case "system-out":
 			suite.SystemOut = string(node.Contents)
 		case "system-err":
@@ -202,6 +170,15 @@ func newTest(xml parser.XMLElement) parser.Test {
 	return test
 }
 
+func parseProperties(xml parser.XMLElement) parser.Properties {
+	properties := make(map[string]string)
+	for _, node := range xml.Children {
+		properties[node.Attr("name")] = node.Attr("value")
+	}
+
+	return properties
+}
+
 func parseFailure(xml parser.XMLElement) *parser.Failure {
 	failure := parser.NewFailure()
 
@@ -220,15 +197,6 @@ func parseError(xml parser.XMLElement) *parser.Error {
 	err.Type = xml.Attr("type")
 
 	return &err
-}
-
-func newProperties(xml parser.XMLElement) parser.Properties {
-	properties := make(map[string]string)
-	for _, node := range xml.Children {
-		properties[node.Attr("name")] = node.Attr("value")
-	}
-
-	return properties
 }
 
 func parseTime(s string) time.Duration {

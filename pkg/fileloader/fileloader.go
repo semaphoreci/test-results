@@ -2,6 +2,7 @@ package fileloader
 
 import (
 	"bytes"
+	"io"
 
 	"github.com/semaphoreci/test-results/pkg/logger"
 )
@@ -19,6 +20,7 @@ func decode(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 	foundReader, exists := readers[path]
 	if exists && foundReader != nil {
 		logger.Info(fields, "Path read from cache")
+		foundReader.Seek(0, io.SeekStart)
 		return foundReader, true
 	}
 	readers[path] = reader

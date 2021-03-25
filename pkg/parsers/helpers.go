@@ -1,0 +1,45 @@
+package parsers
+
+import (
+	"bytes"
+	"io/ioutil"
+
+	"github.com/semaphoreci/test-results/pkg/fileloader"
+	"github.com/semaphoreci/test-results/pkg/parser"
+)
+
+// LoadPath ...
+func LoadPath(path string) (*bytes.Reader, error) {
+	var reader *bytes.Reader
+	// Preload path with loader. If nothing is found in file cache - load it up from path.
+	reader, found := fileloader.Load(path, nil)
+
+	if found == false {
+		file, err := ioutil.ReadFile(path)
+
+		if err != nil {
+			return nil, err
+		}
+
+		b := bytes.NewReader(file)
+		reader, _ = fileloader.Load(path, b)
+	}
+	return reader, nil
+}
+
+// LoadXML ...
+func LoadXML(path string) (*parser.XMLElement, error) {
+	reader, err := LoadPath(path)
+	if err != nil {
+		return nil, err
+	}
+
+	xmlElement := parser.NewXMLElement()
+
+	err = xmlElement.Parse(reader)
+	if err != nil {
+		return nil, err
+	}
+
+	return &xmlElement, nil
+}

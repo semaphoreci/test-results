@@ -30,13 +30,14 @@ func FindParser(name string, path string) (parser.Parser, error) {
 	}
 
 	for _, p := range availableParsers {
-		logger.Info(fields, "Looking for applicable parser")
-		if p.IsApplicable(path) {
-			logger.Info(fields, "Found applicable parser: %s", p.GetName())
+		isApplicable := p.IsApplicable(path)
+		logger.Debug(fields, "Looking for applicable parser, checking %s -> %b", p.GetName(), isApplicable)
+		if isApplicable {
+			logger.Trace(fields, "Found applicable parser: %s", p.GetName())
 			return p, nil
 		}
-		logger.Error(fields, "No applicable parsers found")
 	}
+	logger.Error(fields, "No applicable parsers found")
 
 	return nil, fmt.Errorf("Parser not found")
 }

@@ -22,10 +22,33 @@ func (me RSpec) GetName() string {
 
 // IsApplicable ...
 func (me RSpec) IsApplicable(path string) bool {
-	return true
+	me.logFields["fun"] = "IsApplicable"
+	xmlElement, err := LoadXML(path)
+	logger.Trace(me.logFields, "Checking applicability")
+
+	if err != nil {
+		logger.Error(me.logFields, "Loading XML failed: %v", err)
+		return false
+	}
+
+	switch xmlElement.Tag() {
+	case "testsuite":
+		for attr, value := range xmlElement.Attributes {
+			switch attr {
+			case "name":
+				if value == "rspec" {
+					return true
+				}
+			}
+		}
+	}
+	return false
 }
 
 // Parse ...
 func (me RSpec) Parse(path string) parser.TestResults {
-	return parser.NewTestResults()
+	parser := NewGeneric()
+	parser.logFields = me.logFields
+
+	return parser.Parse(path)
 }

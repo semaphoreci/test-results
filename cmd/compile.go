@@ -26,9 +26,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var name string
-var parser string
-
 // compileCmd represents the compile command
 var compileCmd = &cobra.Command{
 	Use:   "compile [xml-file] [json-file]",
@@ -36,8 +33,14 @@ var compileCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+
+		if trace {
+			logger.LogEntry.SetLevel(logger.TraceLevel)
+		} else if verbose {
+			logger.LogEntry.SetLevel(logger.DebugLevel)
+		}
+
 		var logFields = logger.Fields{"app": "compile"}
-		logger.LogEntry.SetLevel(logger.DebugLevel)
 		inFile := args[0]
 		outFile := args[1]
 
@@ -49,7 +52,12 @@ var compileCmd = &cobra.Command{
 			logger.Info(logFields, "File successfuly read: %s", inFile)
 		}
 
-		parser := parsers.NewGeneric()
+		parser, err := parsers.FindParser(parser, inFile)
+		if err != nil {
+			logger.Error(logFields, "Could not find parser: %v", err)
+		} else {
+			logger.Info(logFields, "Parser found: %s", parser.GetName())
+		}
 
 		testResults := parser.Parse(inFile)
 
@@ -71,7 +79,5 @@ var compileCmd = &cobra.Command{
 }
 
 func init() {
-	compileCmd.Flags().StringVarP(&name, "name", "N", "suite", "name of the suite")
-	compileCmd.Flags().StringVarP(&parser, "parser", "p", "auto", "override parser to be used")
 	rootCmd.AddCommand(compileCmd)
 }

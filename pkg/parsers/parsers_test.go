@@ -21,7 +21,7 @@ func TestFindParser(t *testing.T) {
 		{
 			desc: "finds parser automatically",
 			name: "auto",
-			path: "/some/path",
+			path: "/some/generic_path",
 			reader: bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
 					<testsuites name="foo" time="0.1234" tests="10" failures="5" errors="1">
@@ -37,74 +37,60 @@ func TestFindParser(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			desc: "finds parser automatically",
+			desc: "finds rspec parser automatically",
 			name: "auto",
-			path: "/some/path",
+			path: "/some/rspec_path",
 			reader: bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
-					<testsuites name="rspec" time="0.1234" tests="10" failures="5" errors="1">
-						<testsuite>
-							<testcase name="bar">
+					<testsuite name="rspec">
+						<testcase name="bar">
+						</testcase>
+						<testcase name="baz">
+						</testcase>
+					</testsuite>
+			`)),
+			want:    RSpec{},
+			wantErr: false,
+		},
+		{
+			desc: "finds exunit parser automatically",
+			name: "auto",
+			path: "/some/exunit_path",
+			reader: bytes.NewReader([]byte(`
+				<?xml version="1.0"?>
+					<testsuites>
+						<testsuite name="Elixir.bar">
+							<testcase name="foo">
 							</testcase>
 							<testcase name="baz">
 							</testcase>
 						</testsuite>
 					</testsuites>
 			`)),
-			want:    RSpec{},
-			wantErr: false,
-		},
-		{
-			desc: "finds parser automatically",
-			name: "auto",
-			path: "/some/path",
-			reader: bytes.NewReader([]byte(`
-				<?xml version="1.0"?>
-					<testsuite name="rspec">
-						<testcase name="bar">
-						</testcase>
-						<testcase name="baz">
-						</testcase>
-					</testsuite>
-			`)),
-			want:    RSpec{},
-			wantErr: false,
-		},
-		{
-			desc: "finds parser automatically",
-			name: "auto",
-			path: "/some/path",
-			reader: bytes.NewReader([]byte(`
-				<?xml version="1.0"?>
-					<testsuite name="rspec">
-						<testcase name="bar">
-						</testcase>
-						<testcase name="baz">
-						</testcase>
-					</testsuite>
-			`)),
 			want:    ExUnit{},
 			wantErr: false,
 		},
 		{
-			desc: "finds parser automatically",
+			desc: "finds mocha parser automatically",
 			name: "auto",
-			path: "/some/path",
+			path: "/some/mocha_path",
 			reader: bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
+				<testsuites name="Mocha tests">
 					<testsuite name="rspec">
 						<testcase name="bar">
 						</testcase>
 						<testcase name="baz">
 						</testcase>
 					</testsuite>
+				</testsuites>
 			`)),
 			want:    Mocha{},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
+		t.Run(tt.desc, func(t *testing.T) {
 
 			fileloader.Load(tt.path, tt.reader)
 
