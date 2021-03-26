@@ -48,7 +48,6 @@ func (me RSpec) IsApplicable(path string) bool {
 // Parse ...
 func (me RSpec) Parse(path string) parser.TestResults {
 	parser := NewGeneric()
-	parser.logFields = me.logFields
 
 	return parser.Parse(path)
 }

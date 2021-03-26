@@ -65,7 +65,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.test-results.yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&trace, "trace", "", false, "trace output")
-	rootCmd.PersistentFlags().StringVarP(&name, "name", "N", "suite", "name of the suite")
+	rootCmd.PersistentFlags().StringVarP(&name, "name", "N", "", "name of the suite")
 	rootCmd.PersistentFlags().StringVarP(&parser, "parser", "p", "auto", "override parser to be used")
 
 	// Cobra also supports local flags, which will only run

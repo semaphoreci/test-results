@@ -34,6 +34,12 @@ var publishCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		if trace {
+			logger.LogEntry.SetLevel(logger.TraceLevel)
+		} else if verbose {
+			logger.LogEntry.SetLevel(logger.DebugLevel)
+		}
+
 		var logFields = logger.Fields{"app": "publish_cmd"}
 		inFile := args[0]
 
@@ -42,9 +48,20 @@ var publishCmd = &cobra.Command{
 			logger.Error(logFields, "Input file read failed: %v", err)
 		}
 
-		parser := parsers.NewGeneric()
+		parser, err := parsers.FindParser(parser, inFile)
+		if err != nil {
+			logger.Error(logFields, "Could not find parser: %v", err)
+		} else {
+			logger.Info(logFields, "Parser found: %s", parser.GetName())
+		}
 
 		testResults := parser.Parse(inFile)
+
+		if name != "" {
+			testResults.Name = name
+		}
+
+		testResults.Framework = parser.GetName()
 
 		file, err := json.Marshal(testResults)
 		if err != nil {

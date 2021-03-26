@@ -33,7 +33,6 @@ var compileCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-
 		if trace {
 			logger.LogEntry.SetLevel(logger.TraceLevel)
 		} else if verbose {
@@ -60,6 +59,11 @@ var compileCmd = &cobra.Command{
 		}
 
 		testResults := parser.Parse(inFile)
+		if name != "" {
+			testResults.Name = name
+		}
+
+		testResults.Framework = parser.GetName()
 
 		file, err := json.Marshal(testResults)
 		if err != nil {

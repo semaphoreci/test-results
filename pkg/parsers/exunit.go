@@ -68,7 +68,6 @@ func (me ExUnit) IsApplicable(path string) bool {
 // Parse ...
 func (me ExUnit) Parse(path string) parser.TestResults {
 	parser := NewGeneric()
-	parser.logFields = me.logFields
 
 	return parser.Parse(path)
 }

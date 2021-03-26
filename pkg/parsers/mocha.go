@@ -51,7 +51,6 @@ func (me Mocha) IsApplicable(path string) bool {
 // Parse ...
 func (me Mocha) Parse(path string) parser.TestResults {
 	parser := NewGeneric()
-	parser.logFields = me.logFields
 
 	return parser.Parse(path)
 }
