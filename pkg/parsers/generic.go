@@ -1,62 +1,60 @@
 package parsers
 
 import (
-	"bytes"
-	"io/ioutil"
 	"strconv"
 	"time"
 
-	"github.com/semaphoreci/test-results/pkg/fileloader"
+	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
 )
 
 // Generic ...
 type Generic struct {
-	parser.Parser
+	logFields logger.Fields
 }
 
 // NewGeneric ...
 func NewGeneric() Generic {
-	return Generic{}
+	return Generic{logger.Fields{"app": "parser.generic"}}
+}
+
+// IsApplicable ...
+func (me Generic) IsApplicable(path string) bool {
+	return true
+}
+
+// GetName ...
+func (me Generic) GetName() string {
+	return "generic"
 }
 
 // Parse ...
-func (p Generic) Parse(path string) (*parser.TestResults, error) {
+func (me Generic) Parse(path string) parser.TestResults {
+	me.logFields["path"] = path
+
 	var results parser.TestResults
-	var reader *bytes.Reader
-	// Preload path with loader. If nothing is found in file cache - load it up from path.
-	reader, found := fileloader.Load(path, nil)
 
-	if found == false {
-		file, err := ioutil.ReadFile(path)
+	xmlElement, err := LoadXML(path)
 
-		if err != nil {
-			return nil, err
-		}
-
-		b := bytes.NewReader(file)
-		reader, _ = fileloader.Load(path, b)
-	}
-
-	xmlElement := parser.NewXMLElement()
-
-	err := xmlElement.Parse(reader)
 	if err != nil {
-		return nil, err
+		logger.Error(me.logFields, "Loading XML failed: %v", err)
+		return results
 	}
 
 	switch xmlElement.Tag() {
 	case "testsuites":
-		results = newTestResults(xmlElement)
+		logger.Debug(me.logFields, "Root <testsuites> element found")
+		results = newTestResults(*xmlElement)
 	case "testsuite":
+		logger.Debug(me.logFields, "No root <testsuites> element found")
 		results = parser.NewTestResults()
 		results.Name = "Generic Parser"
-		results.Suites = []parser.Suite{newSuite(xmlElement)}
+		results.Suites = append(results.Suites, newSuite(*xmlElement))
 	}
 
 	results.Aggregate()
 
-	return &results, nil
+	return results
 }
 
 func newTestResults(xml parser.XMLElement) parser.TestResults {
@@ -90,24 +88,13 @@ func newTestResults(xml parser.XMLElement) parser.TestResults {
 	return testResults
 }
 
-func newSuites(elements []parser.XMLElement) []parser.Suite {
-	var suites []parser.Suite
-
-	for _, element := range elements {
-		suites = append(suites, newSuite(element))
-	}
-
-	return suites
-}
-
 func newSuite(xml parser.XMLElement) parser.Suite {
 	suite := parser.NewSuite()
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "properties":
-			properties := newProperties(node)
-			suite.Properties = properties
+			suite.Properties = parseProperties(node)
 		case "system-out":
 			suite.SystemOut = string(node.Contents)
 		case "system-err":
@@ -183,6 +170,15 @@ func newTest(xml parser.XMLElement) parser.Test {
 	return test
 }
 
+func parseProperties(xml parser.XMLElement) parser.Properties {
+	properties := make(map[string]string)
+	for _, node := range xml.Children {
+		properties[node.Attr("name")] = node.Attr("value")
+	}
+
+	return properties
+}
+
 func parseFailure(xml parser.XMLElement) *parser.Failure {
 	failure := parser.NewFailure()
 
@@ -203,19 +199,11 @@ func parseError(xml parser.XMLElement) *parser.Error {
 	return &err
 }
 
-func newProperties(xml parser.XMLElement) parser.Properties {
-	properties := make(map[string]string)
-	for _, node := range xml.Children {
-		properties[node.Attr("name")] = node.Attr("value")
-	}
-
-	return properties
-}
-
 func parseTime(s string) time.Duration {
 	// append 's' to end of input to use `time` built in duration parser
 	d, err := time.ParseDuration(s + "s")
 	if err != nil {
+		logger.Warn(logger.Fields{}, "Duration parsing failed: %v", err)
 		return 0
 	}
 
@@ -225,6 +213,7 @@ func parseTime(s string) time.Duration {
 func parseInt(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
+		logger.Warn(logger.Fields{}, "Integer parsing failed: %v", err)
 		return 0
 	}
 	return i
@@ -233,6 +222,7 @@ func parseInt(s string) int {
 func parseBool(s string) bool {
 	b, err := strconv.ParseBool(s)
 	if err != nil {
+		logger.Warn(logger.Fields{}, "Boolean parsing failed: %v", err)
 		return false
 	}
 	return b

@@ -25,6 +25,7 @@ const (
 type TestResults struct {
 	ID         string  `json:"id"`
 	Name       string  `json:"name"`
+	Framework  string  `json:"framework"`
 	IsDisabled bool    `json:"isDisabled"`
 	Suites     []Suite `json:"suites"`
 	Summary    Summary `json:"summary"`

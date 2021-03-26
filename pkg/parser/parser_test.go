@@ -1,11 +1,5 @@
 package parser
 
-import (
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-)
-
 type fooParser struct {
 	Parser
 	name string
@@ -50,23 +44,4 @@ func newBarParser() barParser {
 	parser := barParser{}
 	parser.name = "bar"
 	return parser
-}
-
-func TestFindParser(t *testing.T) {
-	availableParsers := []Parser{
-		newFooParser(),
-		newBarParser(),
-	}
-
-	parser, _ := FindParser("foo", "path", availableParsers)
-	assert.IsType(t, fooParser{}, parser, "Should return correct parser")
-
-	parser, _ = FindParser("bar", "path", availableParsers)
-	assert.IsType(t, barParser{}, parser, "Should return correct parser")
-
-	_, err := FindParser("baz", "path", availableParsers)
-	assert.Error(t, err, "Should return error")
-
-	parser, _ = FindParser("", "bar", availableParsers)
-	assert.IsType(t, barParser{}, parser, "Should return correct parser")
 }

@@ -19,10 +19,10 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 
+	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parsers"
 	"github.com/spf13/cobra"
 )
@@ -34,24 +34,38 @@ var publishCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		if trace {
+			logger.LogEntry.SetLevel(logger.TraceLevel)
+		} else if verbose {
+			logger.LogEntry.SetLevel(logger.DebugLevel)
+		}
+
+		var logFields = logger.Fields{"app": "publish_cmd"}
 		inFile := args[0]
 
 		_, err := os.Stat(inFile)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error(logFields, "Input file read failed: %v", err)
 		}
 
-		parser := parsers.NewGeneric()
-
-		testResults, err := parser.Parse(inFile)
-
+		parser, err := parsers.FindParser(parser, inFile)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error(logFields, "Could not find parser: %v", err)
+		} else {
+			logger.Info(logFields, "Parser found: %s", parser.GetName())
 		}
+
+		testResults := parser.Parse(inFile)
+
+		if name != "" {
+			testResults.Name = name
+		}
+
+		testResults.Framework = parser.GetName()
 
 		file, err := json.Marshal(testResults)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error(logFields, "JSON marshaling failed: %v", err)
 		}
 
 		tmpFile, err := ioutil.TempFile("/tmp", "test-results")
@@ -59,19 +73,19 @@ var publishCmd = &cobra.Command{
 		// Todo: Check if file can be created at location
 		_, err = tmpFile.Write(file)
 		if err != nil {
-			log.Fatal(err)
+			logger.Error(logFields, "Output file write failed: %v", err)
 		}
 
 		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "-d", "test-results/junit.json")
 		err = artifactsPush.Run()
 		if err != nil {
-			log.Fatal(err)
+			logger.Error(logFields, "Pushing artifacts failed: %v", err)
 		}
 
 		artifactsPush = exec.Command("artifact", "push", "job", inFile, "-d", "test-results/junit.xml")
 		err = artifactsPush.Run()
 		if err != nil {
-			log.Fatal(err)
+			logger.Error(logFields, "Pushing artifacts failed: %v", err)
 		}
 	},
 }

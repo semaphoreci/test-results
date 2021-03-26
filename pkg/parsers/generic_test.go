@@ -24,8 +24,7 @@ func TestParse(t *testing.T) {
 	fileloader.Load("/path", reader)
 
 	p := NewGeneric()
-	testResults, err := p.Parse("/path")
-	assert.Equal(t, nil, err)
+	testResults := p.Parse("/path")
 	assert.Equal(t, "Generic Parser", testResults.Name)
 
 	assert.Equal(t, "foo", testResults.Suites[0].Name)
