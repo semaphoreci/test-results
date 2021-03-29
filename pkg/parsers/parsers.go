@@ -16,28 +16,24 @@ var availableParsers = []parser.Parser{
 
 // FindParser ...
 func FindParser(name string, path string) (parser.Parser, error) {
-	fields := logger.Fields{"app": "parser", "name": name, "path": path}
-
 	if name != "auto" {
-		logger.Info(fields, "Looking for parser")
 		for _, p := range availableParsers {
 			if p.GetName() == name {
-				logger.Info(fields, "Found parser")
+				logger.Debug("Found parser: %s", p.GetName())
 				return p, nil
 			}
 		}
-		logger.Info(fields, "Parser not found")
+		logger.Debug("Parser not found")
 	}
 
 	for _, p := range availableParsers {
 		isApplicable := p.IsApplicable(path)
-		logger.Debug(fields, "Looking for applicable parser, checking %s -> %b", p.GetName(), isApplicable)
+		logger.Debug("Looking for applicable parser, checking %s -> %b", p.GetName(), isApplicable)
 		if isApplicable {
-			logger.Trace(fields, "Found applicable parser: %s", p.GetName())
+			logger.Trace("Found applicable parser: %s", p.GetName())
 			return p, nil
 		}
 	}
-	logger.Error(fields, "No applicable parsers found")
 
-	return nil, fmt.Errorf("Parser not found")
+	return nil, fmt.Errorf("No applicable parsers found")
 }

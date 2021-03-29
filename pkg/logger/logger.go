@@ -1,9 +1,15 @@
 package logger
 
 import (
-	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
+
+type logFormatter struct {
+}
+
+func (f *logFormatter) Format(entry *log.Entry) ([]byte, error) {
+	return append([]byte("* "), entry.Message...), nil
+}
 
 // LogEntry ...
 var LogEntry *logEntry = new()
@@ -38,62 +44,65 @@ type logEntry struct {
 
 // new ...
 func new() *logEntry {
-	return &logEntry{logger: log.New()}
+	logger := log.New()
+	logEntry := &logEntry{logger: logger}
+	logEntry.logger.SetFormatter(&logFormatter{})
+	return logEntry
 }
 
 // GetLogger ...
-func (me *logEntry) GetLogger() *log.Logger {
-	return me.logger
+func GetLogger() *log.Logger {
+	return LogEntry.logger
 }
 
 // SetLogger ...
-func (me *logEntry) SetLogger(logger *log.Logger) {
-	(*me).logger = logger
+func SetLogger(logger *log.Logger) {
+	LogEntry.logger = logger
+	LogEntry.logger.SetFormatter(&logFormatter{})
 }
 
 // SetLevel ...
-func (me *logEntry) SetLevel(level Level) {
-	(*me).logger.SetLevel(log.Level(level))
+func SetLevel(level Level) {
+	LogEntry.logger.SetLevel(log.Level(level))
 }
 
 // Error ...
-func Error(fields Fields, s string, args ...interface{}) {
-	LogEntry.Log(ErrorLevel, fields, s, args...)
+func Error(s string, args ...interface{}) {
+	Log(ErrorLevel, s, args...)
 }
 
 // Warn ...
-func Warn(fields Fields, s string, args ...interface{}) {
-	LogEntry.Log(WarnLevel, fields, s, args...)
+func Warn(s string, args ...interface{}) {
+	Log(WarnLevel, s, args...)
 }
 
 // Info ...
-func Info(fields Fields, s string, args ...interface{}) {
-	LogEntry.Log(InfoLevel, fields, s, args...)
+func Info(s string, args ...interface{}) {
+	Log(InfoLevel, s, args...)
 }
 
 // Debug ...
-func Debug(fields Fields, s string, args ...interface{}) {
-	LogEntry.Log(DebugLevel, fields, s, args...)
+func Debug(s string, args ...interface{}) {
+	Log(DebugLevel, s, args...)
 }
 
 // Trace ...
-func Trace(fields Fields, s string, args ...interface{}) {
-	LogEntry.Log(TraceLevel, fields, s, args...)
+func Trace(s string, args ...interface{}) {
+	Log(TraceLevel, s, args...)
 }
 
 // Log ...
-// TODO: change to separate methods (?)
-func (me *logEntry) Log(level Level, fields Fields, s string, args ...interface{}) {
+func Log(level Level, s string, args ...interface{}) {
 	switch level {
 	case ErrorLevel:
-		me.logger.WithFields(logrus.Fields(fields)).Errorf(s+"\n", args...)
+		LogEntry.logger.Errorf(s+"\n", args...)
 	case WarnLevel:
-		me.logger.WithFields(logrus.Fields(fields)).Warnf(s+"\n", args...)
+		LogEntry.logger.Warnf(s+"\n", args...)
 	case InfoLevel:
-		me.logger.WithFields(logrus.Fields(fields)).Infof(s+"\n", args...)
+		LogEntry.logger.Infof(s+"\n", args...)
 	case DebugLevel:
-		me.logger.WithFields(logrus.Fields(fields)).Debugf(s+"\n", args...)
+		LogEntry.logger.Debugf(s+"\n", args...)
 	case TraceLevel:
-		me.logger.WithFields(logrus.Fields(fields)).Tracef(s+"\n", args...)
+		LogEntry.logger.Tracef(s+"\n", args...)
 	}
 }

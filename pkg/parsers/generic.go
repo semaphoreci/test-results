@@ -10,12 +10,11 @@ import (
 
 // Generic ...
 type Generic struct {
-	logFields logger.Fields
 }
 
 // NewGeneric ...
 func NewGeneric() Generic {
-	return Generic{logger.Fields{"app": "parser.generic"}}
+	return Generic{}
 }
 
 // IsApplicable ...
@@ -30,26 +29,24 @@ func (me Generic) GetName() string {
 
 // Parse ...
 func (me Generic) Parse(path string) parser.TestResults {
-	me.logFields["path"] = path
-
 	var results parser.TestResults
 
 	xmlElement, err := LoadXML(path)
 
 	if err != nil {
-		logger.Error(me.logFields, "Loading XML failed: %v", err)
+		logger.Error("Loading XML failed: %v", err)
 		return results
 	}
 
 	switch xmlElement.Tag() {
 	case "testsuites":
-		logger.Debug(me.logFields, "Root <testsuites> element found")
-		results = newTestResults(*xmlElement)
+		logger.Debug("Root <testsuites> element found")
+		results = me.newTestResults(*xmlElement)
 	case "testsuite":
-		logger.Debug(me.logFields, "No root <testsuites> element found")
+		logger.Debug("No root <testsuites> element found")
 		results = parser.NewTestResults()
 		results.Name = "Generic Parser"
-		results.Suites = append(results.Suites, newSuite(*xmlElement))
+		results.Suites = append(results.Suites, me.newSuite(*xmlElement))
 	}
 
 	results.Aggregate()
@@ -57,13 +54,13 @@ func (me Generic) Parse(path string) parser.TestResults {
 	return results
 }
 
-func newTestResults(xml parser.XMLElement) parser.TestResults {
+func (me Generic) newTestResults(xml parser.XMLElement) parser.TestResults {
 	testResults := parser.NewTestResults()
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "testsuite":
-			testResults.Suites = append(testResults.Suites, newSuite(node))
+			testResults.Suites = append(testResults.Suites, me.newSuite(node))
 		}
 	}
 
@@ -88,19 +85,19 @@ func newTestResults(xml parser.XMLElement) parser.TestResults {
 	return testResults
 }
 
-func newSuite(xml parser.XMLElement) parser.Suite {
+func (me Generic) newSuite(xml parser.XMLElement) parser.Suite {
 	suite := parser.NewSuite()
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "properties":
-			suite.Properties = parseProperties(node)
+			suite.Properties = me.parseProperties(node)
 		case "system-out":
 			suite.SystemOut = string(node.Contents)
 		case "system-err":
 			suite.SystemErr = string(node.Contents)
 		case "testcase":
-			suite.Tests = append(suite.Tests, newTest(node))
+			suite.Tests = append(suite.Tests, me.newTest(node))
 		}
 	}
 
@@ -136,17 +133,17 @@ func newSuite(xml parser.XMLElement) parser.Suite {
 	return suite
 }
 
-func newTest(xml parser.XMLElement) parser.Test {
+func (me Generic) newTest(xml parser.XMLElement) parser.Test {
 	test := parser.NewTest()
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "failure":
 			test.State = parser.StateFailed
-			test.Failure = parseFailure(node)
+			test.Failure = me.parseFailure(node)
 		case "error":
 			test.State = parser.StateError
-			test.Error = parseError(node)
+			test.Error = me.parseError(node)
 		case "skipped":
 			test.State = parser.StateSkipped
 		case "system-out":
@@ -170,7 +167,7 @@ func newTest(xml parser.XMLElement) parser.Test {
 	return test
 }
 
-func parseProperties(xml parser.XMLElement) parser.Properties {
+func (me Generic) parseProperties(xml parser.XMLElement) parser.Properties {
 	properties := make(map[string]string)
 	for _, node := range xml.Children {
 		properties[node.Attr("name")] = node.Attr("value")
@@ -179,7 +176,7 @@ func parseProperties(xml parser.XMLElement) parser.Properties {
 	return properties
 }
 
-func parseFailure(xml parser.XMLElement) *parser.Failure {
+func (me Generic) parseFailure(xml parser.XMLElement) *parser.Failure {
 	failure := parser.NewFailure()
 
 	failure.Body = string(xml.Contents)
@@ -189,7 +186,7 @@ func parseFailure(xml parser.XMLElement) *parser.Failure {
 	return &failure
 }
 
-func parseError(xml parser.XMLElement) *parser.Error {
+func (me Generic) parseError(xml parser.XMLElement) *parser.Error {
 	err := parser.NewError()
 
 	err.Body = string(xml.Contents)
@@ -203,7 +200,7 @@ func parseTime(s string) time.Duration {
 	// append 's' to end of input to use `time` built in duration parser
 	d, err := time.ParseDuration(s + "s")
 	if err != nil {
-		logger.Warn(logger.Fields{}, "Duration parsing failed: %v", err)
+		logger.Warn("Duration parsing failed: %v", err)
 		return 0
 	}
 
@@ -213,7 +210,7 @@ func parseTime(s string) time.Duration {
 func parseInt(s string) int {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		logger.Warn(logger.Fields{}, "Integer parsing failed: %v", err)
+		logger.Warn("Integer parsing failed: %v", err)
 		return 0
 	}
 	return i
@@ -222,7 +219,7 @@ func parseInt(s string) int {
 func parseBool(s string) bool {
 	b, err := strconv.ParseBool(s)
 	if err != nil {
-		logger.Warn(logger.Fields{}, "Boolean parsing failed: %v", err)
+		logger.Warn("Boolean parsing failed: %v", err)
 		return false
 	}
 	return b

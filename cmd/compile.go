@@ -34,32 +34,32 @@ var compileCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		if trace {
-			logger.LogEntry.SetLevel(logger.TraceLevel)
+			logger.SetLevel(logger.TraceLevel)
 		} else if verbose {
-			logger.LogEntry.SetLevel(logger.DebugLevel)
+			logger.SetLevel(logger.DebugLevel)
 		}
 
-		var logFields = logger.Fields{"app": "compile"}
 		inFile := args[0]
 		outFile := args[1]
 
 		_, err := os.Stat(inFile)
 
+		logger.Info("Reading %s", inFile)
 		if err != nil {
-			logger.Error(logFields, "Input file read failed: %v", err)
-		} else {
-			logger.Info(logFields, "File successfuly read: %s", inFile)
+			logger.Error("Input file read failed: %v", err)
+			return
 		}
 
 		parser, err := parsers.FindParser(parser, inFile)
 		if err != nil {
-			logger.Error(logFields, "Could not find parser: %v", err)
-		} else {
-			logger.Info(logFields, "Parser found: %s", parser.GetName())
+			logger.Error("Could not find parser: %v", err)
+			return
 		}
+		logger.Info("Using %s parser", parser.GetName())
 
 		testResults := parser.Parse(inFile)
 		if name != "" {
+			logger.Debug("Overriding test results name to %s", name)
 			testResults.Name = name
 		}
 
@@ -67,18 +67,14 @@ var compileCmd = &cobra.Command{
 
 		file, err := json.Marshal(testResults)
 		if err != nil {
-			logger.Error(logFields, "JSON marshaling failed: %v", err)
-		} else {
-			logger.Info(logFields, "JSON marshaling completed: %s", inFile)
+			logger.Error("Marshaling results failed with: %v", err)
 		}
 
-		// Todo: Check if file can be created at location
 		err = ioutil.WriteFile(outFile, file, 0644)
 		if err != nil {
-			logger.Error(logFields, "Output file write failed: %v", err)
-		} else {
-			logger.Info(logFields, "File saved to: %s", outFile)
+			logger.Error("Output file write failed: %v", err)
 		}
+		logger.Info("Saving results to %s", outFile)
 	},
 }
 
