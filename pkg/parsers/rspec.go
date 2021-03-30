@@ -22,12 +22,11 @@ func (me RSpec) GetName() string {
 
 // IsApplicable ...
 func (me RSpec) IsApplicable(path string) bool {
-	me.logFields["fun"] = "IsApplicable"
 	xmlElement, err := LoadXML(path)
-	logger.Trace(me.logFields, "Checking applicability")
+	logger.Trace("Checking applicability")
 
 	if err != nil {
-		logger.Error(me.logFields, "Loading XML failed: %v", err)
+		logger.Error("Loading XML failed: %v", err)
 		return false
 	}
 
