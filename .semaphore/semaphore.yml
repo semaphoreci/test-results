@@ -16,7 +16,7 @@ blocks:
           - checkout
 
       jobs:
-        - name: "Lint"
+        - name: "Lint and Test"
           commands:
             - go get ./...
             - go test ./...
