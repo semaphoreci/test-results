@@ -24,7 +24,7 @@ func (me ExUnit) GetName() string {
 // IsApplicable ...
 func (me ExUnit) IsApplicable(path string) bool {
 	xmlElement, err := LoadXML(path)
-	logger.Trace("Checking applicability")
+	logger.Debug("Checking applicability of %s parser", me.GetName())
 
 	if err != nil {
 		logger.Error("Loading XML failed: %v", err)
@@ -65,12 +65,14 @@ func (me ExUnit) IsApplicable(path string) bool {
 
 // Parse ...
 func (me ExUnit) Parse(path string) parser.TestResults {
-	var results parser.TestResults
+	results := parser.NewTestResults()
 
 	xmlElement, err := LoadXML(path)
 
 	if err != nil {
 		logger.Error("Loading XML failed: %v", err)
+		results.Status = parser.StatusError
+		results.StatusMessage = err.Error()
 		return results
 	}
 
@@ -80,7 +82,6 @@ func (me ExUnit) Parse(path string) parser.TestResults {
 		results = me.newTestResults(*xmlElement)
 	case "testsuite":
 		logger.Debug("No root <testsuites> element found")
-		results = parser.NewTestResults()
 		results.Name = "ExUnit Parser"
 		results.Suites = append(results.Suites, me.newSuite(*xmlElement))
 	}

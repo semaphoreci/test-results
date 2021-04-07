@@ -41,6 +41,8 @@ func TestXMLElement_Parse(t *testing.T) {
 		"<test",
 		"<test>",
 		"<test><te</test>",
+		"<test name=\"1 < 2\"></test>",
+		"<test name=\"1 & 2\"></test>",
 	}
 
 	for _, data := range malformedData {

@@ -19,6 +19,7 @@ func NewGeneric() Generic {
 
 // IsApplicable ...
 func (me Generic) IsApplicable(path string) bool {
+	logger.Debug("Checking applicability of %s parser", me.GetName())
 	return true
 }
 
@@ -29,12 +30,14 @@ func (me Generic) GetName() string {
 
 // Parse ...
 func (me Generic) Parse(path string) parser.TestResults {
-	var results parser.TestResults
+	results := parser.NewTestResults()
 
 	xmlElement, err := LoadXML(path)
 
 	if err != nil {
 		logger.Error("Loading XML failed: %v", err)
+		results.Status = parser.StatusError
+		results.StatusMessage = err.Error()
 		return results
 	}
 
@@ -44,18 +47,19 @@ func (me Generic) Parse(path string) parser.TestResults {
 		results = me.newTestResults(*xmlElement)
 	case "testsuite":
 		logger.Debug("No root <testsuites> element found")
-		results = parser.NewTestResults()
 		results.Name = "Generic Parser"
 		results.Suites = append(results.Suites, me.newSuite(*xmlElement))
 	}
 
 	results.Aggregate()
+	results.Status = parser.StatusSuccess
 
 	return results
 }
 
 func (me Generic) newTestResults(xml parser.XMLElement) parser.TestResults {
 	testResults := parser.NewTestResults()
+	logger.Trace("Parsing TestResults element with name: %s", xml.Attr("name"))
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
@@ -77,7 +81,7 @@ func (me Generic) newTestResults(xml parser.XMLElement) parser.TestResults {
 		case "errors":
 			testResults.Summary.Error = parseInt(value)
 		case "disabled":
-			testResults.IsDisabled = parseBool(value)
+			testResults.Summary.Disabled = parseInt(value)
 		}
 	}
 	testResults.Summary.Passed = testResults.Summary.Total - testResults.Summary.Error - testResults.Summary.Failed
@@ -87,6 +91,8 @@ func (me Generic) newTestResults(xml parser.XMLElement) parser.TestResults {
 
 func (me Generic) newSuite(xml parser.XMLElement) parser.Suite {
 	suite := parser.NewSuite()
+
+	logger.Trace("Parsing Suite element with name: %s", xml.Attr("name"))
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
@@ -114,9 +120,9 @@ func (me Generic) newSuite(xml parser.XMLElement) parser.Suite {
 		case "time":
 			suite.Summary.Duration = parseTime(value)
 		case "disabled":
-			suite.IsDisabled = parseBool(value)
+			suite.Summary.Disabled = parseInt(value)
 		case "skipped":
-			suite.IsSkipped = parseBool(value)
+			suite.Summary.Skipped = parseInt(value)
 		case "timestamp":
 			suite.Timestamp = value
 		case "hostname":
@@ -135,6 +141,7 @@ func (me Generic) newSuite(xml parser.XMLElement) parser.Suite {
 
 func (me Generic) newTest(xml parser.XMLElement) parser.Test {
 	test := parser.NewTest()
+	logger.Trace("Parsing Test element with name: %s", xml.Attr("name"))
 
 	for _, node := range xml.Children {
 		switch node.Tag() {

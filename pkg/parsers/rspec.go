@@ -23,7 +23,7 @@ func (me RSpec) GetName() string {
 // IsApplicable ...
 func (me RSpec) IsApplicable(path string) bool {
 	xmlElement, err := LoadXML(path)
-	logger.Trace("Checking applicability")
+	logger.Debug("Checking applicability of %s parser", me.GetName())
 
 	if err != nil {
 		logger.Error("Loading XML failed: %v", err)

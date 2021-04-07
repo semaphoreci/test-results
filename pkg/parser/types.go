@@ -4,39 +4,56 @@ import (
 	"time"
 )
 
-// State ...
-type State string
-
-// Properties ...
+// Properties maps additional parameters for test suites
 type Properties map[string]string
 
+// State indicates state of specific test
+type State string
+
 const (
-	// StatePassed ...
+	// StatePassed indicates that test was successful
 	StatePassed State = "passed"
-	// StateError ...
+	// StateError indicates that test errored due to unexpected behaviour when running test i.e. exception
 	StateError State = "error"
-	// StateFailed ...
+	// StateFailed indicates that test failed due to invalid test result
 	StateFailed State = "failed"
-	// StateSkipped ...
+	// StateSkipped indicates that test was skipped
 	StateSkipped State = "skipped"
+	// StateDisabled indicates that test was disabled
+	StateDisabled State = "disabled"
+)
+
+// Status stores information about parsing results
+type Status string
+
+const (
+	// StatusSuccess indicates that parsing was successful
+	StatusSuccess Status = "success"
+
+	// StatusError indicates that parsing failed due to error
+	StatusError Status = "error"
 )
 
 // TestResults ...
 type TestResults struct {
-	ID         string  `json:"id"`
-	Name       string  `json:"name"`
-	Framework  string  `json:"framework"`
-	IsDisabled bool    `json:"isDisabled"`
-	Suites     []Suite `json:"suites"`
-	Summary    Summary `json:"summary"`
+	ID            string  `json:"id"`
+	Name          string  `json:"name"`
+	Framework     string  `json:"framework"`
+	IsDisabled    bool    `json:"isDisabled"`
+	Suites        []Suite `json:"suites"`
+	Summary       Summary `json:"summary"`
+	Status        Status  `json:"status"`
+	StatusMessage string  `json:"statusMessage"`
 }
 
 // NewTestResults ...
 func NewTestResults() TestResults {
-	return TestResults{}
+	return TestResults{
+		Suites: []Suite{},
+	}
 }
 
-// Aggregate all test suites
+// Aggregate all test suite summaries
 func (testResults *TestResults) Aggregate() {
 	summary := Summary{}
 
@@ -47,6 +64,7 @@ func (testResults *TestResults) Aggregate() {
 		summary.Total += suite.Summary.Total
 		summary.Failed += suite.Summary.Failed
 		summary.Passed += suite.Summary.Passed
+		summary.Disabled += suite.Summary.Disabled
 	}
 
 	(*testResults).Summary = summary
@@ -90,6 +108,8 @@ func (suite *Suite) Aggregate() {
 			summary.Error++
 		case StatePassed:
 			summary.Passed++
+		case StateDisabled:
+			summary.Disabled++
 		}
 	}
 
@@ -147,5 +167,6 @@ type Summary struct {
 	Skipped  int           `json:"skipped"`
 	Error    int           `json:"error"`
 	Failed   int           `json:"failed"`
+	Disabled int           `json:"disabled"`
 	Duration time.Duration `json:"duration"`
 }

@@ -26,7 +26,7 @@ func (me Mocha) GetName() string {
 func (me Mocha) IsApplicable(path string) bool {
 	me.logFields["fun"] = "IsApplicable"
 	xmlElement, err := LoadXML(path)
-	logger.Trace("Checking applicability")
+	logger.Debug("Checking applicability of %s parser", me.GetName())
 
 	if err != nil {
 		logger.Error("Loading XML failed: %v", err)

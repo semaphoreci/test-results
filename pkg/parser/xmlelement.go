@@ -45,10 +45,10 @@ func (me *XMLElement) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error
 
 // Parse ...
 func (me *XMLElement) Parse(reader *bytes.Reader) error {
-	logger.Debug("Parsing element started")
 	decoder := xml.NewDecoder(reader)
+
 	if err := decoder.Decode(&me); err != nil {
-		logger.Error("Parsing element failed")
+		logger.Error("Parsing element \"<%v>\" failed", me.Tag())
 		return err
 	}
 	return nil
@@ -58,10 +58,7 @@ func parseAttributes(attrs []xml.Attr) map[string]string {
 	attributes := make(map[string]string)
 
 	for _, attr := range attrs {
-		switch attr.Name {
-		default:
-			attributes[attr.Name.Local] = attr.Value
-		}
+		attributes[attr.Name.Local] = attr.Value
 	}
 
 	return attributes
