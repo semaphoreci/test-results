@@ -49,7 +49,9 @@ type TestResults struct {
 // NewTestResults ...
 func NewTestResults() TestResults {
 	return TestResults{
-		Suites: []Suite{},
+		Suites:        []Suite{},
+		Status:        StatusSuccess,
+		StatusMessage: "",
 	}
 }
 

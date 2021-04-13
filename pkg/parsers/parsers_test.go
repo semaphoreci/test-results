@@ -88,6 +88,46 @@ func TestFindParser(t *testing.T) {
 			want:    Mocha{},
 			wantErr: false,
 		},
+		{
+			desc: "finds golang parser automatically",
+			name: "auto",
+			path: "/some/golang_path",
+			reader: bytes.NewReader([]byte(`
+				<?xml version="1.0"?>
+				<testsuites name="tests">
+					<testsuite>
+						<properties>
+							<property name="go.version" value="1.15.0"></property>
+						</properties>
+						<testcase name="bar">
+						</testcase>
+						<testcase name="baz">
+						</testcase>
+					</testsuite>
+				</testsuites>
+			`)),
+			want:    GoLang{},
+			wantErr: false,
+		},
+		{
+			desc: "finds golang parser automatically",
+			name: "auto",
+			path: "/some/golang_path",
+			reader: bytes.NewReader([]byte(`
+				<?xml version="1.0"?>
+				<testsuite>
+					<properties>
+						<property name="go.version" value="1.15.0"></property>
+					</properties>
+					<testcase name="bar">
+					</testcase>
+					<testcase name="baz">
+					</testcase>
+				</testsuite>
+			`)),
+			want:    GoLang{},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.desc, func(t *testing.T) {

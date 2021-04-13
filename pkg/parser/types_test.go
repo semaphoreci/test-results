@@ -11,6 +11,8 @@ func TestNewTestResults(t *testing.T) {
 	testResults := NewTestResults()
 
 	assert.IsType(t, testResults, TestResults{})
+	assert.Equal(t, testResults.Status, StatusSuccess)
+	assert.Equal(t, testResults.StatusMessage, "")
 }
 
 func TestTestResults_Aggregate(t *testing.T) {

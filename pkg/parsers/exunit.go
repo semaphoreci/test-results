@@ -82,7 +82,7 @@ func (me ExUnit) Parse(path string) parser.TestResults {
 		results = me.newTestResults(*xmlElement)
 	case "testsuite":
 		logger.Debug("No root <testsuites> element found")
-		results.Name = "ExUnit Parser"
+		results.Name = strings.Title(me.GetName() + " suite")
 		results.Suites = append(results.Suites, me.newSuite(*xmlElement))
 	}
 
@@ -106,15 +106,15 @@ func (me ExUnit) newTestResults(xml parser.XMLElement) parser.TestResults {
 		case "name":
 			testResults.Name = value
 		case "time":
-			testResults.Summary.Duration = parseTime(value)
+			testResults.Summary.Duration = parser.ParseTime(value)
 		case "tests":
-			testResults.Summary.Total = parseInt(value)
+			testResults.Summary.Total = parser.ParseInt(value)
 		case "failures":
-			testResults.Summary.Failed = parseInt(value)
+			testResults.Summary.Failed = parser.ParseInt(value)
 		case "errors":
-			testResults.Summary.Error = parseInt(value)
+			testResults.Summary.Error = parser.ParseInt(value)
 		case "disabled":
-			testResults.IsDisabled = parseBool(value)
+			testResults.IsDisabled = parser.ParseBool(value)
 		}
 	}
 	testResults.Summary.Passed = testResults.Summary.Total - testResults.Summary.Error - testResults.Summary.Failed
@@ -128,7 +128,7 @@ func (me ExUnit) newSuite(xml parser.XMLElement) parser.Suite {
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "properties":
-			suite.Properties = me.parseProperties(node)
+			suite.Properties = parser.ParseProperties(node)
 		case "system-out":
 			suite.SystemOut = string(node.Contents)
 		case "system-err":
@@ -143,17 +143,17 @@ func (me ExUnit) newSuite(xml parser.XMLElement) parser.Suite {
 		case "name":
 			suite.Name = strings.Trim(value, "Elixir.")
 		case "tests":
-			suite.Summary.Total = parseInt(value)
+			suite.Summary.Total = parser.ParseInt(value)
 		case "failures":
-			suite.Summary.Failed = parseInt(value)
+			suite.Summary.Failed = parser.ParseInt(value)
 		case "errors":
-			suite.Summary.Error = parseInt(value)
+			suite.Summary.Error = parser.ParseInt(value)
 		case "time":
-			suite.Summary.Duration = parseTime(value)
+			suite.Summary.Duration = parser.ParseTime(value)
 		case "disabled":
-			suite.IsDisabled = parseBool(value)
+			suite.IsDisabled = parser.ParseBool(value)
 		case "skipped":
-			suite.IsSkipped = parseBool(value)
+			suite.IsSkipped = parser.ParseBool(value)
 		case "timestamp":
 			suite.Timestamp = value
 		case "hostname":
@@ -177,10 +177,10 @@ func (me ExUnit) newTest(xml parser.XMLElement) parser.Test {
 		switch node.Tag() {
 		case "failure":
 			test.State = parser.StateFailed
-			test.Failure = me.parseFailure(node)
+			test.Failure = parser.ParseFailure(node)
 		case "error":
 			test.State = parser.StateError
-			test.Error = me.parseError(node)
+			test.Error = parser.ParseError(node)
 		case "skipped":
 			test.State = parser.StateSkipped
 		case "system-out":
@@ -195,40 +195,11 @@ func (me ExUnit) newTest(xml parser.XMLElement) parser.Test {
 		case "name":
 			test.Name = value
 		case "time":
-			test.Duration = parseTime(value)
+			test.Duration = parser.ParseTime(value)
 		case "classname":
 			test.Classname = value
 		}
 	}
 
 	return test
-}
-
-func (me ExUnit) parseProperties(xml parser.XMLElement) parser.Properties {
-	properties := make(map[string]string)
-	for _, node := range xml.Children {
-		properties[node.Attr("name")] = node.Attr("value")
-	}
-
-	return properties
-}
-
-func (me ExUnit) parseFailure(xml parser.XMLElement) *parser.Failure {
-	failure := parser.NewFailure()
-
-	failure.Body = string(xml.Contents)
-	failure.Message = xml.Attr("message")
-	failure.Type = xml.Attr("type")
-
-	return &failure
-}
-
-func (me ExUnit) parseError(xml parser.XMLElement) *parser.Error {
-	err := parser.NewError()
-
-	err.Body = string(xml.Contents)
-	err.Message = xml.Attr("message")
-	err.Type = xml.Attr("type")
-
-	return &err
 }
