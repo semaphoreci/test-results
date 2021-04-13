@@ -11,6 +11,8 @@ func TestNewTestResults(t *testing.T) {
 	testResults := NewTestResults()
 
 	assert.IsType(t, testResults, TestResults{})
+	assert.Equal(t, testResults.Status, StatusSuccess)
+	assert.Equal(t, testResults.StatusMessage, "")
 }
 
 func TestTestResults_Aggregate(t *testing.T) {
@@ -20,30 +22,32 @@ func TestTestResults_Aggregate(t *testing.T) {
 	assert.Equal(t, testResults.Summary, Summary{})
 
 	suite := NewSuite()
-	suite.Summary.Total = 5
+	suite.Summary.Total = 6
 	suite.Summary.Passed = 1
 	suite.Summary.Skipped = 2
 	suite.Summary.Error = 2
 	suite.Summary.Failed = 1
+	suite.Summary.Disabled = 1
 	suite.Summary.Duration = time.Duration(1)
 
 	testResults.Suites = append(testResults.Suites, suite)
 
 	testResults.Aggregate()
-	assert.Equal(t, testResults.Summary, Summary{5, 1, 2, 2, 1, 1})
+	assert.Equal(t, testResults.Summary, Summary{6, 1, 2, 2, 1, 1, 1})
 
 	suite = NewSuite()
-	suite.Summary.Total = 10
+	suite.Summary.Total = 12
 	suite.Summary.Passed = 2
 	suite.Summary.Skipped = 4
 	suite.Summary.Error = 2
 	suite.Summary.Failed = 2
+	suite.Summary.Disabled = 2
 	suite.Summary.Duration = time.Duration(10)
 
 	testResults.Suites = append(testResults.Suites, suite)
 	testResults.Aggregate()
 
-	assert.Equal(t, testResults.Summary, Summary{15, 3, 6, 4, 3, 11})
+	assert.Equal(t, testResults.Summary, Summary{18, 3, 6, 4, 3, 3, 11})
 }
 
 func TestNewSuite(t *testing.T) {
@@ -86,6 +90,14 @@ func TestSuite_Aggregate(t *testing.T) {
 	suite.Aggregate()
 
 	assert.Equal(t, Summary{Total: 4, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Duration: 60}, suite.Summary)
+
+	test = NewTest()
+	test.State = StateDisabled
+	test.Duration = time.Duration(50)
+	suite.Tests = append(suite.Tests, test)
+	suite.Aggregate()
+
+	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 110}, suite.Summary)
 }
 
 func TestNewTest(t *testing.T) {

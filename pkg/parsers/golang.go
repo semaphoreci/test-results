@@ -8,22 +8,22 @@ import (
 	"github.com/semaphoreci/test-results/pkg/parser"
 )
 
-// Mocha ...
-type Mocha struct {
+// GoLang ...
+type GoLang struct {
 }
 
-// NewMocha ...
-func NewMocha() Mocha {
-	return Mocha{}
+// NewGoLang ...
+func NewGoLang() GoLang {
+	return GoLang{}
 }
 
 // GetName ...
-func (me Mocha) GetName() string {
-	return "mocha"
+func (me GoLang) GetName() string {
+	return "golang"
 }
 
 // IsApplicable ...
-func (me Mocha) IsApplicable(path string) bool {
+func (me GoLang) IsApplicable(path string) bool {
 	xmlElement, err := LoadXML(path)
 	logger.Debug("Checking applicability of %s parser", me.GetName())
 
@@ -34,21 +34,39 @@ func (me Mocha) IsApplicable(path string) bool {
 
 	switch xmlElement.Tag() {
 	case "testsuites":
-		for attr, value := range xmlElement.Attributes {
-			logger.Trace("%s %s", attr, value)
-			switch attr {
-			case "name":
-				if strings.Contains(strings.ToLower(value), "mocha") {
+		testsuites := xmlElement.Children
+
+		for _, testsuite := range testsuites {
+			switch testsuite.Tag() {
+			case "testsuite":
+				if hasProperty(testsuite, "go.version") {
 					return true
 				}
 			}
+		}
+
+	case "testsuite":
+		if hasProperty(*xmlElement, "go.version") {
+			return true
+		}
+	}
+
+	return false
+}
+
+func hasProperty(testsuiteElement parser.XMLElement, property string) bool {
+	for _, child := range testsuiteElement.Children {
+		switch child.Tag() {
+		case "properties":
+			properties := parser.ParseProperties(child)
+			return parser.PropertyExists(properties, property)
 		}
 	}
 	return false
 }
 
 // Parse ...
-func (me Mocha) Parse(path string) parser.TestResults {
+func (me GoLang) Parse(path string) parser.TestResults {
 	results := parser.NewTestResults()
 
 	xmlElement, err := LoadXML(path)
@@ -66,7 +84,7 @@ func (me Mocha) Parse(path string) parser.TestResults {
 		results = me.newTestResults(*xmlElement)
 	case "testsuite":
 		logger.Debug("No root <testsuites> element found")
-		results.Name = strings.Title(me.GetName() + " suite")
+		results.Name = strings.Title(me.GetName() + " Parser")
 		results.Suites = append(results.Suites, me.newSuite(*xmlElement))
 	default:
 		tag := xmlElement.Tag()
@@ -81,7 +99,7 @@ func (me Mocha) Parse(path string) parser.TestResults {
 	return results
 }
 
-func (me Mocha) newTestResults(xml parser.XMLElement) parser.TestResults {
+func (me GoLang) newTestResults(xml parser.XMLElement) parser.TestResults {
 	testResults := parser.NewTestResults()
 
 	for _, node := range xml.Children {
@@ -112,7 +130,7 @@ func (me Mocha) newTestResults(xml parser.XMLElement) parser.TestResults {
 	return testResults
 }
 
-func (me Mocha) newSuite(xml parser.XMLElement) parser.Suite {
+func (me GoLang) newSuite(xml parser.XMLElement) parser.Suite {
 	suite := parser.NewSuite()
 
 	for _, node := range xml.Children {
@@ -160,7 +178,7 @@ func (me Mocha) newSuite(xml parser.XMLElement) parser.Suite {
 	return suite
 }
 
-func (me Mocha) newTest(xml parser.XMLElement) parser.Test {
+func (me GoLang) newTest(xml parser.XMLElement) parser.Test {
 	test := parser.NewTest()
 
 	for _, node := range xml.Children {
