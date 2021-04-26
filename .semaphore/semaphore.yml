@@ -19,11 +19,13 @@ blocks:
         - name: "Lint and Test"
           commands:
             - go get ./...
-            - go test ./...
             - go get gotest.tools/gotestsum
             - gotestsum --junitfile /tmp/junit.xml
             - go build
-            - ./test-results publish /tmp/junit.xml
+      epilogue:
+        always:
+          commands:
+            - test-results publish /tmp/junit.xml
 
 promotions:
     - name: Release
