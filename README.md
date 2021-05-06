@@ -111,3 +111,71 @@ $ test-results gen-pipeline-report
 ```
 
 How to pull job level reports with Artifacts?
+
+Where to store reports:
+
+```
+Approach #1:
+------------
+
+Job A:
+
+  $ test-results publish junit.xml
+  artifact push workflow test-results/$PIPELINE_ID/$JOB_ID.json
+
+Job B:
+
+  $ test-results publish junit.xml
+  artifact push workflow test-results/$PIPELINE_ID/$JOB_ID.json
+  
+After Job:
+  
+  $ test-results gen-pipeline-report
+  artifacts pull workflow test-results/$PIPELINE_ID --destination /tmp/test-results
+  Merging....
+  artifacts push workflow test-results/$PIPELINE_ID.json
+  
+Approach #2:
+-----------
+
+
+Job A:
+
+  $ test-results publish junit.xml
+  artifact push project test-results/$WORKFLOW_ID/$PIPELINE_ID/$JOB_ID.json
+
+Job B:
+
+  $ test-results publish junit.xml
+  artifact push project test-results/$WORKFLOW_ID/$PIPELINE_ID/$JOB_ID.json
+  
+After Job:
+  
+  $ test-results gen-pipeline-report
+  artifacts pull project test-results/$WORKFLOW_ID/$PIPELINE_ID --destination /tmp/test-results
+  Merging....
+  artifacts push project test-results/$WORKFLOW_ID/$PIPELINE_ID.json
+
+Approach #3:
+------------
+
+Job A:
+
+  $ test-results publish junit.xml
+  artifact push job test-results/report.json
+
+Job B:
+
+  $ test-results publish junit.xml
+  artifact push job test-results/report.json
+  
+After job:
+  # generate this file from Zebra:
+  
+  $ cat ~/jobs.txt
+  67bb1901-4823-4e01-8af5-d992dc3b6792
+  e8ece834-c9e5-4e47-867c-26af7b0c82f8
+  746203fa-b635-46ca-b4fa-d4814f274069
+  
+  $ test-results gen-pipeline-report
+```
