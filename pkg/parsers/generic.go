@@ -48,7 +48,8 @@ func (me Generic) Parse(path string) parser.TestResults {
 	case "testsuite":
 		logger.Debug("No root <testsuites> element found")
 		results.Name = strings.Title(me.GetName() + " suite")
-		results.Suites = append(results.Suites, me.newSuite(*xmlElement))
+		results.EnsureID()
+		results.Suites = append(results.Suites, me.newSuite(*xmlElement, results))
 	default:
 		tag := xmlElement.Tag()
 		logger.Debug("Invalid root element found: <%s>", tag)
@@ -67,13 +68,6 @@ func (me Generic) newTestResults(xml parser.XMLElement) parser.TestResults {
 	testResults := parser.NewTestResults()
 	logger.Trace("Parsing TestResults element with name: %s", xml.Attr("name"))
 
-	for _, node := range xml.Children {
-		switch node.Tag() {
-		case "testsuite":
-			testResults.Suites = append(testResults.Suites, me.newSuite(node))
-		}
-	}
-
 	for attr, value := range xml.Attributes {
 		switch attr {
 		case "name":
@@ -90,28 +84,23 @@ func (me Generic) newTestResults(xml parser.XMLElement) parser.TestResults {
 			testResults.Summary.Disabled = parser.ParseInt(value)
 		}
 	}
+	testResults.EnsureID()
+
+	for _, node := range xml.Children {
+		switch node.Tag() {
+		case "testsuite":
+			testResults.Suites = append(testResults.Suites, me.newSuite(node, testResults))
+		}
+	}
 	testResults.Summary.Passed = testResults.Summary.Total - testResults.Summary.Error - testResults.Summary.Failed
 
 	return testResults
 }
 
-func (me Generic) newSuite(xml parser.XMLElement) parser.Suite {
+func (me Generic) newSuite(xml parser.XMLElement, results parser.TestResults) parser.Suite {
 	suite := parser.NewSuite()
 
 	logger.Trace("Parsing Suite element with name: %s", xml.Attr("name"))
-
-	for _, node := range xml.Children {
-		switch node.Tag() {
-		case "properties":
-			suite.Properties = parser.ParseProperties(node)
-		case "system-out":
-			suite.SystemOut = string(node.Contents)
-		case "system-err":
-			suite.SystemErr = string(node.Contents)
-		case "testcase":
-			suite.Tests = append(suite.Tests, me.newTest(node))
-		}
-	}
 
 	for attr, value := range xml.Attributes {
 		switch attr {
@@ -140,14 +129,41 @@ func (me Generic) newSuite(xml parser.XMLElement) parser.Suite {
 		}
 	}
 
+	suite.EnsureID(results)
+
+	for _, node := range xml.Children {
+		switch node.Tag() {
+		case "properties":
+			suite.Properties = parser.ParseProperties(node)
+		case "system-out":
+			suite.SystemOut = string(node.Contents)
+		case "system-err":
+			suite.SystemErr = string(node.Contents)
+		case "testcase":
+			suite.Tests = append(suite.Tests, me.newTest(node, suite))
+		}
+	}
 	suite.Aggregate()
 
 	return suite
 }
 
-func (me Generic) newTest(xml parser.XMLElement) parser.Test {
+func (me Generic) newTest(xml parser.XMLElement, suite parser.Suite) parser.Test {
 	test := parser.NewTest()
 	logger.Trace("Parsing Test element with name: %s", xml.Attr("name"))
+
+	for attr, value := range xml.Attributes {
+		switch attr {
+		case "name":
+			test.Name = value
+		case "time":
+			test.Duration = parser.ParseTime(value)
+		case "classname":
+			test.Classname = value
+		}
+	}
+
+	test.EnsureID(suite)
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
@@ -163,17 +179,6 @@ func (me Generic) newTest(xml parser.XMLElement) parser.Test {
 			test.SystemOut = string(node.Contents)
 		case "system-err":
 			test.SystemErr = string(node.Contents)
-		}
-	}
-
-	for attr, value := range xml.Attributes {
-		switch attr {
-		case "name":
-			test.Name = value
-		case "time":
-			test.Duration = parser.ParseTime(value)
-		case "classname":
-			test.Classname = value
 		}
 	}
 
