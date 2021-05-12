@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Generic_ParseTestSuite(t *testing.T) {
+func Test_ExUnit_ParseTestSuite(t *testing.T) {
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
 			<testsuite name="foo" id="1234">
@@ -24,27 +24,28 @@ func Test_Generic_ParseTestSuite(t *testing.T) {
 
 	fileloader.Load("/path1", reader)
 
-	p := NewGeneric()
+	p := NewExUnit()
 	testResults := p.Parse("/path1")
-	assert.Equal(t, "Generic Suite", testResults.Name)
-	assert.Equal(t, "17990af8-cb17-371c-9a8e-215e0e201902", testResults.ID)
+	assert.Equal(t, "Exunit Suite", testResults.Name)
+	assert.Equal(t, "exunit", testResults.Framework)
+	assert.Equal(t, "b37fd0fa-7cfa-3b6b-a992-67b61d24b79f", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
 	assert.Equal(t, "", testResults.StatusMessage)
 
 	assert.Equal(t, "foo", testResults.Suites[0].Name)
-	assert.Equal(t, "b088d75b-c907-3ac1-9f80-489cfacb1619", testResults.Suites[0].ID)
+	assert.Equal(t, "3e3fd52e-60da-3a34-ace5-e69db05bc15e", testResults.Suites[0].ID)
 
 	assert.Equal(t, "bar", testResults.Suites[0].Tests[0].Name)
 	assert.Equal(t, "baz", testResults.Suites[0].Tests[1].Name)
 	assert.Equal(t, "bar", testResults.Suites[0].Tests[2].Name)
 
-	assert.Equal(t, "a4e4268d-208f-398d-baa5-f7fd5f904216", testResults.Suites[0].Tests[0].ID)
-	assert.Equal(t, "237dc38f-c2ec-3ee4-af95-3b9d003da11c", testResults.Suites[0].Tests[1].ID)
-	assert.Equal(t, "a4e4268d-208f-398d-baa5-f7fd5f904216", testResults.Suites[0].Tests[2].ID)
+	assert.Equal(t, "43ad972b-a4fe-3835-8e9d-a9c765261a64", testResults.Suites[0].Tests[0].ID)
+	assert.Equal(t, "bfb9eae0-3a41-312d-b429-a32e76be493f", testResults.Suites[0].Tests[1].ID)
+	assert.Equal(t, "43ad972b-a4fe-3835-8e9d-a9c765261a64", testResults.Suites[0].Tests[2].ID)
 
 }
 
-func Test_Generic_ParseTestSuites(t *testing.T) {
+func Test_ExUnit_ParseTestSuites(t *testing.T) {
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
 		<testsuites name="ff">
@@ -144,9 +145,10 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 
 	fileloader.Load("/path2", reader)
 
-	p := NewGeneric()
+	p := NewExUnit()
 	testResults := p.Parse("/path2")
 	assert.Equal(t, "ff", testResults.Name)
+	assert.Equal(t, "exunit", testResults.Framework)
 	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
 	assert.Equal(t, "", testResults.StatusMessage)
@@ -162,7 +164,7 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 	}
 }
 
-func Test_Generic_ParseInvalidRoot(t *testing.T) {
+func Test_ExUnit_ParseInvalidRoot(t *testing.T) {
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
 		<nontestsuites name="ff">
@@ -177,7 +179,7 @@ func Test_Generic_ParseInvalidRoot(t *testing.T) {
 
 	fileloader.Load("/path3", reader)
 
-	p := NewGeneric()
+	p := NewExUnit()
 	testResults := p.Parse("/path3")
 	assert.Equal(t, parser.StatusError, testResults.Status)
 	assert.NotEmpty(t, testResults.StatusMessage)

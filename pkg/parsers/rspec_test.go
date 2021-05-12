@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Generic_ParseTestSuite(t *testing.T) {
+func Test_RSpec_ParseTestSuite(t *testing.T) {
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
 			<testsuite name="foo" id="1234">
@@ -24,27 +24,28 @@ func Test_Generic_ParseTestSuite(t *testing.T) {
 
 	fileloader.Load("/path1", reader)
 
-	p := NewGeneric()
+	p := NewRSpec()
 	testResults := p.Parse("/path1")
-	assert.Equal(t, "Generic Suite", testResults.Name)
-	assert.Equal(t, "17990af8-cb17-371c-9a8e-215e0e201902", testResults.ID)
+	assert.Equal(t, "Rspec Suite", testResults.Name)
+	assert.Equal(t, "rspec", testResults.Framework)
+	assert.Equal(t, "a9497520-97f8-30ac-a6f4-6e3f69dc69a5", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
 	assert.Equal(t, "", testResults.StatusMessage)
 
 	assert.Equal(t, "foo", testResults.Suites[0].Name)
-	assert.Equal(t, "b088d75b-c907-3ac1-9f80-489cfacb1619", testResults.Suites[0].ID)
+	assert.Equal(t, "9d30ea07-aedd-3c14-b012-a3962fe5b698", testResults.Suites[0].ID)
 
 	assert.Equal(t, "bar", testResults.Suites[0].Tests[0].Name)
 	assert.Equal(t, "baz", testResults.Suites[0].Tests[1].Name)
 	assert.Equal(t, "bar", testResults.Suites[0].Tests[2].Name)
 
-	assert.Equal(t, "a4e4268d-208f-398d-baa5-f7fd5f904216", testResults.Suites[0].Tests[0].ID)
-	assert.Equal(t, "237dc38f-c2ec-3ee4-af95-3b9d003da11c", testResults.Suites[0].Tests[1].ID)
-	assert.Equal(t, "a4e4268d-208f-398d-baa5-f7fd5f904216", testResults.Suites[0].Tests[2].ID)
+	assert.Equal(t, "5dbd5f2f-cce8-3bad-82c0-acef31c3e60d", testResults.Suites[0].Tests[0].ID)
+	assert.Equal(t, "5944a4e5-6a2f-3e47-8a46-061f291a2deb", testResults.Suites[0].Tests[1].ID)
+	assert.Equal(t, "5dbd5f2f-cce8-3bad-82c0-acef31c3e60d", testResults.Suites[0].Tests[2].ID)
 
 }
 
-func Test_Generic_ParseTestSuites(t *testing.T) {
+func Test_RSpec_ParseTestSuites(t *testing.T) {
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
 		<testsuites name="ff">
@@ -144,9 +145,10 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 
 	fileloader.Load("/path2", reader)
 
-	p := NewGeneric()
+	p := NewRSpec()
 	testResults := p.Parse("/path2")
 	assert.Equal(t, "ff", testResults.Name)
+	assert.Equal(t, "rspec", testResults.Framework)
 	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
 	assert.Equal(t, "", testResults.StatusMessage)
@@ -162,7 +164,7 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 	}
 }
 
-func Test_Generic_ParseInvalidRoot(t *testing.T) {
+func Test_RSpec_ParseInvalidRoot(t *testing.T) {
 	reader := bytes.NewReader([]byte(`
 		<?xml version="1.0"?>
 		<nontestsuites name="ff">
@@ -177,7 +179,7 @@ func Test_Generic_ParseInvalidRoot(t *testing.T) {
 
 	fileloader.Load("/path3", reader)
 
-	p := NewGeneric()
+	p := NewRSpec()
 	testResults := p.Parse("/path3")
 	assert.Equal(t, parser.StatusError, testResults.Status)
 	assert.NotEmpty(t, testResults.StatusMessage)

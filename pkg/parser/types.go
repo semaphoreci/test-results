@@ -2,6 +2,8 @@ package parser
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 // Properties maps additional parameters for test suites
@@ -55,11 +57,20 @@ func NewTestResults() TestResults {
 	}
 }
 
+// EnsureID ...
+func (me *TestResults) EnsureID() {
+	if me.ID == "" {
+		me.ID = me.Name
+	}
+
+	me.ID = UUID(uuid.Nil, me.ID).String()
+}
+
 // Aggregate all test suite summaries
-func (testResults *TestResults) Aggregate() {
+func (me *TestResults) Aggregate() {
 	summary := Summary{}
 
-	for _, suite := range testResults.Suites {
+	for _, suite := range me.Suites {
 		summary.Duration += suite.Summary.Duration
 		summary.Skipped += suite.Summary.Skipped
 		summary.Error += suite.Summary.Error
@@ -69,7 +80,7 @@ func (testResults *TestResults) Aggregate() {
 		summary.Disabled += suite.Summary.Disabled
 	}
 
-	(*testResults).Summary = summary
+	(*me).Summary = summary
 }
 
 // Suite ...
@@ -95,10 +106,10 @@ func NewSuite() Suite {
 
 // Aggregate all tests in suite
 // TODO: add flag to skip aggregating already present data
-func (suite *Suite) Aggregate() {
+func (me *Suite) Aggregate() {
 	summary := Summary{}
 
-	for _, test := range suite.Tests {
+	for _, test := range me.Tests {
 		summary.Duration += test.Duration
 		summary.Total++
 		switch test.State {
@@ -115,7 +126,16 @@ func (suite *Suite) Aggregate() {
 		}
 	}
 
-	(*suite).Summary = summary
+	(*me).Summary = summary
+}
+
+// EnsureID ...
+func (me *Suite) EnsureID(tr TestResults) {
+	if me.ID == "" {
+		me.ID = me.Name
+	}
+
+	me.ID = UUID(uuid.MustParse(tr.ID), me.ID).String()
 }
 
 // Test ...
@@ -138,6 +158,15 @@ func NewTest() Test {
 	return Test{
 		State: StatePassed,
 	}
+}
+
+// EnsureID ...
+func (me *Test) EnsureID(s Suite) {
+	if me.ID == "" {
+		me.ID = me.Name
+	}
+
+	me.ID = UUID(uuid.MustParse(s.ID), me.ID).String()
 }
 
 type err struct {
@@ -171,4 +200,9 @@ type Summary struct {
 	Failed   int           `json:"failed"`
 	Disabled int           `json:"disabled"`
 	Duration time.Duration `json:"duration"`
+}
+
+// UUID ...
+func UUID(id uuid.UUID, str string) uuid.UUID {
+	return uuid.NewMD5(id, []byte(str))
 }
