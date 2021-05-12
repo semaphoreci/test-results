@@ -80,7 +80,7 @@ func (me *TestResults) Aggregate() {
 		summary.Disabled += suite.Summary.Disabled
 	}
 
-	(*me).Summary = summary
+	me.Summary = summary
 }
 
 // Suite ...
@@ -126,7 +126,7 @@ func (me *Suite) Aggregate() {
 		}
 	}
 
-	(*me).Summary = summary
+	me.Summary = summary
 }
 
 // EnsureID ...
