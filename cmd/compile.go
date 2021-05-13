@@ -17,12 +17,7 @@ limitations under the License.
 */
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
-
-	"github.com/semaphoreci/test-results/pkg/logger"
-	"github.com/semaphoreci/test-results/pkg/parsers"
+	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/spf13/cobra"
 )
 
@@ -33,48 +28,35 @@ var compileCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		if trace {
-			logger.SetLevel(logger.TraceLevel)
-		} else if verbose {
-			logger.SetLevel(logger.DebugLevel)
-		}
-
-		inFile := args[0]
-		outFile := args[1]
-
-		_, err := os.Stat(inFile)
-
-		logger.Info("Reading %s", inFile)
+		err := cli.SetLogLevel(cmd)
 		if err != nil {
-			logger.Error("Input file read failed: %v", err)
 			return
 		}
 
-		parser, err := parsers.FindParser(parser, inFile)
+		inFile, err := cli.CheckFile(args[0])
 		if err != nil {
-			logger.Error("Could not find parser: %v", err)
 			return
 		}
-		logger.Info("Using %s parser", parser.GetName())
 
-		testResults := parser.Parse(inFile)
-		if name != "" {
-			logger.Debug("Overriding test results name to %s", name)
-			testResults.Name = name
-		}
-
-		testResults.Framework = parser.GetName()
-
-		file, err := json.Marshal(testResults)
+		parser, err := cli.FindParser(inFile, cmd)
 		if err != nil {
-			logger.Error("Marshaling results failed with: %v", err)
+			return
 		}
 
-		err = ioutil.WriteFile(outFile, file, 0644)
+		testResults, err := cli.Parse(parser, inFile, cmd)
 		if err != nil {
-			logger.Error("Output file write failed: %v", err)
+			return
 		}
-		logger.Info("Saving results to %s", outFile)
+
+		jsonData, err := cli.Marshal(testResults)
+		if err != nil {
+			return
+		}
+
+		_, err = cli.WriteToFile(jsonData, args[1])
+		if err != nil {
+			return
+		}
 	},
 }
 

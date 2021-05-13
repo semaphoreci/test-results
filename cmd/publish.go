@@ -17,13 +17,11 @@ limitations under the License.
 */
 
 import (
-	"encoding/json"
-	"io/ioutil"
 	"os"
-	"os/exec"
+	"path"
 
+	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
-	"github.com/semaphoreci/test-results/pkg/parsers"
 	"github.com/spf13/cobra"
 )
 
@@ -34,68 +32,83 @@ var publishCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if trace {
-			logger.SetLevel(logger.TraceLevel)
-		} else if verbose {
-			logger.SetLevel(logger.DebugLevel)
-		}
-
-		inFile := args[0]
-
-		_, err := os.Stat(inFile)
+		err := cli.SetLogLevel(cmd)
 		if err != nil {
-			logger.Error("Input file read failed: %v", err)
 			return
 		}
 
-		parser, err := parsers.FindParser(parser, inFile)
+		inFile, err := cli.CheckFile(args[0])
 		if err != nil {
-			logger.Error("Could not find parser: %v", err)
-			return
-		}
-		logger.Info("Using %s parser", parser.GetName())
-
-		testResults := parser.Parse(inFile)
-		if name != "" {
-			logger.Debug("Overriding test results name to %s", name)
-			testResults.Name = name
-		}
-
-		testResults.Framework = parser.GetName()
-
-		file, err := json.Marshal(testResults)
-		if err != nil {
-			logger.Error("Marshaling results failed with: %v", err)
 			return
 		}
 
-		tmpFile, err := ioutil.TempFile("/tmp", "test-results")
-
-		_, err = tmpFile.Write(file)
+		parser, err := cli.FindParser(inFile, cmd)
 		if err != nil {
-			logger.Error("Output file write failed: %v", err)
 			return
 		}
-		logger.Info("Saving results to %s", tmpFile.Name())
-
-		artifactsPush := exec.Command("artifact", "push", "job", tmpFile.Name(), "-d", "test-results/junit.json")
-		err = artifactsPush.Run()
+		testResults, err := cli.Parse(parser, inFile, cmd)
 		if err != nil {
-			logger.Error("Pushing artifacts failed: %v", err)
 			return
 		}
-		logger.Info("Pushing json artifacts:\n > %s", artifactsPush.String())
 
-		artifactsPush = exec.Command("artifact", "push", "job", inFile, "-d", "test-results/junit.xml")
-		err = artifactsPush.Run()
+		jsonData, err := cli.Marshal(testResults)
 		if err != nil {
-			logger.Error("Pushing artifacts failed: %v", err)
 			return
 		}
-		logger.Info("Pushing xml artifacts:\n > %s", artifactsPush.String())
+
+		fileName, err := cli.WriteToTmpFile(jsonData)
+		if err != nil {
+			return
+		}
+
+		err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
+		if err != nil {
+			return
+		}
+
+		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
+		if !found {
+			logger.Error("SEMAPHORE_PIPELINE_ID env is missing")
+			return
+		}
+
+		jobID, found := os.LookupEnv("SEMAPHORE_JOB_ID")
+		if !found {
+			logger.Error("SEMAPHORE_JOB_ID env is missing")
+			return
+		}
+
+		err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID, jobID+".json"), cmd)
+		if err != nil {
+			return
+		}
+
+		noRaw, err := cmd.Flags().GetBool("no-raw")
+		if err != nil {
+			logger.Error("Reading flag error: %v", err)
+			return
+		}
+		if !noRaw {
+			err = cli.PushArtifacts("job", inFile, "test-results/junit.xml", cmd)
+			if err != nil {
+				return
+			}
+		}
 	},
 }
 
 func init() {
+
+	desc := `Skips uploading raw XML files`
+	publishCmd.Flags().BoolP("no-raw", "", false, desc)
+
+	desc = `Removes the files after the given amount of time.
+Nd for N days
+Nw for N weeks
+Nm for N months
+Ny for N years
+`
+	publishCmd.Flags().StringP("expire-in", "", "", desc)
+
 	rootCmd.AddCommand(publishCmd)
 }
