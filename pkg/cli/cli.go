@@ -127,12 +127,12 @@ func PushArtifacts(level string, file string, destination string, cmd *cobra.Com
 		artifactsPush.Args = append(artifactsPush.Args, "--expire-in", expireIn)
 	}
 
-	err = artifactsPush.Run()
+	output, err := artifactsPush.CombinedOutput()
 
 	logger.Info("Pushing json artifacts:\n > %s", artifactsPush.String())
 
 	if err != nil {
-		logger.Error("Pushing artifacts failed: %v", err)
+		logger.Error("Pushing artifacts failed: %v\n%s", err, string(output))
 		return err
 	}
 	return nil
