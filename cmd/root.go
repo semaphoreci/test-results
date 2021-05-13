@@ -29,15 +29,12 @@ import (
 // Flags
 
 var cfgFile string
-var verbose bool
-var trace bool
-var name string
-var parser string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "test-results",
-	Short: "A brief description of your application",
+	Use:     "test-results",
+	Version: "0.1.0",
+	Short:   "A brief description of your application",
 	Long: `A longer description that spans multiple lines and likely contains
 examples and usage of using your application. For example:
 
@@ -63,10 +60,10 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.test-results.yaml)")
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().BoolVarP(&trace, "trace", "", false, "trace output")
-	rootCmd.PersistentFlags().StringVarP(&name, "name", "N", "", "name of the suite")
-	rootCmd.PersistentFlags().StringVarP(&parser, "parser", "p", "auto", "override parser to be used")
+	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")
+	rootCmd.PersistentFlags().BoolP("trace", "", false, "trace output")
+	rootCmd.PersistentFlags().StringP("name", "N", "", "name of the suite")
+	rootCmd.PersistentFlags().StringP("parser", "p", "auto", "override parser to be used")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
