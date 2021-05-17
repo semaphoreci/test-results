@@ -21,8 +21,7 @@ func TestFindParser(t *testing.T) {
 		{
 			desc: "finds parser automatically",
 			name: "auto",
-			path: "/some/generic_path",
-			reader: bytes.NewReader([]byte(`
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
 					<testsuites name="foo" time="0.1234" tests="10" failures="5" errors="1">
 						<testsuite>
@@ -32,15 +31,14 @@ func TestFindParser(t *testing.T) {
 							</testcase>
 						</testsuite>
 					</testsuites>
-			`)),
+			`))),
 			want:    Generic{},
 			wantErr: false,
 		},
 		{
 			desc: "finds rspec parser automatically",
 			name: "auto",
-			path: "/some/rspec_path",
-			reader: bytes.NewReader([]byte(`
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
 					<testsuite name="rspec">
 						<testcase name="bar">
@@ -48,15 +46,14 @@ func TestFindParser(t *testing.T) {
 						<testcase name="baz">
 						</testcase>
 					</testsuite>
-			`)),
+			`))),
 			want:    RSpec{},
 			wantErr: false,
 		},
 		{
 			desc: "finds exunit parser automatically",
 			name: "auto",
-			path: "/some/exunit_path",
-			reader: bytes.NewReader([]byte(`
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
 					<testsuites>
 						<testsuite name="Elixir.bar">
@@ -66,15 +63,14 @@ func TestFindParser(t *testing.T) {
 							</testcase>
 						</testsuite>
 					</testsuites>
-			`)),
+			`))),
 			want:    ExUnit{},
 			wantErr: false,
 		},
 		{
 			desc: "finds mocha parser automatically",
 			name: "auto",
-			path: "/some/mocha_path",
-			reader: bytes.NewReader([]byte(`
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
 				<testsuites name="Mocha tests">
 					<testsuite name="rspec">
@@ -84,15 +80,14 @@ func TestFindParser(t *testing.T) {
 						</testcase>
 					</testsuite>
 				</testsuites>
-			`)),
+			`))),
 			want:    Mocha{},
 			wantErr: false,
 		},
 		{
 			desc: "finds golang parser automatically",
 			name: "auto",
-			path: "/some/golang_path",
-			reader: bytes.NewReader([]byte(`
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
 				<?xml version="1.0"?>
 				<testsuites name="tests">
 					<testsuite>
@@ -105,26 +100,25 @@ func TestFindParser(t *testing.T) {
 						</testcase>
 					</testsuite>
 				</testsuites>
-			`)),
+			`))),
 			want:    GoLang{},
 			wantErr: false,
 		},
 		{
 			desc: "finds golang parser automatically",
 			name: "auto",
-			path: "/some/golang_path",
-			reader: bytes.NewReader([]byte(`
-				<?xml version="1.0"?>
-				<testsuite>
-					<properties>
-						<property name="go.version" value="1.15.0"></property>
-					</properties>
-					<testcase name="bar">
-					</testcase>
-					<testcase name="baz">
-					</testcase>
-				</testsuite>
-			`)),
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
+			<?xml version="1.0"?>
+			<testsuite>
+				<properties>
+					<property name="go.version" value="1.15.0"></property>
+				</properties>
+				<testcase name="bar">
+				</testcase>
+				<testcase name="baz">
+				</testcase>
+			</testsuite>
+		`))),
 			want:    GoLang{},
 			wantErr: false,
 		},

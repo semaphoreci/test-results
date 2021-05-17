@@ -57,6 +57,48 @@ func NewTestResults() TestResults {
 	}
 }
 
+// ArrangeSuitesByTestFile ...
+func (me *TestResults) ArrangeSuitesByTestFile() {
+	newSuites := []Suite{}
+
+	for _, suite := range me.Suites {
+		for _, test := range suite.Tests {
+			var (
+				idx        int
+				foundSuite *Suite
+			)
+			if test.File != "" {
+				idx, foundSuite = EnsureSuiteByName(newSuites, test.File)
+			} else {
+				idx, foundSuite = EnsureSuiteByName(newSuites, suite.Name)
+			}
+
+			foundSuite.Tests = append(foundSuite.Tests, test)
+
+			if idx == -1 {
+				foundSuite.EnsureID(*me)
+				newSuites = append(newSuites, *foundSuite)
+			}
+		}
+	}
+
+	me.Suites = newSuites
+	me.Aggregate()
+}
+
+// EnsureSuiteByName ...
+func EnsureSuiteByName(suites []Suite, name string) (int, *Suite) {
+	for i := range suites {
+		if suites[i].Name == name {
+			return i, &suites[i]
+		}
+	}
+	suite := NewSuite()
+	suite.Name = name
+
+	return -1, &suite
+}
+
 // EnsureID ...
 func (me *TestResults) EnsureID() {
 	if me.ID == "" {
@@ -70,14 +112,14 @@ func (me *TestResults) EnsureID() {
 func (me *TestResults) Aggregate() {
 	summary := Summary{}
 
-	for _, suite := range me.Suites {
-		summary.Duration += suite.Summary.Duration
-		summary.Skipped += suite.Summary.Skipped
-		summary.Error += suite.Summary.Error
-		summary.Total += suite.Summary.Total
-		summary.Failed += suite.Summary.Failed
-		summary.Passed += suite.Summary.Passed
-		summary.Disabled += suite.Summary.Disabled
+	for i := range me.Suites {
+		summary.Duration += me.Suites[i].Summary.Duration
+		summary.Skipped += me.Suites[i].Summary.Skipped
+		summary.Error += me.Suites[i].Summary.Error
+		summary.Total += me.Suites[i].Summary.Total
+		summary.Failed += me.Suites[i].Summary.Failed
+		summary.Passed += me.Suites[i].Summary.Passed
+		summary.Disabled += me.Suites[i].Summary.Disabled
 	}
 
 	me.Summary = summary
@@ -135,7 +177,18 @@ func (me *Suite) EnsureID(tr TestResults) {
 		me.ID = me.Name
 	}
 
-	me.ID = UUID(uuid.MustParse(tr.ID), me.ID).String()
+	oldID, err := uuid.Parse(tr.ID)
+	if err != nil {
+		oldID = uuid.Nil
+	}
+
+	me.ID = UUID(oldID, me.ID).String()
+}
+
+// AppendTest ...
+func (me *Suite) AppendTest(test Test) {
+	me.Tests = append(me.Tests, test)
+	me.Aggregate()
 }
 
 // Test ...

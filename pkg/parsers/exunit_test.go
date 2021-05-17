@@ -22,10 +22,10 @@ func Test_ExUnit_ParseTestSuite(t *testing.T) {
 			</testsuite>
 	`))
 
-	fileloader.Load("/path1", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewExUnit()
-	testResults := p.Parse("/path1")
+	testResults := p.Parse(path)
 	assert.Equal(t, "Exunit Suite", testResults.Name)
 	assert.Equal(t, "exunit", testResults.Framework)
 	assert.Equal(t, "b37fd0fa-7cfa-3b6b-a992-67b61d24b79f", testResults.ID)
@@ -143,10 +143,10 @@ func Test_ExUnit_ParseTestSuites(t *testing.T) {
 		},
 	}
 
-	fileloader.Load("/path2", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewExUnit()
-	testResults := p.Parse("/path2")
+	testResults := p.Parse(path)
 	assert.Equal(t, "ff", testResults.Name)
 	assert.Equal(t, "exunit", testResults.Framework)
 	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
@@ -177,10 +177,10 @@ func Test_ExUnit_ParseInvalidRoot(t *testing.T) {
 		</nontestsuites>
 	`))
 
-	fileloader.Load("/path3", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewExUnit()
-	testResults := p.Parse("/path3")
+	testResults := p.Parse(path)
 	assert.Equal(t, parser.StatusError, testResults.Status)
 	assert.NotEmpty(t, testResults.StatusMessage)
 }
