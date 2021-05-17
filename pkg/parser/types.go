@@ -74,6 +74,7 @@ func (me *TestResults) ArrangeSuitesByTestFile() {
 			}
 
 			foundSuite.Tests = append(foundSuite.Tests, test)
+			foundSuite.Aggregate()
 
 			if idx == -1 {
 				foundSuite.EnsureID(*me)
