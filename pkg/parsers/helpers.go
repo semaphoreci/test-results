@@ -12,9 +12,9 @@ import (
 func LoadPath(path string) (*bytes.Reader, error) {
 	var reader *bytes.Reader
 	// Preload path with loader. If nothing is found in file cache - load it up from path.
-	reader, found := fileloader.Load(path, nil)
+	reader, found := fileloader.Load(path, &bytes.Reader{})
 
-	if found == false {
+	if !found {
 		file, err := ioutil.ReadFile(path)
 
 		if err != nil {

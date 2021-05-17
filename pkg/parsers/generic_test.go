@@ -22,10 +22,10 @@ func Test_Generic_ParseTestSuite(t *testing.T) {
 			</testsuite>
 	`))
 
-	fileloader.Load("/path1", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewGeneric()
-	testResults := p.Parse("/path1")
+	testResults := p.Parse(path)
 	assert.Equal(t, "Generic Suite", testResults.Name)
 	assert.Equal(t, "17990af8-cb17-371c-9a8e-215e0e201902", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
@@ -142,10 +142,10 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 		},
 	}
 
-	fileloader.Load("/path2", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewGeneric()
-	testResults := p.Parse("/path2")
+	testResults := p.Parse(path)
 	assert.Equal(t, "ff", testResults.Name)
 	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
@@ -175,10 +175,10 @@ func Test_Generic_ParseInvalidRoot(t *testing.T) {
 		</nontestsuites>
 	`))
 
-	fileloader.Load("/path3", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewGeneric()
-	testResults := p.Parse("/path3")
+	testResults := p.Parse(path)
 	assert.Equal(t, parser.StatusError, testResults.Status)
 	assert.NotEmpty(t, testResults.StatusMessage)
 }

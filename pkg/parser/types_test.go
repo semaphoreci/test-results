@@ -1,13 +1,14 @@
 package parser
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewTestResults(t *testing.T) {
+func Test_NewTest_Results(t *testing.T) {
 	testResults := NewTestResults()
 
 	assert.IsType(t, testResults, TestResults{})
@@ -15,7 +16,7 @@ func TestNewTestResults(t *testing.T) {
 	assert.Equal(t, testResults.StatusMessage, "")
 }
 
-func TestTestResults_Aggregate(t *testing.T) {
+func Test_TestResults_Aggregate(t *testing.T) {
 	testResults := TestResults{}
 
 	testResults.Aggregate()
@@ -50,13 +51,110 @@ func TestTestResults_Aggregate(t *testing.T) {
 	assert.Equal(t, testResults.Summary, Summary{18, 3, 6, 4, 3, 3, 11})
 }
 
-func TestNewSuite(t *testing.T) {
+func Test_TestResults_ArrangeSuitesByTestFile(t *testing.T) {
+	testResults := NewTestResults()
+	testResults.ID = "1"
+
+	suite := newSuite("1", "test_suite_name/with_special_chars.go")
+	newTest(&suite, "1", "foo/foo.go")
+	newTest(&suite, "2", "foo/bar.go")
+	testResults.Suites = append(testResults.Suites, suite)
+
+	suite = newSuite("2", "golang")
+	newTest(&suite, "3", "golang/foo.go")
+	newTest(&suite, "4", "golang/bar.go")
+	testResults.Suites = append(testResults.Suites, suite)
+
+	suite = newSuite("3", "foo/foo.go")
+	newTest(&suite, "5", "foo/foo.go")
+	newTest(&suite, "6", "foo/foo.go")
+	testResults.Suites = append(testResults.Suites, suite)
+
+	assert.Equal(t, 3, len(testResults.Suites), "test results should have correct number of suites before arrangement")
+	for _, suite := range testResults.Suites {
+		assert.Equal(t, 2, len(suite.Tests), "suites should have correct number of tests before arrangement")
+	}
+
+	testResults.Aggregate()
+
+	testResults.ArrangeSuitesByTestFile()
+
+	assert.Equal(t, 4, len(testResults.Suites), "test results should have correct number of suites after arrangement")
+
+	suite = testResults.Suites[0]
+	assert.Equal(t, "foo/foo.go", suite.Name, "suite name should match")
+	assert.Equal(t, 3, len(suite.Tests), "should contain correct number of tests")
+	assert.Equal(t, "foo/foo.go#1", suite.Tests[0].Name, "test name should match")
+	assert.Equal(t, "foo/foo.go#5", suite.Tests[1].Name, "test name should match")
+	assert.Equal(t, "foo/foo.go#6", suite.Tests[2].Name, "test name should match")
+
+	suite = testResults.Suites[1]
+	assert.Equal(t, "foo/bar.go", suite.Name, "suite name should match")
+	assert.Equal(t, 1, len(suite.Tests), "should remove tests from old suite")
+	assert.Equal(t, "foo/bar.go#2", suite.Tests[0].Name, "test name should match")
+
+	suite = testResults.Suites[2]
+	assert.Equal(t, "golang/foo.go", suite.Name, "suite name should match")
+	assert.Equal(t, 1, len(suite.Tests), "should remove tests from old suite")
+	assert.Equal(t, "golang/foo.go#3", suite.Tests[0].Name, "test name should match")
+
+	suite = testResults.Suites[3]
+	assert.Equal(t, "golang/bar.go", suite.Name, "suite name should match")
+	assert.Equal(t, 1, len(suite.Tests), "should remove tests from old suite")
+	assert.Equal(t, "golang/bar.go#4", suite.Tests[0].Name, "test name should match")
+}
+
+func Test_TestResults_ArrangeSuitesByTestFile_SingleSuite(t *testing.T) {
+	testResults := NewTestResults()
+	testResults.ID = "1"
+
+	suite := newSuite("1", "test_suite_name/with_special_chars.go")
+	newTest(&suite, "1", "foo/foo.go")
+	newTest(&suite, "2", "foo/bar.go")
+	test := NewTest()
+	test.ID = "3"
+	test.Name = "Foo"
+	suite.Tests = append(suite.Tests, test)
+	test.ID = "4"
+	test.Name = "Bar"
+	suite.Tests = append(suite.Tests, test)
+
+	testResults.Suites = append(testResults.Suites, suite)
+
+	assert.Equal(t, 1, len(testResults.Suites), "test results should have correct number of suites before arrangement")
+	for _, suite := range testResults.Suites {
+		assert.Equal(t, 4, len(suite.Tests), "suites should have correct number of tests before arrangement")
+	}
+
+	testResults.ArrangeSuitesByTestFile()
+
+	assert.Equal(t, 3, len(testResults.Suites), "test results should have correct number of suites after arrangement")
+
+	suite = testResults.Suites[0]
+	assert.Equal(t, "foo/foo.go", suite.Name, "suite name should match")
+	assert.Equal(t, 1, len(suite.Tests), "should contain correct number of tests")
+	assert.Equal(t, "foo/foo.go#1", suite.Tests[0].Name, "test name should match")
+
+	suite = testResults.Suites[1]
+	assert.Equal(t, "foo/bar.go", suite.Name, "suite name should match")
+	assert.Equal(t, 1, len(suite.Tests), "should remove tests from old suite")
+	assert.Equal(t, "foo/bar.go#2", suite.Tests[0].Name, "test name should match")
+
+	suite = testResults.Suites[2]
+	assert.Equal(t, "test_suite_name/with_special_chars.go", suite.Name, "suite name should match")
+	assert.Equal(t, 2, len(suite.Tests), "should remove tests from old suite")
+	assert.Equal(t, "Foo", suite.Tests[0].Name, "test name should match")
+	assert.Equal(t, "Bar", suite.Tests[1].Name, "test name should match")
+
+}
+
+func Test_NewSuite(t *testing.T) {
 	suite := NewSuite()
 
 	assert.IsType(t, suite, Suite{})
 }
 
-func TestSuite_Aggregate(t *testing.T) {
+func Test_Suite_Aggregate(t *testing.T) {
 	suite := NewSuite()
 
 	suite.Aggregate()
@@ -100,21 +198,36 @@ func TestSuite_Aggregate(t *testing.T) {
 	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 110}, suite.Summary)
 }
 
-func TestNewTest(t *testing.T) {
+func Test_NewTest(t *testing.T) {
 	test := NewTest()
 
 	assert.Equal(t, test.State, StatePassed, "is in passed state by default")
 	assert.IsType(t, test, Test{})
 }
 
-func TestNewError(t *testing.T) {
+func Test_NewError(t *testing.T) {
 	obj := NewError()
 
 	assert.IsType(t, obj, Error{})
 }
 
-func TestNewFailure(t *testing.T) {
+func Test_NewFailure(t *testing.T) {
 	obj := NewFailure()
 
 	assert.IsType(t, obj, Failure{})
+}
+
+func newTest(suite *Suite, id string, file string) {
+	test := NewTest()
+	test.ID = id
+	test.File = file
+	test.Name = fmt.Sprintf("%s#%s", file, id)
+	suite.AppendTest(test)
+}
+
+func newSuite(id string, name string) Suite {
+	suite := NewSuite()
+	suite.ID = id
+	suite.Name = name
+	return suite
 }

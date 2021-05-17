@@ -77,6 +77,7 @@ func (me RSpec) Parse(path string) parser.TestResults {
 		results.StatusMessage = fmt.Sprintf("Invalid root element found: <%s>, must be one of <testsuites>, <testsuite>", tag)
 	}
 
+	results.ArrangeSuitesByTestFile()
 	results.Aggregate()
 
 	return results
@@ -177,6 +178,12 @@ func (me RSpec) newTest(xml parser.XMLElement, suite parser.Suite) parser.Test {
 			test.Duration = parser.ParseTime(value)
 		case "classname":
 			test.Classname = value
+		case "id":
+			test.ID = value
+		case "file":
+			test.File = strings.TrimPrefix(value, "./")
+		case "package":
+			test.Package = value
 		}
 	}
 

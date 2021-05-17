@@ -22,10 +22,10 @@ func Test_GoLang_ParseTestSuite(t *testing.T) {
 			</testsuite>
 	`))
 
-	fileloader.Load("/path1", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewGoLang()
-	testResults := p.Parse("/path1")
+	testResults := p.Parse(path)
 	assert.Equal(t, "Golang Suite", testResults.Name)
 	assert.Equal(t, "golang", testResults.Framework)
 	assert.Equal(t, "69cd6757-6b3d-30ca-bb19-0b892b4f399e", testResults.ID)
@@ -143,10 +143,10 @@ func Test_GoLang_ParseTestSuites(t *testing.T) {
 		},
 	}
 
-	fileloader.Load("/path2", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewGoLang()
-	testResults := p.Parse("/path2")
+	testResults := p.Parse(path)
 	assert.Equal(t, "ff", testResults.Name)
 	assert.Equal(t, "golang", testResults.Framework)
 	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
@@ -177,10 +177,10 @@ func Test_GoLang_ParseInvalidRoot(t *testing.T) {
 		</nontestsuites>
 	`))
 
-	fileloader.Load("/path3", reader)
+	path := fileloader.Ensure(reader)
 
 	p := NewGoLang()
-	testResults := p.Parse("/path3")
+	testResults := p.Parse(path)
 	assert.Equal(t, parser.StatusError, testResults.Status)
 	assert.NotEmpty(t, testResults.StatusMessage)
 }
