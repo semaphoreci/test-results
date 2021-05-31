@@ -84,6 +84,7 @@ blocks:
             - test-results gen-pipeline-report
             - artifact pull workflow test-results/junit.json -d /tmp/junit.json
             - diff /tmp/junit.json priv/workflow/out.json
+            - artifact push job /tmp/junit.json -d test-results/junit.json
 
 
 promotions:

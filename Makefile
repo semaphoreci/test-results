@@ -11,7 +11,7 @@ regen:
 
 	go run main.go compile priv/merging priv/merging/out.json
 
-	go run main.go compile priv priv/workflow/out.json
+	go run main.go compile priv/merging priv/parsers priv/workflow/out.json
 
 test:
 	gotestsum ./...

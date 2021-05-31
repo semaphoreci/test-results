@@ -16,29 +16,35 @@ import (
 )
 
 // LoadFiles checks if path exists and can be `stat`ed at given `path`
-func LoadFiles(path string) ([]string, error) {
-	file, err := os.Stat(path)
+func LoadFiles(inPaths []string) ([]string, error) {
 	paths := []string{}
 
-	if err != nil {
-		logger.Error("Input file read failed: %v", err)
-		return paths, err
-	}
+	for _, path := range inPaths {
+		file, err := os.Stat(path)
 
-	switch file.IsDir() {
-	case true:
-		filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
-			if d.Type().IsRegular() {
-				switch filepath.Ext(d.Name()) {
-				case ".xml":
-					paths = append(paths, path)
+		if err != nil {
+			logger.Error("Input file read failed: %v", err)
+			return paths, err
+		}
+
+		switch file.IsDir() {
+		case true:
+			filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
+				if d.Type().IsRegular() {
+					switch filepath.Ext(d.Name()) {
+					case ".xml":
+						paths = append(paths, path)
+					}
 				}
-			}
-			return nil
-		})
+				return nil
+			})
 
-	case false:
-		paths = append(paths, path)
+		case false:
+			switch filepath.Ext(file.Name()) {
+			case ".xml":
+				paths = append(paths, path)
+			}
+		}
 	}
 
 	sort.Strings(paths)
@@ -77,13 +83,14 @@ func FindParser(path string, cmd *cobra.Command) (parser.Parser, error) {
 }
 
 // Parse parses file at `path` with given `parser`
-func Parse(parser parser.Parser, path string, cmd *cobra.Command) (parser.TestResults, error) {
-	testResults := parser.Parse(path)
+func Parse(p parser.Parser, path string, cmd *cobra.Command) (parser.Result, error) {
+	result := parser.NewResult()
+	testResults := p.Parse(path)
 
 	testResultsName, err := cmd.Flags().GetString("name")
 	if err != nil {
 		logger.Error("Reading flag error: %v", err)
-		return testResults, err
+		return result, err
 	}
 
 	if testResultsName != "" {
@@ -91,11 +98,13 @@ func Parse(parser parser.Parser, path string, cmd *cobra.Command) (parser.TestRe
 		testResults.Name = testResultsName
 	}
 
-	return testResults, nil
+	result.TestResults = append(result.TestResults, testResults)
+
+	return result, nil
 }
 
 // Marshal provides json output for given test results
-func Marshal(testResults parser.TestResults) ([]byte, error) {
+func Marshal(testResults parser.Result) ([]byte, error) {
 	jsonData, err := json.Marshal(testResults)
 	if err != nil {
 		logger.Error("Marshaling results failed with: %v", err)
@@ -230,7 +239,8 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 		logger.Error(err.Error())
 	}
 
-	var result *parser.Result
+	r := parser.NewResult()
+	result := &r
 
 	fun := func(p string, d fs.DirEntry, err error) error {
 		if verbose {
@@ -262,7 +272,7 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 			return err
 		}
 
-		result, err = Load(inFile, result)
+		newResult, err := Load(inFile)
 		if err != nil {
 			logger.Error(err.Error())
 			return err
@@ -272,6 +282,7 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 			logger.Info("[verbose] File loaded: %s", p)
 		}
 
+		result.Combine(*newResult)
 		return nil
 	}
 
@@ -280,13 +291,15 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 		logger.Error("Test results dir listing failed: %v", err)
 		return nil, err
 	}
-	result.Combine()
 
 	return result, nil
 }
 
 // Load ...
-func Load(path string, result *parser.Result) (*parser.Result, error) {
+// [TODO]: TEST THIS!!!
+func Load(path string) (*parser.Result, error) {
+	var result parser.Result
+
 	jsonFile, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -296,11 +309,11 @@ func Load(path string, result *parser.Result) (*parser.Result, error) {
 		return nil, err
 	}
 
-	var testResults parser.TestResults
+	err = json.Unmarshal(bytes, &result)
 
-	json.Unmarshal(bytes, &testResults)
+	if err != nil {
+		return nil, err
+	}
 
-	result.TestResults = append(result.TestResults, testResults)
-
-	return result, nil
+	return &result, nil
 }

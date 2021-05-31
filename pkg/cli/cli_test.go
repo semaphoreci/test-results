@@ -14,7 +14,7 @@ func Test_LoadFiles(t *testing.T) {
 
 	t.Run("with invalid path to file", func(t *testing.T) {
 		filePath := generateFile(t)
-		paths, err := cli.LoadFiles(fmt.Sprintf("%s1", filePath))
+		paths, err := cli.LoadFiles([]string{fmt.Sprintf("%s1", filePath)})
 
 		assert.Len(t, paths, 0, "should return correct number of files")
 		assert.NotNil(t, err, "should throw error")
@@ -23,7 +23,7 @@ func Test_LoadFiles(t *testing.T) {
 
 	t.Run("with single file", func(t *testing.T) {
 		filePath := generateFile(t)
-		paths, err := cli.LoadFiles(filePath)
+		paths, err := cli.LoadFiles([]string{filePath})
 
 		assert.Equal(t, filePath, paths[0], "should contain correct file path")
 		assert.Len(t, paths, 1, "should return correct number of files")
@@ -35,7 +35,7 @@ func Test_LoadFiles(t *testing.T) {
 		dirPath := generateDir(t)
 		assert.NotEqual(t, "", dirPath)
 
-		paths, err := cli.LoadFiles(dirPath)
+		paths, err := cli.LoadFiles([]string{dirPath})
 		assert.Len(t, paths, 5, "should return correct number of files")
 		assert.Nil(t, err, "should not throw error")
 
@@ -44,7 +44,7 @@ func Test_LoadFiles(t *testing.T) {
 }
 
 func generateFile(t *testing.T) string {
-	filePath, err := ioutil.TempFile("", "")
+	filePath, err := ioutil.TempFile("", "file-*.xml")
 	if err != nil {
 		t.Errorf("Failed to create temporary file: %v", err)
 	}

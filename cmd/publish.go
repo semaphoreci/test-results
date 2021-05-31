@@ -34,12 +34,13 @@ var publishCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		inputs := args
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
 			return
 		}
 
-		paths, err := cli.LoadFiles(args[0])
+		paths, err := cli.LoadFiles(inputs)
 		if err != nil {
 			return
 		}

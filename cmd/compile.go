@@ -32,12 +32,15 @@ var compileCmd = &cobra.Command{
 	Long:  `Parses xml file to well defined json schema`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		inputs := args[:len(args)-1]
+		output := args[len(args)-1]
+
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
 			return
 		}
 
-		paths, err := cli.LoadFiles(args[0])
+		paths, err := cli.LoadFiles(inputs)
 		if err != nil {
 			return
 		}
@@ -78,7 +81,7 @@ var compileCmd = &cobra.Command{
 			return
 		}
 
-		_, err = cli.WriteToFile(jsonData, args[1])
+		_, err = cli.WriteToFile(jsonData, output)
 		if err != nil {
 			return
 		}

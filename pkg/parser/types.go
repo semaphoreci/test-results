@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"sort"
 	"time"
 
@@ -43,26 +44,30 @@ type Result struct {
 	TestResults []TestResults `json:"testResults"`
 }
 
-// Combine test results that are part of result
-func (me *Result) Combine() {
-	result := Result{}
+// NewResult ...
+func NewResult() Result {
+	return Result{
+		TestResults: []TestResults{},
+	}
+}
 
-	for i := range me.TestResults {
-		foundTestResultsIdx, found := result.hasTestResults(me.TestResults[i])
+// Combine test results that are part of result
+// [TODO]: TEST THIS!!!
+func (me *Result) Combine(other Result) {
+	for i := range other.TestResults {
+		foundTestResultsIdx, found := me.hasTestResults(other.TestResults[i])
 		if found {
-			result.TestResults[foundTestResultsIdx].Combine(me.TestResults[i])
-			result.TestResults[foundTestResultsIdx].Aggregate()
+			me.TestResults[foundTestResultsIdx].Combine(other.TestResults[i])
+			me.TestResults[foundTestResultsIdx].Aggregate()
 		} else {
-			result.TestResults = append(result.TestResults, me.TestResults[i])
-			sort.SliceStable(result.TestResults, func(i, j int) bool { return result.TestResults[i].ID < result.TestResults[j].ID })
+			me.TestResults = append(me.TestResults, other.TestResults[i])
+			sort.SliceStable(me.TestResults, func(i, j int) bool { return me.TestResults[i].ID < me.TestResults[j].ID })
 		}
 	}
 
-	for i := range result.TestResults {
-		result.TestResults[i].Aggregate()
+	for i := range me.TestResults {
+		me.TestResults[i].Aggregate()
 	}
-
-	*me = result
 }
 
 func (me *Result) hasTestResults(testResults TestResults) (int, bool) {
@@ -107,7 +112,7 @@ func (me *TestResults) Combine(other TestResults) {
 				me.Suites = append(me.Suites, other.Suites[i])
 
 				sort.SliceStable(me.Suites, func(i, j int) bool {
-					return me.Suites[i].Name < me.Suites[j].Name
+					return me.Suites[i].ID < me.Suites[j].ID
 				})
 			}
 		}
@@ -172,6 +177,10 @@ func (me *TestResults) EnsureID() {
 		me.ID = me.Name
 	}
 
+	if me.Framework != "" {
+		me.ID = fmt.Sprintf("%s%s", me.ID, me.Framework)
+	}
+
 	me.ID = UUID(uuid.Nil, me.ID).String()
 }
 
@@ -221,7 +230,7 @@ func (me *Suite) Combine(other Suite) {
 				me.Tests = append(me.Tests, test)
 
 				sort.SliceStable(me.Tests, func(i, j int) bool {
-					return me.Tests[i].Name < me.Tests[j].Name
+					return me.Tests[i].ID < me.Tests[j].ID
 				})
 			}
 		}
