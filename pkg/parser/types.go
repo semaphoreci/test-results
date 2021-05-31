@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -45,6 +46,8 @@ type Result struct {
 // Combine test results that are part of result
 func (me *Result) Combine() {
 	result := Result{}
+
+	sort.SliceStable(me.TestResults, func(i, j int) bool { return me.TestResults[i].ID < me.TestResults[j].ID })
 
 	for i := range me.TestResults {
 		foundTestResultsIdx, found := result.hasTestResults(me.TestResults[i])

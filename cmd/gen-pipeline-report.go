@@ -33,6 +33,11 @@ var genPipelineReportCmd = &cobra.Command{
 	Long:  `fetches workflow level junit reports and combines them together`,
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
+		err := cli.SetLogLevel(cmd)
+		if err != nil {
+			return
+		}
+
 		dir, err := ioutil.TempDir("/tmp", "test-results")
 		if err != nil {
 			logger.Error("Creating temporary directory failed %v", err)
@@ -68,5 +73,12 @@ var genPipelineReportCmd = &cobra.Command{
 }
 
 func init() {
+	desc := `Removes the files after the given amount of time.
+Nd for N days
+Nw for N weeks
+Nm for N months
+Ny for N years
+`
+	genPipelineReportCmd.Flags().StringP("expire-in", "", "", desc)
 	rootCmd.AddCommand(genPipelineReportCmd)
 }

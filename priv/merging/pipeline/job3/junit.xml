@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<testsuites>
+  <testsuite name="foo">
+    <testcase name="foo.5"></testcase>
+    <testcase name="foo.6"></testcase>
+  </testsuite>
+</testsuites>

@@ -30,10 +30,12 @@ import (
 
 var cfgFile string
 
+var versionString = "0.3.0"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "test-results",
-	Version: "0.3.0",
+	Version: versionString,
 	Short:   "Semaphore 2.0 Test results CLI",
 	Long:    "Semaphore 2.0 Test results CLI",
 }

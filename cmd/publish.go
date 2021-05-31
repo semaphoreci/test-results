@@ -17,6 +17,8 @@ limitations under the License.
 */
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -37,22 +39,44 @@ var publishCmd = &cobra.Command{
 			return
 		}
 
-		inFile, err := cli.CheckFile(args[0])
+		paths, err := cli.LoadFiles(args[0])
 		if err != nil {
 			return
 		}
 
-		parser, err := cli.FindParser(inFile, cmd)
-		if err != nil {
-			return
+		dirPath, err := ioutil.TempDir("", "test-results-*")
+		for _, path := range paths {
+			parser, err := cli.FindParser(path, cmd)
+			if err != nil {
+				return
+			}
+
+			testResults, err := cli.Parse(parser, path, cmd)
+			if err != nil {
+				return
+			}
+
+			jsonData, err := cli.Marshal(testResults)
+			if err != nil {
+				return
+			}
+
+			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+
+			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+			if err != nil {
+				return
+			}
 		}
-		testResults, err := cli.Parse(parser, inFile, cmd)
+
+		result, err := cli.MergeFiles(dirPath, cmd)
 		if err != nil {
 			return
 		}
 
-		jsonData, err := cli.Marshal(testResults)
+		jsonData, err := json.Marshal(result)
 		if err != nil {
+			logger.Error("Marshaling results failed with: %v", err)
 			return
 		}
 
@@ -89,9 +113,11 @@ var publishCmd = &cobra.Command{
 			return
 		}
 		if !noRaw {
-			_, err = cli.PushArtifacts("job", inFile, "test-results/junit.xml", cmd)
-			if err != nil {
-				return
+			for _, rawFilePath := range paths {
+				_, err = cli.PushArtifacts("job", rawFilePath, path.Join("test-results/raw", rawFilePath), cmd)
+				if err != nil {
+					return
+				}
 			}
 		}
 	},

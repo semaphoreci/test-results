@@ -38,6 +38,9 @@ var compileCmd = &cobra.Command{
 		}
 
 		paths, err := cli.LoadFiles(args[0])
+		if err != nil {
+			return
+		}
 
 		dirPath, err := ioutil.TempDir("", "test-results-*")
 		for _, path := range paths {

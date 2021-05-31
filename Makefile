@@ -4,7 +4,14 @@ run:
 	go run main.go $(arg)
 
 regen:
-	go run main.go compile samples/parsers/generic/in.xml samples/parsers/generic/out.json
+	go run main.go compile priv/parsers/generic/in.xml priv/parsers/generic/out.json
+	go run main.go compile priv/parsers/rspec/in.xml priv/parsers/rspec/out.json
+	go run main.go compile priv/parsers/exunit/in.xml priv/parsers/exunit/out.json
+	go run main.go compile priv/parsers/golang/in.xml priv/parsers/golang/out.json
+
+	go run main.go compile priv/merging priv/merging/out.json
+
+	go run main.go compile priv priv/workflow/out.json
 
 test:
 	gotestsum ./...

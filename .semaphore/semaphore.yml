@@ -25,7 +25,8 @@ blocks:
       epilogue:
         always:
           commands:
-            - test-results publish /tmp/junit.xml
+            - cd /tmp
+            - test-results publish junit.xml
   - name: Build
     dependencies: []
     task:
@@ -50,11 +51,39 @@ blocks:
           - artifact pull workflow bin/test-results -d /tmp/test-results
           - sudo mv /tmp/test-results /usr/local/bin/test-results
           - sudo chmod +x /usr/local/bin/test-results
+          - test-results --version
           - checkout
       jobs:
-        - name: "Integration"
+        - name: "Parsers"
+          matrix:
+              - env_var: PARSER
+                values: ["generic", "rspec", "golang", "exunit"]
           commands:
-            - test-results --version
+            - test-results publish priv/parsers/$PARSER/in.xml
+            - artifact pull job test-results/junit.json -d /tmp/junit.json
+            - diff priv/parsers/$PARSER/out.json /tmp/junit.json
+        - name: "Merging - directory as input"
+          commands:
+            - test-results publish priv/merging
+            - artifact pull job test-results/junit.json -d /tmp/junit.json
+            - diff priv/merging/out.json /tmp/junit.json
+
+  - name: Integration tests - workflow level
+    dependencies:
+      - Integration tests
+    task:
+      prologue:
+        commands:
+          - artifact pull workflow bin/test-results -d /tmp/test-results
+          - sudo mv /tmp/test-results /usr/local/bin/test-results
+          - sudo chmod +x /usr/local/bin/test-results
+          - checkout
+      jobs:
+        - name: "Test"
+          commands:
+            - test-results gen-pipeline-report
+            - artifact pull workflow test-results/junit.json -d /tmp/junit.json
+            - diff /tmp/junit.json priv/workflow/out.json
 
 
 promotions:

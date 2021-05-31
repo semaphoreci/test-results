@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <testsuites>
   <testsuite name="foo">
-    <testcase name="foo.3"></testcase>
-    <testcase name="foo.4"></testcase>
+    <testcase name="foo.1"></testcase>
   </testsuite>
 </testsuites>

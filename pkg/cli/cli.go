@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
@@ -39,6 +40,8 @@ func LoadFiles(path string) ([]string, error) {
 	case false:
 		paths = append(paths, path)
 	}
+
+	sort.Strings(paths)
 
 	return paths, nil
 }
@@ -161,7 +164,7 @@ func PushArtifacts(level string, file string, destination string, cmd *cobra.Com
 
 	output, err := artifactsPush.CombinedOutput()
 
-	logger.Info("Pushing artifacts:\n > %s", artifactsPush.String())
+	logger.Info("Pushing artifacts:\n$%s", artifactsPush.String())
 
 	if err != nil {
 		logger.Error("Pushing artifacts failed: %v\n%s", err, string(output))
@@ -186,7 +189,7 @@ func PullArtifacts(level string, remotePath string, localPath string, cmd *cobra
 
 	output, err := artifactsPush.CombinedOutput()
 
-	logger.Info("Pulling artifacts:\n > %s", artifactsPush.String())
+	logger.Info("Pulling artifacts:\n$%s", artifactsPush.String())
 
 	if err != nil {
 		logger.Error("Pulling artifacts failed: %v\n%s", err, string(output))
@@ -233,13 +236,14 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 			logger.Info(err.Error())
 			return err
 		}
+
 		if d.Type().IsDir() {
 			return nil
 		}
-		fs, err := d.Info()
 
+		fs, err := d.Info()
 		if err != nil {
-			logger.Error("%v", err)
+			logger.Error(err.Error())
 			return err
 		}
 
@@ -249,11 +253,13 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 
 		inFile, err := CheckFile(p)
 		if err != nil {
+			logger.Error(err.Error())
 			return err
 		}
 
 		result, err = Load(inFile, result)
 		if err != nil {
+			logger.Error(err.Error())
 			return err
 		}
 
