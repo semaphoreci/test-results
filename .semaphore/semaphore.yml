@@ -6,26 +6,56 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: "Test"
+  - name: Unit Test
+    dependencies: []
     task:
       prologue:
         commands:
-          - sem-version go 1.15
+          - sem-version go 1.16
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
-
+          - go get ./...
+          - go get -u gotest.tools/gotestsum
       jobs:
-        - name: "Lint and Test"
+        - name: "Test"
           commands:
-            - go get ./...
-            - go get gotest.tools/gotestsum
             - gotestsum --junitfile /tmp/junit.xml
-            - go build
+
       epilogue:
         always:
           commands:
             - test-results publish /tmp/junit.xml
+  - name: Build
+    dependencies: []
+    task:
+      prologue:
+        commands:
+          - sem-version go 1.16
+          - "export GOPATH=~/go"
+          - "export PATH=/home/semaphore/go/bin:$PATH"
+          - checkout
+      jobs:
+        - name: Build
+          commands:
+            - make build
+            - artifact push workflow bin/test-results -d bin/test-results
+
+  - name: Integration tests
+    dependencies:
+      - Build
+    task:
+      prologue:
+        commands:
+          - artifact pull workflow bin/test-results -d /tmp/test-results
+          - sudo mv /tmp/test-results /usr/local/bin/test-results
+          - sudo chmod +x /usr/local/bin/test-results
+          - checkout
+      jobs:
+        - name: "Integration"
+          commands:
+            - test-results --version
+
 
 promotions:
     - name: Release

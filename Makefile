@@ -1,10 +1,16 @@
 PHONY: run
 
 run:
-	go run main.go
+	go run main.go $(arg)
+
+regen:
+	go run main.go compile samples/parsers/generic/in.xml samples/parsers/generic/out.json
+
+test:
+	gotestsum ./...
 
 build:
-	CGO_ENABLED=0 go build -o bin/testresults
+	CGO_ENABLED=0 go build -o bin/test-results
 
 release.major:
 	git fetch --tags

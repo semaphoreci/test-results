@@ -61,7 +61,7 @@ var publishCmd = &cobra.Command{
 			return
 		}
 
-		err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
+		_, err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
 		if err != nil {
 			return
 		}
@@ -78,7 +78,7 @@ var publishCmd = &cobra.Command{
 			return
 		}
 
-		err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID, jobID+".json"), cmd)
+		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID, jobID+".json"), cmd)
 		if err != nil {
 			return
 		}
@@ -89,7 +89,7 @@ var publishCmd = &cobra.Command{
 			return
 		}
 		if !noRaw {
-			err = cli.PushArtifacts("job", inFile, "test-results/junit.xml", cmd)
+			_, err = cli.PushArtifacts("job", inFile, "test-results/junit.xml", cmd)
 			if err != nil {
 				return
 			}

@@ -19,52 +19,31 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
+	"path"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/spf13/cobra"
 )
 
-// compileCmd represents the compile command
-var compileCmd = &cobra.Command{
-	Use:   "compile [xml-file] [json-file]",
-	Short: "parses xml file to well defined json schema",
-	Long:  `Parses xml file to well defined json schema`,
-	Args:  cobra.MinimumNArgs(2),
+// genPipelineReportCmd represents the publish command
+var genPipelineReportCmd = &cobra.Command{
+	Use:   "gen-pipeline-report",
+	Short: "fetches workflow level junit reports and combines them together",
+	Long:  `fetches workflow level junit reports and combines them together`,
+	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		err := cli.SetLogLevel(cmd)
+		dir, err := ioutil.TempDir("/tmp", "test-results")
+		if err != nil {
+			logger.Error("Creating temporary directory failed %v", err)
+		}
+
+		dir, err = cli.PullArtifacts("workflow", "test-results", dir, cmd)
 		if err != nil {
 			return
 		}
 
-		paths, err := cli.LoadFiles(args[0])
-
-		dirPath, err := ioutil.TempDir("", "test-results-*")
-		for _, path := range paths {
-			parser, err := cli.FindParser(path, cmd)
-			if err != nil {
-				return
-			}
-
-			testResults, err := cli.Parse(parser, path, cmd)
-			if err != nil {
-				return
-			}
-
-			jsonData, err := cli.Marshal(testResults)
-			if err != nil {
-				return
-			}
-
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
-
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
-			if err != nil {
-				return
-			}
-		}
-
-		result, err := cli.MergeFiles(dirPath, cmd)
+		result, err := cli.MergeFiles(dir, cmd)
 		if err != nil {
 			return
 		}
@@ -75,13 +54,19 @@ var compileCmd = &cobra.Command{
 			return
 		}
 
-		_, err = cli.WriteToFile(jsonData, args[1])
+		fileName, err := cli.WriteToTmpFile(jsonData)
 		if err != nil {
 			return
 		}
+
+		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", "junit.json"), cmd)
+		if err != nil {
+			return
+		}
+
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(compileCmd)
+	rootCmd.AddCommand(genPipelineReportCmd)
 }

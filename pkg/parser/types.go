@@ -36,6 +36,42 @@ const (
 	StatusError Status = "error"
 )
 
+// Result ...
+// [TODO] Better name is required...
+type Result struct {
+	TestResults []TestResults `json:"testResults"`
+}
+
+// Combine test results that are part of result
+func (me *Result) Combine() {
+	result := Result{}
+
+	for i := range me.TestResults {
+		foundTestResultsIdx, found := result.hasTestResults(me.TestResults[i])
+		if found {
+			result.TestResults[foundTestResultsIdx].Combine(me.TestResults[i])
+			result.TestResults[foundTestResultsIdx].Aggregate()
+		} else {
+			result.TestResults = append(result.TestResults, me.TestResults[i])
+		}
+	}
+
+	for i := range result.TestResults {
+		result.TestResults[i].Aggregate()
+	}
+
+	*me = result
+}
+
+func (me *Result) hasTestResults(testResults TestResults) (int, bool) {
+	for i := range me.TestResults {
+		if me.TestResults[i].ID == testResults.ID {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
 // TestResults ...
 type TestResults struct {
 	ID            string  `json:"id"`
@@ -55,6 +91,30 @@ func NewTestResults() TestResults {
 		Status:        StatusSuccess,
 		StatusMessage: "",
 	}
+}
+
+// Combine ...
+func (me *TestResults) Combine(other TestResults) {
+	if me.ID == other.ID {
+		for i := range other.Suites {
+			foundSuiteIdx, found := me.hasSuite(other.Suites[i])
+			if found {
+				me.Suites[foundSuiteIdx].Combine(other.Suites[i])
+				me.Suites[foundSuiteIdx].Aggregate()
+			} else {
+				me.Suites = append(me.Suites, other.Suites[i])
+			}
+		}
+	}
+}
+
+func (me *TestResults) hasSuite(suite Suite) (int, bool) {
+	for i := range me.Suites {
+		if me.Suites[i].ID == suite.ID {
+			return i, true
+		}
+	}
+	return -1, false
 }
 
 // ArrangeSuitesByTestFile ...
@@ -144,7 +204,27 @@ type Suite struct {
 
 // NewSuite ...
 func NewSuite() Suite {
-	return Suite{}
+	return Suite{Tests: []Test{}}
+}
+
+// Combine ...
+func (me *Suite) Combine(other Suite) {
+	if me.ID == other.ID {
+		for _, test := range other.Tests {
+			if me.hasTest(test) == false {
+				me.Tests = append(me.Tests, test)
+			}
+		}
+	}
+}
+
+func (me *Suite) hasTest(test Test) bool {
+	for _, t := range me.Tests {
+		if t.ID == test.ID {
+			return true
+		}
+	}
+	return false
 }
 
 // Aggregate all tests in suite

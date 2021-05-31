@@ -5,13 +5,13 @@ agent:
     type: e1-standard-2
     os_image: ubuntu1804
 blocks:
-  - name: "Release"
+  - name: Release
     task:
       secrets:
         - name: sem-robot-ghtoken
       prologue:
         commands:
-          - sem-version go 1.15
+          - sem-version go 1.16
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
