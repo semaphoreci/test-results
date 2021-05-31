@@ -38,14 +38,21 @@ var genPipelineReportCmd = &cobra.Command{
 			return
 		}
 
-		dir, err := ioutil.TempDir("/tmp", "test-results")
-		if err != nil {
-			logger.Error("Creating temporary directory failed %v", err)
-		}
+		var dir string
 
-		dir, err = cli.PullArtifacts("workflow", "test-results", dir, cmd)
-		if err != nil {
-			return
+		if len(args) == 0 {
+			dir, err = ioutil.TempDir("/tmp", "test-results")
+			if err != nil {
+				logger.Error("Creating temporary directory failed %v", err)
+				return
+			}
+
+			dir, err = cli.PullArtifacts("workflow", "test-results", dir, cmd)
+			if err != nil {
+				return
+			}
+		} else {
+			dir = args[0]
 		}
 
 		result, err := cli.MergeFiles(dir, cmd)

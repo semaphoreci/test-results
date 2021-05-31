@@ -47,8 +47,6 @@ type Result struct {
 func (me *Result) Combine() {
 	result := Result{}
 
-	sort.SliceStable(me.TestResults, func(i, j int) bool { return me.TestResults[i].ID < me.TestResults[j].ID })
-
 	for i := range me.TestResults {
 		foundTestResultsIdx, found := result.hasTestResults(me.TestResults[i])
 		if found {
@@ -56,6 +54,7 @@ func (me *Result) Combine() {
 			result.TestResults[foundTestResultsIdx].Aggregate()
 		} else {
 			result.TestResults = append(result.TestResults, me.TestResults[i])
+			sort.SliceStable(result.TestResults, func(i, j int) bool { return result.TestResults[i].ID < result.TestResults[j].ID })
 		}
 	}
 
@@ -106,6 +105,10 @@ func (me *TestResults) Combine(other TestResults) {
 				me.Suites[foundSuiteIdx].Aggregate()
 			} else {
 				me.Suites = append(me.Suites, other.Suites[i])
+
+				sort.SliceStable(me.Suites, func(i, j int) bool {
+					return me.Suites[i].Name < me.Suites[j].Name
+				})
 			}
 		}
 	}
@@ -216,6 +219,10 @@ func (me *Suite) Combine(other Suite) {
 		for _, test := range other.Tests {
 			if me.hasTest(test) == false {
 				me.Tests = append(me.Tests, test)
+
+				sort.SliceStable(me.Tests, func(i, j int) bool {
+					return me.Tests[i].Name < me.Tests[j].Name
+				})
 			}
 		}
 	}

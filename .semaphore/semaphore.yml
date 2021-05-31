@@ -79,7 +79,7 @@ blocks:
           - sudo chmod +x /usr/local/bin/test-results
           - checkout
       jobs:
-        - name: "Test"
+        - name: "Generate pipeline report"
           commands:
             - test-results gen-pipeline-report
             - artifact pull workflow test-results/junit.json -d /tmp/junit.json

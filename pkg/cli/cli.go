@@ -164,7 +164,7 @@ func PushArtifacts(level string, file string, destination string, cmd *cobra.Com
 
 	output, err := artifactsPush.CombinedOutput()
 
-	logger.Info("Pushing artifacts:\n$%s", artifactsPush.String())
+	logger.Info("Pushing artifacts:\n$ %s", artifactsPush.String())
 
 	if err != nil {
 		logger.Error("Pushing artifacts failed: %v\n%s", err, string(output))
@@ -189,7 +189,7 @@ func PullArtifacts(level string, remotePath string, localPath string, cmd *cobra
 
 	output, err := artifactsPush.CombinedOutput()
 
-	logger.Info("Pulling artifacts:\n$%s", artifactsPush.String())
+	logger.Info("Pulling artifacts:\n$ %s", artifactsPush.String())
 
 	if err != nil {
 		logger.Error("Pulling artifacts failed: %v\n%s", err, string(output))
@@ -223,8 +223,9 @@ func SetLogLevel(cmd *cobra.Command) error {
 
 // MergeFiles merges all json files found in path into one big blob
 func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
-	_, err := CheckFile(path)
+	verbose, err := cmd.Flags().GetBool("verbose")
 
+	_, err = CheckFile(path)
 	if err != nil {
 		logger.Error(err.Error())
 	}
@@ -232,6 +233,10 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 	var result *parser.Result
 
 	fun := func(p string, d fs.DirEntry, err error) error {
+		if verbose {
+			logger.Info("[verbose] Checking file: %s", p)
+		}
+
 		if err != nil {
 			logger.Info(err.Error())
 			return err
@@ -263,6 +268,10 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 			return err
 		}
 
+		if verbose {
+			logger.Info("[verbose] File loaded: %s", p)
+		}
+
 		return nil
 	}
 
@@ -278,15 +287,18 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 
 // Load ...
 func Load(path string, result *parser.Result) (*parser.Result, error) {
-	jsonFile, _ := os.Open(path)
-	bytes, _ := ioutil.ReadAll(jsonFile)
+	jsonFile, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	bytes, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		return nil, err
+	}
+
 	var testResults parser.TestResults
 
 	json.Unmarshal(bytes, &testResults)
-
-	if result == nil {
-		result = &parser.Result{}
-	}
 
 	result.TestResults = append(result.TestResults, testResults)
 
