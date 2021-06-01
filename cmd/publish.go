@@ -29,10 +29,14 @@ import (
 
 // publishCmd represents the publish command
 var publishCmd = &cobra.Command{
-	Use:   "publish [xml-file]",
+	Use:   "publish <xml-file-path>...",
 	Short: "parses xml file to well defined json schema and publishes results to artifacts storage",
-	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
-	Args:  cobra.MinimumNArgs(1),
+	Long: `Parses xml file to well defined json schema and publishes results to artifacts storage
+
+	It traverses through directory sturcture specificed by <xml-file-path>, compiles
+	every .xml file and publishes it as one artifact.
+	`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		inputs := args
 		err := cli.SetLogLevel(cmd)

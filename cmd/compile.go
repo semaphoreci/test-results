@@ -27,10 +27,14 @@ import (
 
 // compileCmd represents the compile command
 var compileCmd = &cobra.Command{
-	Use:   "compile [xml-file] [json-file]",
-	Short: "parses xml file to well defined json schema",
-	Long:  `Parses xml file to well defined json schema`,
-	Args:  cobra.MinimumNArgs(2),
+	Use:   "compile <xml-file-path>... <json-file>]",
+	Short: "parses xml files to well defined json schema",
+	Long: `Parses xml file to well defined json schema
+
+	It traverses through directory sturcture specificed by <xml-file-path> and compiles
+	every .xml file.
+	`,
+	Args: cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		inputs := args[:len(args)-1]
 		output := args[len(args)-1]

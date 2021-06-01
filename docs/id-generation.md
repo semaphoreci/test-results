@@ -10,7 +10,8 @@ In order to generate consistent `id`'s between builds following method is implem
 
   1. If element has an ID, generate UUID based on that ID
   2. If element doesn't have an ID - generate UUID based on the `name` attribute
-  3. Otherwise, generate uuid based on empty string `""`
+  3. If element has framework name - generate UUID based on the `name` attribute and `framework`
+  4. Otherwise, generate uuid based on empty string `""`
 
 - ID generation for `Suites`
 

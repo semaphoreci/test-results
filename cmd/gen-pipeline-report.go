@@ -28,10 +28,14 @@ import (
 
 // genPipelineReportCmd represents the publish command
 var genPipelineReportCmd = &cobra.Command{
-	Use:   "gen-pipeline-report",
+	Use:   "gen-pipeline-report [<path>...]",
 	Short: "fetches workflow level junit reports and combines them together",
-	Long:  `fetches workflow level junit reports and combines them together`,
-	Args:  cobra.MinimumNArgs(0),
+	Long: `fetches workflow level junit reports and combines them together
+
+	When <path>s are provided it recursively traverses through path structure and
+	combines all .json files into one json schema file.
+	`,
+	Args: cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
