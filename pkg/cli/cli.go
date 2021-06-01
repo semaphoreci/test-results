@@ -2,9 +2,12 @@ package cli
 
 import (
 	"encoding/json"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"sort"
 
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
@@ -12,12 +15,50 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CheckFile checks if file exists and can be `stat`ed at given `path`
+// LoadFiles checks if path exists and can be `stat`ed at given `path`
+func LoadFiles(inPaths []string) ([]string, error) {
+	paths := []string{}
+
+	for _, path := range inPaths {
+		file, err := os.Stat(path)
+
+		if err != nil {
+			logger.Error("Input file read failed: %v", err)
+			return paths, err
+		}
+
+		switch file.IsDir() {
+		case true:
+			filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
+				if d.Type().IsRegular() {
+					switch filepath.Ext(d.Name()) {
+					case ".xml":
+						paths = append(paths, path)
+					}
+				}
+				return nil
+			})
+
+		case false:
+			switch filepath.Ext(file.Name()) {
+			case ".xml":
+				paths = append(paths, path)
+			}
+		}
+	}
+
+	sort.Strings(paths)
+
+	return paths, nil
+}
+
+// CheckFile checks if path exists and can be `stat`ed at given `path`
 func CheckFile(path string) (string, error) {
 	_, err := os.Stat(path)
+
 	if err != nil {
 		logger.Error("Input file read failed: %v", err)
-		return path, err
+		return "", err
 	}
 
 	return path, nil
@@ -42,13 +83,14 @@ func FindParser(path string, cmd *cobra.Command) (parser.Parser, error) {
 }
 
 // Parse parses file at `path` with given `parser`
-func Parse(parser parser.Parser, path string, cmd *cobra.Command) (parser.TestResults, error) {
-	testResults := parser.Parse(path)
+func Parse(p parser.Parser, path string, cmd *cobra.Command) (parser.Result, error) {
+	result := parser.NewResult()
+	testResults := p.Parse(path)
 
 	testResultsName, err := cmd.Flags().GetString("name")
 	if err != nil {
 		logger.Error("Reading flag error: %v", err)
-		return testResults, err
+		return result, err
 	}
 
 	if testResultsName != "" {
@@ -56,11 +98,13 @@ func Parse(parser parser.Parser, path string, cmd *cobra.Command) (parser.TestRe
 		testResults.Name = testResultsName
 	}
 
-	return testResults, nil
+	result.TestResults = append(result.TestResults, testResults)
+
+	return result, nil
 }
 
 // Marshal provides json output for given test results
-func Marshal(testResults parser.TestResults) ([]byte, error) {
+func Marshal(testResults parser.Result) ([]byte, error) {
 	jsonData, err := json.Marshal(testResults)
 	if err != nil {
 		logger.Error("Marshaling results failed with: %v", err)
@@ -104,17 +148,17 @@ func writeToFile(data []byte, file *os.File) (string, error) {
 }
 
 // PushArtifacts publishes artifacts to semaphore artifact storage
-func PushArtifacts(level string, file string, destination string, cmd *cobra.Command) error {
+func PushArtifacts(level string, file string, destination string, cmd *cobra.Command) (string, error) {
 	verbose, err := cmd.Flags().GetBool("verbose")
 	if err != nil {
 		logger.Error("Reading flag error: %v", err)
-		return err
+		return "", err
 	}
 
 	expireIn, err := cmd.Flags().GetString("expire-in")
 	if err != nil {
 		logger.Error("Reading flag error: %v", err)
-		return err
+		return "", err
 	}
 
 	artifactsPush := exec.Command("artifact")
@@ -129,13 +173,39 @@ func PushArtifacts(level string, file string, destination string, cmd *cobra.Com
 
 	output, err := artifactsPush.CombinedOutput()
 
-	logger.Info("Pushing json artifacts:\n > %s", artifactsPush.String())
+	logger.Info("Pushing artifacts:\n$ %s", artifactsPush.String())
 
 	if err != nil {
 		logger.Error("Pushing artifacts failed: %v\n%s", err, string(output))
-		return err
+		return "", err
 	}
-	return nil
+	return destination, nil
+}
+
+// PullArtifacts fetches artifacts from semaphore artifact storage
+func PullArtifacts(level string, remotePath string, localPath string, cmd *cobra.Command) (string, error) {
+	verbose, err := cmd.Flags().GetBool("verbose")
+	if err != nil {
+		logger.Error("Reading flag error: %v", err)
+		return "", err
+	}
+
+	artifactsPush := exec.Command("artifact")
+	artifactsPush.Args = append(artifactsPush.Args, "pull", level, remotePath, "-d", localPath)
+	if verbose {
+		artifactsPush.Args = append(artifactsPush.Args, "-v")
+	}
+
+	output, err := artifactsPush.CombinedOutput()
+
+	logger.Info("Pulling artifacts:\n$ %s", artifactsPush.String())
+
+	if err != nil {
+		logger.Error("Pulling artifacts failed: %v\n%s", err, string(output))
+		return "", err
+	}
+
+	return localPath, nil
 }
 
 // SetLogLevel sets log level according to flags
@@ -158,4 +228,92 @@ func SetLogLevel(cmd *cobra.Command) error {
 		logger.SetLevel(logger.DebugLevel)
 	}
 	return nil
+}
+
+// MergeFiles merges all json files found in path into one big blob
+func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
+	verbose, err := cmd.Flags().GetBool("verbose")
+
+	_, err = CheckFile(path)
+	if err != nil {
+		logger.Error(err.Error())
+	}
+
+	r := parser.NewResult()
+	result := &r
+
+	fun := func(p string, d fs.DirEntry, err error) error {
+		if verbose {
+			logger.Info("[verbose] Checking file: %s", p)
+		}
+
+		if err != nil {
+			logger.Info(err.Error())
+			return err
+		}
+
+		if d.Type().IsDir() {
+			return nil
+		}
+
+		fs, err := d.Info()
+		if err != nil {
+			logger.Error(err.Error())
+			return err
+		}
+
+		if filepath.Ext(fs.Name()) != ".json" {
+			return nil
+		}
+
+		inFile, err := CheckFile(p)
+		if err != nil {
+			logger.Error(err.Error())
+			return err
+		}
+
+		newResult, err := Load(inFile)
+		if err != nil {
+			logger.Error(err.Error())
+			return err
+		}
+
+		if verbose {
+			logger.Info("[verbose] File loaded: %s", p)
+		}
+
+		result.Combine(*newResult)
+		return nil
+	}
+
+	err = filepath.WalkDir(path, fun)
+	if err != nil {
+		logger.Error("Test results dir listing failed: %v", err)
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// Load ...
+// [TODO]: TEST THIS!!!
+func Load(path string) (*parser.Result, error) {
+	var result parser.Result
+
+	jsonFile, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	bytes, err := ioutil.ReadAll(jsonFile)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(bytes, &result)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }

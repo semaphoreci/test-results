@@ -91,6 +91,13 @@ func Trace(s string, args ...interface{}) {
 	Log(TraceLevel, s, args...)
 }
 
+// Inspect ...
+func Inspect(i interface{}) {
+	Log(InfoLevel, "=========================================")
+	Log(InfoLevel, "%+v", i)
+	Log(InfoLevel, "=========================================")
+}
+
 // Log ...
 func Log(level Level, s string, args ...interface{}) {
 	switch level {

@@ -17,6 +17,8 @@ limitations under the License.
 */
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path"
 
@@ -27,32 +29,59 @@ import (
 
 // publishCmd represents the publish command
 var publishCmd = &cobra.Command{
-	Use:   "publish [xml-file]",
+	Use:   "publish <xml-file-path>...",
 	Short: "parses xml file to well defined json schema and publishes results to artifacts storage",
-	Long:  `Parses xml file to well defined json schema and publishes results to artifacts storage`,
-	Args:  cobra.MinimumNArgs(1),
+	Long: `Parses xml file to well defined json schema and publishes results to artifacts storage
+
+	It traverses through directory sturcture specificed by <xml-file-path>, compiles
+	every .xml file and publishes it as one artifact.
+	`,
+	Args: cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		inputs := args
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
 			return
 		}
 
-		inFile, err := cli.CheckFile(args[0])
+		paths, err := cli.LoadFiles(inputs)
 		if err != nil {
 			return
 		}
 
-		parser, err := cli.FindParser(inFile, cmd)
-		if err != nil {
-			return
+		dirPath, err := ioutil.TempDir("", "test-results-*")
+		for _, path := range paths {
+			parser, err := cli.FindParser(path, cmd)
+			if err != nil {
+				return
+			}
+
+			testResults, err := cli.Parse(parser, path, cmd)
+			if err != nil {
+				return
+			}
+
+			jsonData, err := cli.Marshal(testResults)
+			if err != nil {
+				return
+			}
+
+			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+
+			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+			if err != nil {
+				return
+			}
 		}
-		testResults, err := cli.Parse(parser, inFile, cmd)
+
+		result, err := cli.MergeFiles(dirPath, cmd)
 		if err != nil {
 			return
 		}
 
-		jsonData, err := cli.Marshal(testResults)
+		jsonData, err := json.Marshal(result)
 		if err != nil {
+			logger.Error("Marshaling results failed with: %v", err)
 			return
 		}
 
@@ -61,7 +90,7 @@ var publishCmd = &cobra.Command{
 			return
 		}
 
-		err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
+		_, err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
 		if err != nil {
 			return
 		}
@@ -78,7 +107,7 @@ var publishCmd = &cobra.Command{
 			return
 		}
 
-		err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID, jobID+".json"), cmd)
+		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID, jobID+".json"), cmd)
 		if err != nil {
 			return
 		}
@@ -89,9 +118,11 @@ var publishCmd = &cobra.Command{
 			return
 		}
 		if !noRaw {
-			err = cli.PushArtifacts("job", inFile, "test-results/junit.xml", cmd)
-			if err != nil {
-				return
+			for _, rawFilePath := range paths {
+				_, err = cli.PushArtifacts("job", rawFilePath, path.Join("test-results/raw", rawFilePath), cmd)
+				if err != nil {
+					return
+				}
 			}
 		}
 	},

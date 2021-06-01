@@ -19,62 +19,47 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
+	"path"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/spf13/cobra"
 )
 
-// compileCmd represents the compile command
-var compileCmd = &cobra.Command{
-	Use:   "compile <xml-file-path>... <json-file>]",
-	Short: "parses xml files to well defined json schema",
-	Long: `Parses xml file to well defined json schema
+// genPipelineReportCmd represents the publish command
+var genPipelineReportCmd = &cobra.Command{
+	Use:   "gen-pipeline-report [<path>...]",
+	Short: "fetches workflow level junit reports and combines them together",
+	Long: `fetches workflow level junit reports and combines them together
 
-	It traverses through directory sturcture specificed by <xml-file-path> and compiles
-	every .xml file.
+	When <path>s are provided it recursively traverses through path structure and
+	combines all .json files into one json schema file.
 	`,
-	Args: cobra.MinimumNArgs(2),
+	Args: cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		inputs := args[:len(args)-1]
-		output := args[len(args)-1]
-
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
 			return
 		}
 
-		paths, err := cli.LoadFiles(inputs)
-		if err != nil {
-			return
+		var dir string
+
+		if len(args) == 0 {
+			dir, err = ioutil.TempDir("/tmp", "test-results")
+			if err != nil {
+				logger.Error("Creating temporary directory failed %v", err)
+				return
+			}
+
+			dir, err = cli.PullArtifacts("workflow", "test-results", dir, cmd)
+			if err != nil {
+				return
+			}
+		} else {
+			dir = args[0]
 		}
 
-		dirPath, err := ioutil.TempDir("", "test-results-*")
-		for _, path := range paths {
-			parser, err := cli.FindParser(path, cmd)
-			if err != nil {
-				return
-			}
-
-			testResults, err := cli.Parse(parser, path, cmd)
-			if err != nil {
-				return
-			}
-
-			jsonData, err := cli.Marshal(testResults)
-			if err != nil {
-				return
-			}
-
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
-
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
-			if err != nil {
-				return
-			}
-		}
-
-		result, err := cli.MergeFiles(dirPath, cmd)
+		result, err := cli.MergeFiles(dir, cmd)
 		if err != nil {
 			return
 		}
@@ -85,13 +70,26 @@ var compileCmd = &cobra.Command{
 			return
 		}
 
-		_, err = cli.WriteToFile(jsonData, output)
+		fileName, err := cli.WriteToTmpFile(jsonData)
 		if err != nil {
 			return
 		}
+
+		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", "junit.json"), cmd)
+		if err != nil {
+			return
+		}
+
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(compileCmd)
+	desc := `Removes the files after the given amount of time.
+Nd for N days
+Nw for N weeks
+Nm for N months
+Ny for N years
+`
+	genPipelineReportCmd.Flags().StringP("expire-in", "", "", desc)
+	rootCmd.AddCommand(genPipelineReportCmd)
 }

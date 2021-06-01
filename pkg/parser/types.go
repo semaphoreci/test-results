@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+	"sort"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,6 +38,47 @@ const (
 	StatusError Status = "error"
 )
 
+// Result ...
+// [TODO] Better name is required...
+type Result struct {
+	TestResults []TestResults `json:"testResults"`
+}
+
+// NewResult ...
+func NewResult() Result {
+	return Result{
+		TestResults: []TestResults{},
+	}
+}
+
+// Combine test results that are part of result
+// [TODO]: TEST THIS!!!
+func (me *Result) Combine(other Result) {
+	for i := range other.TestResults {
+		foundTestResultsIdx, found := me.hasTestResults(other.TestResults[i])
+		if found {
+			me.TestResults[foundTestResultsIdx].Combine(other.TestResults[i])
+			me.TestResults[foundTestResultsIdx].Aggregate()
+		} else {
+			me.TestResults = append(me.TestResults, other.TestResults[i])
+			sort.SliceStable(me.TestResults, func(i, j int) bool { return me.TestResults[i].ID < me.TestResults[j].ID })
+		}
+	}
+
+	for i := range me.TestResults {
+		me.TestResults[i].Aggregate()
+	}
+}
+
+func (me *Result) hasTestResults(testResults TestResults) (int, bool) {
+	for i := range me.TestResults {
+		if me.TestResults[i].ID == testResults.ID {
+			return i, true
+		}
+	}
+	return -1, false
+}
+
 // TestResults ...
 type TestResults struct {
 	ID            string  `json:"id"`
@@ -55,6 +98,34 @@ func NewTestResults() TestResults {
 		Status:        StatusSuccess,
 		StatusMessage: "",
 	}
+}
+
+// Combine ...
+func (me *TestResults) Combine(other TestResults) {
+	if me.ID == other.ID {
+		for i := range other.Suites {
+			foundSuiteIdx, found := me.hasSuite(other.Suites[i])
+			if found {
+				me.Suites[foundSuiteIdx].Combine(other.Suites[i])
+				me.Suites[foundSuiteIdx].Aggregate()
+			} else {
+				me.Suites = append(me.Suites, other.Suites[i])
+
+				sort.SliceStable(me.Suites, func(i, j int) bool {
+					return me.Suites[i].ID < me.Suites[j].ID
+				})
+			}
+		}
+	}
+}
+
+func (me *TestResults) hasSuite(suite Suite) (int, bool) {
+	for i := range me.Suites {
+		if me.Suites[i].ID == suite.ID {
+			return i, true
+		}
+	}
+	return -1, false
 }
 
 // ArrangeSuitesByTestFile ...
@@ -106,6 +177,10 @@ func (me *TestResults) EnsureID() {
 		me.ID = me.Name
 	}
 
+	if me.Framework != "" {
+		me.ID = fmt.Sprintf("%s%s", me.ID, me.Framework)
+	}
+
 	me.ID = UUID(uuid.Nil, me.ID).String()
 }
 
@@ -144,7 +219,31 @@ type Suite struct {
 
 // NewSuite ...
 func NewSuite() Suite {
-	return Suite{}
+	return Suite{Tests: []Test{}}
+}
+
+// Combine ...
+func (me *Suite) Combine(other Suite) {
+	if me.ID == other.ID {
+		for _, test := range other.Tests {
+			if me.hasTest(test) == false {
+				me.Tests = append(me.Tests, test)
+
+				sort.SliceStable(me.Tests, func(i, j int) bool {
+					return me.Tests[i].ID < me.Tests[j].ID
+				})
+			}
+		}
+	}
+}
+
+func (me *Suite) hasTest(test Test) bool {
+	for _, t := range me.Tests {
+		if t.ID == test.ID {
+			return true
+		}
+	}
+	return false
 }
 
 // Aggregate all tests in suite

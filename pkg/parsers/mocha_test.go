@@ -86,57 +86,57 @@ func Test_Mocha_ParseTestSuites(t *testing.T) {
 		Tests []test
 	}{
 		{
-			ID:   "b3d01848-18ba-3046-b1c9-8806a10742d6",
+			ID:   "eb15cdbd-e1c4-3544-b31b-fa61427ec0ba",
 			Name: "foo",
 			Tests: []test{
 				{
-					ID:   "a718e5fd-8ba4-3f28-a837-b89ec9e6e2e9",
+					ID:   "04a92157-8b5e-3d53-9209-bb849750f267",
 					Name: "bar",
 				},
 				{
-					ID:   "7e336b3f-0878-3a72-b5cd-69c794251a2a",
+					ID:   "20a228ae-ff3c-3f5d-8798-ea7eaecbbc32",
 					Name: "baz",
 				},
 			},
 		},
 		{
-			ID:   "b3d01848-18ba-3046-b1c9-8806a10742d6",
+			ID:   "eb15cdbd-e1c4-3544-b31b-fa61427ec0ba",
 			Name: "1234",
 			Tests: []test{
 				{
-					ID:   "a718e5fd-8ba4-3f28-a837-b89ec9e6e2e9",
+					ID:   "04a92157-8b5e-3d53-9209-bb849750f267",
 					Name: "bar",
 				},
 				{
-					ID:   "7e336b3f-0878-3a72-b5cd-69c794251a2a",
+					ID:   "20a228ae-ff3c-3f5d-8798-ea7eaecbbc32",
 					Name: "baz",
 				},
 			},
 		},
 		{
-			ID:   "b3d01848-18ba-3046-b1c9-8806a10742d6",
+			ID:   "eb15cdbd-e1c4-3544-b31b-fa61427ec0ba",
 			Name: "",
 			Tests: []test{
 				{
-					ID:   "a718e5fd-8ba4-3f28-a837-b89ec9e6e2e9",
+					ID:   "04a92157-8b5e-3d53-9209-bb849750f267",
 					Name: "bar",
 				},
 				{
-					ID:   "7e336b3f-0878-3a72-b5cd-69c794251a2a",
+					ID:   "20a228ae-ff3c-3f5d-8798-ea7eaecbbc32",
 					Name: "baz",
 				},
 			},
 		},
 		{
-			ID:   "376e439f-2352-341a-8400-ff142935ddda",
+			ID:   "fb5253d7-944e-3833-958c-118b9a8bb7c3",
 			Name: "1235",
 			Tests: []test{
 				{
-					ID:   "1ccf0a01-e251-3fad-8dbc-4b4112a5902a",
+					ID:   "5a8bd9c8-02b4-35f8-af6a-16608c914743",
 					Name: "bar",
 				},
 				{
-					ID:   "9f6f64c2-9b45-3f43-a380-6358cc960cca",
+					ID:   "e1015998-a7e4-37fc-b750-7a1d1fad8e25",
 					Name: "baz",
 				},
 			},
@@ -149,7 +149,7 @@ func Test_Mocha_ParseTestSuites(t *testing.T) {
 	testResults := p.Parse(path)
 	assert.Equal(t, "ff", testResults.Name)
 	assert.Equal(t, "mocha", testResults.Framework)
-	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
+	assert.Equal(t, "8037b8cf-de65-31d9-bc40-d0dfcc6ad82c", testResults.ID)
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
 	assert.Equal(t, "", testResults.StatusMessage)
 
