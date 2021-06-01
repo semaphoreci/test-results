@@ -239,9 +239,7 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 		logger.Error(err.Error())
 	}
 
-	r := parser.NewResult()
-	result := &r
-
+	result := parser.NewResult()
 	fun := func(p string, d fs.DirEntry, err error) error {
 		if verbose {
 			logger.Info("[verbose] Checking file: %s", p)
@@ -292,15 +290,15 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 		return nil, err
 	}
 
-	return result, nil
+	return &result, nil
 }
 
 // Load ...
 // [TODO]: TEST THIS!!!
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
-
 	jsonFile, err := os.Open(path)
+	defer jsonFile.Close()
 	if err != nil {
 		return nil, err
 	}
