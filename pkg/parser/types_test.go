@@ -5,15 +5,96 @@ import (
 	"testing"
 	"time"
 
+	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
+
+func Test_Result_Combine(t *testing.T) {
+	result := NewResult()
+
+	resultToMerge := NewResult()
+
+	testResult := NewTestResults()
+	suite := newSuite("1", "foo")
+	newTest(&suite, "1", "foo.1")
+	newTest(&suite, "2", "foo.2")
+	testResult.Suites = append(testResult.Suites, suite)
+	suite = newSuite("1", "foo")
+	newTest(&suite, "3", "foo.3")
+	newTest(&suite, "4", "foo.4")
+	testResult.Suites = append(testResult.Suites, suite)
+	resultToMerge.TestResults = append(resultToMerge.TestResults, testResult)
+	result.Combine(resultToMerge)
+
+	resultToMerge = NewResult()
+	suite = newSuite("1", "foo")
+	newTest(&suite, "3", "foo.3")
+	newTest(&suite, "4", "foo.4")
+	testResult = NewTestResults()
+	testResult.Suites = append(testResult.Suites, suite)
+	resultToMerge.TestResults = append(resultToMerge.TestResults, testResult)
+	result.Combine(resultToMerge)
+
+	resultToMerge = NewResult()
+	suite = newSuite("1", "foo")
+	newTest(&suite, "5", "foo.5")
+	newTest(&suite, "6", "foo.6")
+	testResult = NewTestResults()
+	testResult.Suites = append(testResult.Suites, suite)
+	resultToMerge.TestResults = append(resultToMerge.TestResults, testResult)
+	result.Combine(resultToMerge)
+
+	for _, suite := range result.TestResults[0].Suites {
+		logger.Info("%+v\n", suite)
+	}
+
+	assert.Equal(t, 1, len(result.TestResults))
+	assert.Equal(t, 1, len(result.TestResults[0].Suites))
+	assert.Equal(t, 6, len(result.TestResults[0].Suites[0].Tests))
+}
+
+func Test_TestResults_Combine(t *testing.T) {
+	suite := newSuite("1", "foo")
+	newTest(&suite, "1", "foo.1")
+	newTest(&suite, "2", "foo.2")
+	newTest(&suite, "3", "foo.3")
+
+	testResult := NewTestResults()
+	testResult.Suites = append(testResult.Suites, suite)
+
+	suite = newSuite("1", "foo")
+	newTest(&suite, "1", "foo.1")
+	newTest(&suite, "2", "foo.2")
+
+	testResultToMerge := NewTestResults()
+	testResultToMerge.Suites = append(testResultToMerge.Suites, suite)
+
+	testResult.Combine(testResultToMerge)
+
+	assert.Equal(t, 1, len(testResult.Suites))
+	assert.Equal(t, 3, len(testResult.Suites[0].Tests))
+}
+
+func Test_Suite_Combine(t *testing.T) {
+	suite := newSuite("1", "foo")
+	newTest(&suite, "1", "foo.1")
+	newTest(&suite, "2", "foo.2")
+	newTest(&suite, "3", "foo.3")
+	suiteToMerge := newSuite("1", "foo")
+	newTest(&suiteToMerge, "1", "foo.1")
+	newTest(&suiteToMerge, "2", "foo.2")
+
+	suite.Combine(suiteToMerge)
+
+	assert.Equal(t, 3, len(suite.Tests))
+}
 
 func Test_NewTest_Results(t *testing.T) {
 	testResults := NewTestResults()
 
-	assert.IsType(t, testResults, TestResults{})
-	assert.Equal(t, testResults.Status, StatusSuccess)
-	assert.Equal(t, testResults.StatusMessage, "")
+	assert.IsType(t, TestResults{}, testResults)
+	assert.Equal(t, StatusSuccess, testResults.Status)
+	assert.Equal(t, "", testResults.StatusMessage)
 }
 
 func Test_TestResults_Aggregate(t *testing.T) {

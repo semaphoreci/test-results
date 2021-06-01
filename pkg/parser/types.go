@@ -52,22 +52,44 @@ func NewResult() Result {
 }
 
 // Combine test results that are part of result
-// [TODO]: TEST THIS!!!
 func (me *Result) Combine(other Result) {
 	for i := range other.TestResults {
-		foundTestResultsIdx, found := me.hasTestResults(other.TestResults[i])
+		testResult := other.TestResults[i]
+		testResult.Flatten()
+		foundTestResultsIdx, found := me.hasTestResults(testResult)
 		if found {
-			me.TestResults[foundTestResultsIdx].Combine(other.TestResults[i])
+			me.TestResults[foundTestResultsIdx].Combine(testResult)
 			me.TestResults[foundTestResultsIdx].Aggregate()
 		} else {
-			me.TestResults = append(me.TestResults, other.TestResults[i])
-			sort.SliceStable(me.TestResults, func(i, j int) bool { return me.TestResults[i].ID < me.TestResults[j].ID })
+			me.TestResults = append(me.TestResults, testResult)
 		}
 	}
+
+	sort.SliceStable(me.TestResults, func(i, j int) bool { return me.TestResults[i].ID < me.TestResults[j].ID })
 
 	for i := range me.TestResults {
 		me.TestResults[i].Aggregate()
 	}
+}
+
+// Flatten ...
+func (me *TestResults) Flatten() {
+	testResults := NewTestResults()
+
+	for i := range me.Suites {
+		foundSuiteIdx, found := testResults.hasSuite(me.Suites[i])
+		if found {
+			testResults.Suites[foundSuiteIdx].Combine(me.Suites[i])
+			testResults.Suites[foundSuiteIdx].Aggregate()
+		} else {
+			testResults.Suites = append(testResults.Suites, me.Suites[i])
+		}
+	}
+	me.Suites = testResults.Suites
+
+	sort.SliceStable(me.Suites, func(i, j int) bool {
+		return me.Suites[i].ID < me.Suites[j].ID
+	})
 }
 
 func (me *Result) hasTestResults(testResults TestResults) (int, bool) {
@@ -110,12 +132,12 @@ func (me *TestResults) Combine(other TestResults) {
 				me.Suites[foundSuiteIdx].Aggregate()
 			} else {
 				me.Suites = append(me.Suites, other.Suites[i])
-
-				sort.SliceStable(me.Suites, func(i, j int) bool {
-					return me.Suites[i].ID < me.Suites[j].ID
-				})
 			}
 		}
+
+		sort.SliceStable(me.Suites, func(i, j int) bool {
+			return me.Suites[i].ID < me.Suites[j].ID
+		})
 	}
 }
 
@@ -225,21 +247,21 @@ func NewSuite() Suite {
 // Combine ...
 func (me *Suite) Combine(other Suite) {
 	if me.ID == other.ID {
-		for _, test := range other.Tests {
-			if me.hasTest(test) == false {
-				me.Tests = append(me.Tests, test)
-
-				sort.SliceStable(me.Tests, func(i, j int) bool {
-					return me.Tests[i].ID < me.Tests[j].ID
-				})
+		for i := range other.Tests {
+			if me.hasTest(other.Tests[i]) == false {
+				me.Tests = append(me.Tests, other.Tests[i])
 			}
 		}
+
+		sort.SliceStable(me.Tests, func(i, j int) bool {
+			return me.Tests[i].ID < me.Tests[j].ID
+		})
 	}
 }
 
 func (me *Suite) hasTest(test Test) bool {
-	for _, t := range me.Tests {
-		if t.ID == test.ID {
+	for i := range me.Tests {
+		if me.Tests[i].ID == test.ID {
 			return true
 		}
 	}

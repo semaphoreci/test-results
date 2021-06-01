@@ -19,6 +19,7 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 	"path"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
@@ -45,13 +46,19 @@ var genPipelineReportCmd = &cobra.Command{
 		var dir string
 
 		if len(args) == 0 {
+
+			pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
+			if !found {
+				logger.Error("SEMAPHORE_PIPELINE_ID env is missing")
+				return
+			}
 			dir, err = ioutil.TempDir("/tmp", "test-results")
 			if err != nil {
 				logger.Error("Creating temporary directory failed %v", err)
 				return
 			}
 
-			dir, err = cli.PullArtifacts("workflow", "test-results", dir, cmd)
+			dir, err = cli.PullArtifacts("workflow", path.Join("test-results", pipelineID), dir, cmd)
 			if err != nil {
 				return
 			}
