@@ -44,7 +44,7 @@ var publishCmd = &cobra.Command{
 			return
 		}
 
-		paths, err := cli.LoadFiles(inputs)
+		paths, err := cli.LoadFiles(inputs, ".xml")
 		if err != nil {
 			return
 		}
