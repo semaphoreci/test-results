@@ -16,7 +16,7 @@ import (
 )
 
 // LoadFiles checks if path exists and can be `stat`ed at given `path`
-func LoadFiles(inPaths []string) ([]string, error) {
+func LoadFiles(inPaths []string, ext string) ([]string, error) {
 	paths := []string{}
 
 	for _, path := range inPaths {
@@ -32,7 +32,7 @@ func LoadFiles(inPaths []string) ([]string, error) {
 			filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
 				if d.Type().IsRegular() {
 					switch filepath.Ext(d.Name()) {
-					case ".xml":
+					case ext:
 						paths = append(paths, path)
 					}
 				}
@@ -41,7 +41,7 @@ func LoadFiles(inPaths []string) ([]string, error) {
 
 		case false:
 			switch filepath.Ext(file.Name()) {
-			case ".xml":
+			case ext:
 				paths = append(paths, path)
 			}
 		}

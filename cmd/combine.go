@@ -17,24 +17,18 @@ limitations under the License.
 */
 
 import (
-	"encoding/json"
-	"io/ioutil"
-
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
+	"github.com/semaphoreci/test-results/pkg/parser"
 	"github.com/spf13/cobra"
 )
 
-// compileCmd represents the compile command
-var compileCmd = &cobra.Command{
-	Use:   "compile <xml-file-path>... <json-file>]",
-	Short: "parses xml files to well defined json schema",
-	Long: `Parses xml file to well defined json schema
-
-	It traverses through directory sturcture specificed by <xml-file-path> and compiles
-	every .xml file.
-	`,
-	Args: cobra.MinimumNArgs(2),
+// combineCmd represents the combine command
+var combineCmd = &cobra.Command{
+	Use:   "combine <json-file-path>... <json-file>]",
+	Short: "combines multiples json summary files into one",
+	Long:  `Combines multiples json summary files into one"`,
+	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
 		inputs := args[:len(args)-1]
 		output := args[len(args)-1]
@@ -44,44 +38,25 @@ var compileCmd = &cobra.Command{
 			return
 		}
 
-		paths, err := cli.LoadFiles(inputs, ".xml")
+		paths, err := cli.LoadFiles(inputs, ".json")
 		if err != nil {
 			return
 		}
 
-		dirPath, err := ioutil.TempDir("", "test-results-*")
+		result := parser.NewResult()
 		for _, path := range paths {
-			parser, err := cli.FindParser(path, cmd)
+			inFile, err := cli.CheckFile(path)
 			if err != nil {
+				logger.Error(err.Error())
 				return
 			}
 
-			testResults, err := cli.Parse(parser, path, cmd)
-			if err != nil {
-				return
-			}
-
-			jsonData, err := cli.Marshal(testResults)
-			if err != nil {
-				return
-			}
-
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
-
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
-			if err != nil {
-				return
-			}
+			newResult, err := cli.Load(inFile)
+			result.Combine(*newResult)
 		}
 
-		result, err := cli.MergeFiles(dirPath, cmd)
+		jsonData, err := cli.Marshal(result)
 		if err != nil {
-			return
-		}
-
-		jsonData, err := json.Marshal(result)
-		if err != nil {
-			logger.Error("Marshaling results failed with: %v", err)
 			return
 		}
 
@@ -93,5 +68,5 @@ var compileCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(compileCmd)
+	rootCmd.AddCommand(combineCmd)
 }
