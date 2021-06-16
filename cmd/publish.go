@@ -119,7 +119,7 @@ var publishCmd = &cobra.Command{
 		}
 		if !noRaw {
 			for _, rawFilePath := range paths {
-				_, err = cli.PushArtifacts("job", rawFilePath, path.Join("test-results/raw", rawFilePath), cmd)
+				_, err = cli.PushArtifacts("job", rawFilePath, path.Join("test-results", "junit.xml"), cmd)
 				if err != nil {
 					return
 				}
