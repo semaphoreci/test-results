@@ -96,6 +96,7 @@ func Parse(p parser.Parser, path string, cmd *cobra.Command) (parser.Result, err
 	if testResultsName != "" {
 		logger.Debug("Overriding test results name to %s", testResultsName)
 		testResults.Name = testResultsName
+		testResults.RegenerateID()
 	}
 
 	result.TestResults = append(result.TestResults, testResults)
