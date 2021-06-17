@@ -30,14 +30,14 @@ import (
 
 var cfgFile string
 
-var versionString = "0.4.1"
+var versionString = "0.4.2"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "test-results",
 	Version: versionString,
-	Short:   "Semaphore 2.0 Test results CLI",
-	Long:    "Semaphore 2.0 Test results CLI",
+	Short:   fmt.Sprintf("Semaphore 2.0 Test results CLI v%s", versionString),
+	Long:    fmt.Sprintf("Semaphore 2.0 Test results CLI v%s", versionString),
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
