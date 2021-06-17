@@ -206,6 +206,20 @@ func (me *TestResults) EnsureID() {
 	me.ID = UUID(uuid.Nil, me.ID).String()
 }
 
+// RegenerateID ...
+func (me *TestResults) RegenerateID() {
+	me.ID = ""
+	me.EnsureID()
+	for suiteIdx := range me.Suites {
+		me.Suites[suiteIdx].ID = ""
+		me.Suites[suiteIdx].EnsureID(*me)
+		for testIdx := range me.Suites[suiteIdx].Tests {
+			me.Suites[suiteIdx].Tests[testIdx].ID = ""
+			me.Suites[suiteIdx].Tests[testIdx].EnsureID(me.Suites[suiteIdx])
+		}
+	}
+}
+
 // Aggregate all test suite summaries
 func (me *TestResults) Aggregate() {
 	summary := Summary{}
