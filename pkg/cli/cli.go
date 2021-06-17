@@ -2,6 +2,7 @@ package cli
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -96,6 +97,20 @@ func Parse(p parser.Parser, path string, cmd *cobra.Command) (parser.Result, err
 	if testResultsName != "" {
 		logger.Debug("Overriding test results name to %s", testResultsName)
 		testResults.Name = testResultsName
+		testResults.RegenerateID()
+	}
+
+	suitePrefix, err := cmd.Flags().GetString("suite-prefix")
+	if err != nil {
+		logger.Error("Reading flag error: %v", err)
+		return result, err
+	}
+
+	if suitePrefix != "" {
+		logger.Debug("Prefixing each suite with %s", suitePrefix)
+		for suiteIdx := range testResults.Suites {
+			testResults.Suites[suiteIdx].Name = fmt.Sprintf("%s %s", suitePrefix, testResults.Suites[suiteIdx].Name)
+		}
 		testResults.RegenerateID()
 	}
 

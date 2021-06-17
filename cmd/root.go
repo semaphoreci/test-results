@@ -30,7 +30,7 @@ import (
 
 var cfgFile string
 
-var versionString = "0.4.3"
+var versionString = "0.4.4"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -57,6 +57,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolP("trace", "", false, "trace output")
 	rootCmd.PersistentFlags().StringP("name", "N", "", "name of the suite")
+	rootCmd.PersistentFlags().StringP("suite-prefix", "S", "", "prefix for each suite")
 	rootCmd.PersistentFlags().StringP("parser", "p", "auto", "override parser to be used")
 
 	// Cobra also supports local flags, which will only run
