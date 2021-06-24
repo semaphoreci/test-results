@@ -86,9 +86,9 @@ func Test_RSpec_ParseTestSuites(t *testing.T) {
 				</testcase>
 			</testsuite>
 			<testsuite name="1235">
-				<testcase name="bar">
+				<testcase name="bar" file="foo/bar:123">
 				</testcase>
-				<testcase name="baz">
+				<testcase name="baz" file="foo/baz">
 				</testcase>
 			</testsuite>
 		</testsuites>
@@ -96,6 +96,7 @@ func Test_RSpec_ParseTestSuites(t *testing.T) {
 	type test struct {
 		ID   string
 		Name string
+		File string
 	}
 
 	var fixtures = []struct {
@@ -146,16 +147,24 @@ func Test_RSpec_ParseTestSuites(t *testing.T) {
 			},
 		},
 		{
-			ID:   "5a0a09d5-7020-3585-badc-44dd2f681c73",
-			Name: "1235",
+			ID:   "d1a81530-f601-38c2-af37-a8356472a6d0",
+			Name: "foo/bar:123",
 			Tests: []test{
 				{
 					ID:   "6d356aa1-05b8-3015-a446-ed898d92f9e0",
 					Name: "bar",
+					File: "foo/bar:123",
 				},
+			},
+		},
+		{
+			ID:   "6d4a7e05-ad28-356d-8702-88354c932af5",
+			Name: "foo/baz",
+			Tests: []test{
 				{
 					ID:   "7e0510b2-d80f-32b2-a880-097ca189b7aa",
 					Name: "baz",
+					File: "foo/baz",
 				},
 			},
 		},
@@ -165,6 +174,7 @@ func Test_RSpec_ParseTestSuites(t *testing.T) {
 
 	p := NewRSpec()
 	testResults := p.Parse(path)
+
 	assert.Equal(t, "ff", testResults.Name)
 	assert.Equal(t, "rspec", testResults.Framework)
 	assert.Equal(t, "dda9b4d2-9e8d-3547-9fd0-24bd78148a7a", testResults.ID)
@@ -178,6 +188,7 @@ func Test_RSpec_ParseTestSuites(t *testing.T) {
 		for i := range fixture.Tests {
 			assert.Equal(t, fixture.Tests[i].Name, suite.Tests[i].Name)
 			assert.Equal(t, fixture.Tests[i].ID, suite.Tests[i].ID)
+			assert.Equal(t, fixture.Tests[i].File, suite.Tests[i].File)
 		}
 	}
 }

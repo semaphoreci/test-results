@@ -37,8 +37,8 @@ func Test_Result_Combine(t *testing.T) {
 
 	resultToMerge = NewResult()
 	suite = newSuite("1", "foo")
-	newTest(&suite, "5", "foo.5")
-	newTest(&suite, "6", "foo.6")
+	newTest(&suite, "5", "foo.51")
+	newTest(&suite, "6", "foo.61")
 	testResult = NewTestResults()
 	testResult.Suites = append(testResult.Suites, suite)
 	resultToMerge.TestResults = append(resultToMerge.TestResults, testResult)

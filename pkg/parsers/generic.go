@@ -156,6 +156,8 @@ func (me Generic) newTest(xml parser.XMLElement, suite parser.Suite) parser.Test
 		switch attr {
 		case "name":
 			test.Name = value
+		case "file":
+			test.File = value
 		case "time":
 			test.Duration = parser.ParseTime(value)
 		case "classname":

@@ -68,9 +68,9 @@ func Test_GoLang_ParseTestSuites(t *testing.T) {
 				</testcase>
 			</testsuite>
 			<testsuite name="1235">
-				<testcase name="bar">
+				<testcase name="bar" file="foo/bar:123">
 				</testcase>
-				<testcase name="baz">
+				<testcase name="baz" file="foo/baz">
 				</testcase>
 			</testsuite>
 		</testsuites>
@@ -78,6 +78,7 @@ func Test_GoLang_ParseTestSuites(t *testing.T) {
 	type test struct {
 		ID   string
 		Name string
+		File string
 	}
 
 	var fixtures = []struct {
@@ -134,10 +135,12 @@ func Test_GoLang_ParseTestSuites(t *testing.T) {
 				{
 					ID:   "8c7b771b-3ec2-33db-b8d8-2c09af0c01cc",
 					Name: "bar",
+					File: "foo/bar:123",
 				},
 				{
 					ID:   "9cb3f829-ba01-3d32-b864-5cf7148b6f98",
 					Name: "baz",
+					File: "foo/baz",
 				},
 			},
 		},
@@ -160,6 +163,7 @@ func Test_GoLang_ParseTestSuites(t *testing.T) {
 		for i := range fixture.Tests {
 			assert.Equal(t, fixture.Tests[i].Name, suite.Tests[i].Name)
 			assert.Equal(t, fixture.Tests[i].ID, suite.Tests[i].ID)
+			assert.Equal(t, fixture.Tests[i].File, suite.Tests[i].File)
 		}
 	}
 }
