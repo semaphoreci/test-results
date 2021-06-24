@@ -68,9 +68,9 @@ func Test_Mocha_ParseTestSuites(t *testing.T) {
 				</testcase>
 			</testsuite>
 			<testsuite name="1235">
-				<testcase name="bar">
+				<testcase name="bar" file="foo/bar:123">
 				</testcase>
-				<testcase name="baz">
+				<testcase name="baz" file="foo/baz">
 				</testcase>
 			</testsuite>
 		</testsuites>
@@ -78,6 +78,7 @@ func Test_Mocha_ParseTestSuites(t *testing.T) {
 	type test struct {
 		ID   string
 		Name string
+		File string
 	}
 
 	var fixtures = []struct {
@@ -134,10 +135,12 @@ func Test_Mocha_ParseTestSuites(t *testing.T) {
 				{
 					ID:   "5a8bd9c8-02b4-35f8-af6a-16608c914743",
 					Name: "bar",
+					File: "foo/bar:123",
 				},
 				{
 					ID:   "e1015998-a7e4-37fc-b750-7a1d1fad8e25",
 					Name: "baz",
+					File: "foo/baz",
 				},
 			},
 		},
@@ -160,6 +163,7 @@ func Test_Mocha_ParseTestSuites(t *testing.T) {
 		for i := range fixture.Tests {
 			assert.Equal(t, fixture.Tests[i].Name, suite.Tests[i].Name)
 			assert.Equal(t, fixture.Tests[i].ID, suite.Tests[i].ID)
+			assert.Equal(t, fixture.Tests[i].File, suite.Tests[i].File)
 		}
 	}
 }
