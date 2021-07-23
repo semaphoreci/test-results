@@ -4,4 +4,9 @@
     <testcase name="foo.1"></testcase>
     <testcase name="foo.2"></testcase>
   </testsuite>
+  <testsuite name="bar">
+    <testcase name="bar.1">
+      <skipped />
+    </testcase>
+  </testsuite>
 </testsuites>

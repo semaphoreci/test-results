@@ -24,6 +24,7 @@ blocks:
             - test-results publish priv/parsers/$PARSER/in.xml
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
+
         - name: "Merging - directory as input"
           commands:
             - test-results publish priv/merging
@@ -56,3 +57,8 @@ promotions:
       - result: passed
         branch:
           - "^refs/tags/v*"
+
+  - name: Reports
+    pipeline_file: reports.yml
+    auto_promote:
+      when: true

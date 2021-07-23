@@ -30,11 +30,11 @@ import (
 // genPipelineReportCmd represents the publish command
 var genPipelineReportCmd = &cobra.Command{
 	Use:   "gen-pipeline-report [<path>...]",
-	Short: "fetches workflow level junit reports and combines them together",
-	Long: `fetches workflow level junit reports and combines them together
+	Short: "fetches workflow level JUnit reports and combines them together",
+	Long: `fetches workflow level junit reports and combines them
 
 	When <path>s are provided it recursively traverses through path structure and
-	combines all .json files into one json schema file.
+	combines all .json files into one JSON schema file.
 	`,
 	Args: cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
