@@ -1,0 +1,21 @@
+version: v1.0
+name: Reports
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Test results
+    task:
+      jobs:
+        - name: Generate pipeline report
+          commands:
+            - artifact pull workflow test-results -d /tmp/test-results
+            - cd /tmp/test-results
+            - >
+              for directory in * ; do
+                if [ -d "$directory" ]; then
+                  test-results combine $directory $directory.json
+                  artifact push workflow $directory.json -d test-results/$directory.json
+                fi
+              done

@@ -132,6 +132,7 @@ func init() {
 
 	desc := `Skips uploading raw XML files`
 	publishCmd.Flags().BoolP("no-raw", "", false, desc)
+	publishCmd.Flags().BoolP("force", "f", false, "force artifact push, passes -f flag to artifact CLI")
 
 	desc = `Removes the files after the given amount of time.
 Nd for N days

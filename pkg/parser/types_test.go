@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/stretchr/testify/assert"
 )
@@ -86,7 +87,32 @@ func Test_Suite_Combine(t *testing.T) {
 
 	suite.Combine(suiteToMerge)
 
-	assert.Equal(t, 3, len(suite.Tests))
+	assert.Equal(t, 3, len(suite.Tests), "Should combine tests properly given test name and test file")
+
+	test := NewTest()
+	test.ID = "4"
+	test.Name = "4.foo.4"
+	test.File = "foo.4"
+	test.State = StateSkipped
+
+	suiteToMerge = newSuite("1", "foo")
+	suiteToMerge.AppendTest(test)
+	suite.Combine(suiteToMerge)
+
+	assert.Equal(t, 4, len(suite.Tests))
+	assert.Equal(t, true, suite.Tests[len(suite.Tests)-1].State == StateSkipped)
+
+	test.State = StatePassed
+	suiteToMerge.AppendTest(test)
+	suite.Combine(suiteToMerge)
+	assert.Equal(t, 4, len(suite.Tests))
+	assert.Equal(t, true, suite.Tests[len(suite.Tests)-1].State == StatePassed, "If tests are the same, passed state should take priority over skipped state")
+
+	test.State = StateFailed
+	suiteToMerge.AppendTest(test)
+	suite.Combine(suiteToMerge)
+	assert.Equal(t, 4, len(suite.Tests))
+	assert.Equal(t, true, suite.Tests[len(suite.Tests)-1].State == StateFailed, "If tests are the same, failed state should take priority over passed state")
 }
 
 func Test_NewTest_Results(t *testing.T) {
@@ -296,6 +322,25 @@ func Test_NewFailure(t *testing.T) {
 	obj := NewFailure()
 
 	assert.IsType(t, obj, Failure{})
+}
+
+func Test_EnsureID(t *testing.T) {
+	suite := NewSuite()
+	suite.ID = uuid.NewString()
+
+	test := NewTest()
+	test.Name = "foo"
+	test.EnsureID(suite)
+
+	testToCompare := NewTest()
+	testToCompare.Name = "foo"
+	testToCompare.EnsureID(suite)
+
+	assert.Equal(t, true, test.ID == testToCompare.ID, "should have the same ID in the same suite")
+
+	testToCompare.Classname = "bar"
+	testToCompare.EnsureID(suite)
+	assert.Equal(t, false, test.ID == testToCompare.ID, "should have different ID in the same suite when classname differs")
 }
 
 func newTest(suite *Suite, id string, file string) {

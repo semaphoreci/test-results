@@ -165,6 +165,12 @@ func writeToFile(data []byte, file *os.File) (string, error) {
 
 // PushArtifacts publishes artifacts to semaphore artifact storage
 func PushArtifacts(level string, file string, destination string, cmd *cobra.Command) (string, error) {
+	force, err := cmd.Flags().GetBool("force")
+	if err != nil {
+		logger.Error("Reading flag error: %v", err)
+		return "", err
+	}
+
 	verbose, err := cmd.Flags().GetBool("verbose")
 	if err != nil {
 		logger.Error("Reading flag error: %v", err)
@@ -185,6 +191,10 @@ func PushArtifacts(level string, file string, destination string, cmd *cobra.Com
 
 	if expireIn != "" {
 		artifactsPush.Args = append(artifactsPush.Args, "--expire-in", expireIn)
+	}
+
+	if force {
+		artifactsPush.Args = append(artifactsPush.Args, "-f")
 	}
 
 	output, err := artifactsPush.CombinedOutput()

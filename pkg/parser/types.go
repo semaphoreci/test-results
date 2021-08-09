@@ -265,6 +265,13 @@ func (me *Suite) Combine(other Suite) {
 			if me.hasTest(other.Tests[i]) == false {
 				me.Tests = append(me.Tests, other.Tests[i])
 			}
+
+			shouldReplace, indexToReplace := me.shouldReplaceTest(other.Tests[i])
+
+			if shouldReplace && indexToReplace != -1 {
+				me.Tests[indexToReplace] = other.Tests[i]
+			}
+
 		}
 
 		sort.SliceStable(me.Tests, func(i, j int) bool {
@@ -272,7 +279,33 @@ func (me *Suite) Combine(other Suite) {
 		})
 	}
 }
+func (me *Suite) shouldReplaceTest(test Test) (shouldReplace bool, foundIndex int) {
+	foundIndex = -1
+	shouldReplace = false
+	for i := range me.Tests {
+		if me.Tests[i].ID == test.ID {
+			foundIndex = i
+			break
+		}
+	}
 
+	if foundIndex == -1 {
+		return
+	} else {
+		foundTest := me.Tests[foundIndex]
+
+		if foundTest.State == StateSkipped {
+			shouldReplace = true
+			return
+		}
+		if foundTest.State == StatePassed && test.State == StateFailed || test.State == StateError {
+			shouldReplace = true
+			return
+		}
+
+		return
+	}
+}
 func (me *Suite) hasTest(test Test) bool {
 	for i := range me.Tests {
 		if me.Tests[i].ID == test.ID {
@@ -353,6 +386,10 @@ func NewTest() Test {
 func (me *Test) EnsureID(s Suite) {
 	if me.ID == "" {
 		me.ID = me.Name
+	}
+
+	if me.Classname != "" {
+		me.ID = fmt.Sprintf("%s.%s", me.Classname, me.ID)
 	}
 
 	me.ID = UUID(uuid.MustParse(s.ID), me.ID).String()

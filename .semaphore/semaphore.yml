@@ -25,8 +25,7 @@ blocks:
       epilogue:
         always:
           commands:
-            - cd /tmp
-            - test-results publish junit.xml
+            - test-results publish /tmp/junit.xml
   - name: Build
     dependencies: []
     task:
@@ -49,3 +48,7 @@ promotions:
     pipeline_file: integration.yml
     auto_promote:
       when: "result = 'passed'"
+  - name: Reports
+    pipeline_file: reports.yml
+    auto_promote:
+      when: true

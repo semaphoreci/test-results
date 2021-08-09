@@ -40,6 +40,7 @@ var compileCmd = &cobra.Command{
 		output := args[len(args)-1]
 
 		err := cli.SetLogLevel(cmd)
+
 		if err != nil {
 			return
 		}
