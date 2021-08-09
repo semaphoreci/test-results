@@ -16,6 +16,9 @@ regen:
 test:
 	gotestsum ./...
 
+test.watch:
+	gotestsum --watch ./...
+
 build:
 	CGO_ENABLED=0 go build -o bin/test-results
 

@@ -57,8 +57,3 @@ promotions:
       - result: passed
         branch:
           - "^refs/tags/v*"
-
-  - name: Reports
-    pipeline_file: reports.yml
-    auto_promote:
-      when: true

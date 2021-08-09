@@ -52,7 +52,7 @@ func Test_RSpec_ParseTestSuite(t *testing.T) {
 	assert.Equal(t, "bar", testResults.Suites[0].Tests[2].Name)
 
 	assert.Equal(t, "foo bar", testResults.Suites[1].Tests[0].Name)
-	assert.Equal(t, "977c3162-ea09-3747-8c87-6f8c78585f51", testResults.Suites[1].Tests[0].ID)
+	assert.Equal(t, "96eef1d9-d6ee-32c3-8de2-801a5c64e5c2", testResults.Suites[1].Tests[0].ID)
 	assert.Equal(t, "Foo", testResults.Suites[1].Tests[0].Classname)
 	assert.Equal(t, "foo/bar.o", testResults.Suites[1].Tests[0].File)
 	assert.Equal(t, time.Duration(123400000), testResults.Suites[1].Tests[0].Duration)
