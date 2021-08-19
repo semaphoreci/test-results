@@ -30,7 +30,7 @@ import (
 
 var cfgFile string
 
-var versionString = "0.4.6"
+var versionString = "0.4.7"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

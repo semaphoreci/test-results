@@ -45,13 +45,13 @@ var genPipelineReportCmd = &cobra.Command{
 
 		var dir string
 
-		if len(args) == 0 {
+		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
+		if !found {
+			logger.Error("SEMAPHORE_PIPELINE_ID env is missing")
+			return
+		}
 
-			pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
-			if !found {
-				logger.Error("SEMAPHORE_PIPELINE_ID env is missing")
-				return
-			}
+		if len(args) == 0 {
 			dir, err = ioutil.TempDir("/tmp", "test-results")
 			if err != nil {
 				logger.Error("Creating temporary directory failed %v", err)
@@ -82,7 +82,7 @@ var genPipelineReportCmd = &cobra.Command{
 			return
 		}
 
-		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", "junit.json"), cmd)
+		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID+".json"), cmd)
 		if err != nil {
 			return
 		}
