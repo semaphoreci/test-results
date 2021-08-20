@@ -18,6 +18,7 @@ limitations under the License.
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -125,9 +126,20 @@ var publishCmd = &cobra.Command{
 			logger.Error("Reading flag error: %v", err)
 			return err
 		}
+
 		if !noRaw {
-			for _, rawFilePath := range paths {
-				_, err = cli.PushArtifacts("job", rawFilePath, path.Join("test-results", "junit.xml"), cmd)
+			singlePath := true
+			if len(paths) > 1 {
+				singlePath = false
+			}
+
+			for idx, rawFilePath := range paths {
+				outPath := path.Join("test-results", "junit.xml")
+				if !singlePath {
+					outPath = path.Join("test-results", fmt.Sprintf("junit-%d.xml", idx))
+				}
+
+				_, err = cli.PushArtifacts("job", rawFilePath, outPath, cmd)
 				if err != nil {
 					return err
 				}
