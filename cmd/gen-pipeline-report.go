@@ -37,10 +37,10 @@ var genPipelineReportCmd = &cobra.Command{
 	combines all .json files into one JSON schema file.
 	`,
 	Args: cobra.MinimumNArgs(0),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
-			return
+			return err
 		}
 
 		var dir string
@@ -48,19 +48,19 @@ var genPipelineReportCmd = &cobra.Command{
 		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
 		if !found {
 			logger.Error("SEMAPHORE_PIPELINE_ID env is missing")
-			return
+			return err
 		}
 
 		if len(args) == 0 {
 			dir, err = ioutil.TempDir("/tmp", "test-results")
 			if err != nil {
 				logger.Error("Creating temporary directory failed %v", err)
-				return
+				return err
 			}
 
 			dir, err = cli.PullArtifacts("workflow", path.Join("test-results", pipelineID), dir, cmd)
 			if err != nil {
-				return
+				return err
 			}
 		} else {
 			dir = args[0]
@@ -68,25 +68,26 @@ var genPipelineReportCmd = &cobra.Command{
 
 		result, err := cli.MergeFiles(dir, cmd)
 		if err != nil {
-			return
+			return err
 		}
 
 		jsonData, err := json.Marshal(result)
 		if err != nil {
 			logger.Error("Marshaling results failed with: %v", err)
-			return
+			return err
 		}
 
 		fileName, err := cli.WriteToTmpFile(jsonData)
 		if err != nil {
-			return
+			return err
 		}
 
 		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID+".json"), cmd)
 		if err != nil {
-			return
+			return err
 		}
 
+		return nil
 	},
 }
 

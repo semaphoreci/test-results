@@ -29,18 +29,18 @@ var combineCmd = &cobra.Command{
 	Short: "combines multiples json summary files into one",
 	Long:  `Combines multiples json summary files into one"`,
 	Args:  cobra.MinimumNArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		inputs := args[:len(args)-1]
 		output := args[len(args)-1]
 
 		err := cli.SetLogLevel(cmd)
 		if err != nil {
-			return
+			return err
 		}
 
 		paths, err := cli.LoadFiles(inputs, ".json")
 		if err != nil {
-			return
+			return err
 		}
 
 		result := parser.NewResult()
@@ -48,22 +48,28 @@ var combineCmd = &cobra.Command{
 			inFile, err := cli.CheckFile(path)
 			if err != nil {
 				logger.Error(err.Error())
-				return
+				return err
 			}
 
 			newResult, err := cli.Load(inFile)
+
+			if err != nil {
+				logger.Error(err.Error())
+				return err
+			}
 			result.Combine(*newResult)
 		}
 
 		jsonData, err := cli.Marshal(result)
 		if err != nil {
-			return
+			return err
 		}
 
 		_, err = cli.WriteToFile(jsonData, output)
 		if err != nil {
-			return
+			return err
 		}
+		return nil
 	},
 }
 
