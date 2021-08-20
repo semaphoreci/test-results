@@ -35,61 +35,71 @@ var compileCmd = &cobra.Command{
 	every .xml file.
 	`,
 	Args: cobra.MinimumNArgs(2),
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		inputs := args[:len(args)-1]
 		output := args[len(args)-1]
 
 		err := cli.SetLogLevel(cmd)
 
 		if err != nil {
-			return
+			return err
 		}
 
 		paths, err := cli.LoadFiles(inputs, ".xml")
 		if err != nil {
-			return
+			return err
 		}
 
 		dirPath, err := ioutil.TempDir("", "test-results-*")
+
+		if err != nil {
+			return err
+		}
+
 		for _, path := range paths {
 			parser, err := cli.FindParser(path, cmd)
 			if err != nil {
-				return
+				return err
 			}
 
 			testResults, err := cli.Parse(parser, path, cmd)
 			if err != nil {
-				return
+				return err
 			}
 
 			jsonData, err := cli.Marshal(testResults)
 			if err != nil {
-				return
+				return err
 			}
 
 			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+			if err != nil {
+				return err
+			}
 
 			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
 			if err != nil {
-				return
+				return err
 			}
 		}
 
 		result, err := cli.MergeFiles(dirPath, cmd)
 		if err != nil {
-			return
+			return err
 		}
 
 		jsonData, err := json.Marshal(result)
 		if err != nil {
 			logger.Error("Marshaling results failed with: %v", err)
-			return
+			return err
 		}
 
 		_, err = cli.WriteToFile(jsonData, output)
 		if err != nil {
-			return
+			return err
 		}
+
+		return nil
 	},
 }
 
