@@ -202,8 +202,6 @@ func (me GoLang) newTest(xml parser.XMLElement, suite parser.Suite) parser.Test 
 		}
 	}
 
-	test.EnsureID(suite)
-
 	for _, node := range xml.Children {
 		switch node.Tag() {
 		case "failure":
@@ -220,6 +218,8 @@ func (me GoLang) newTest(xml parser.XMLElement, suite parser.Suite) parser.Test 
 			test.SystemErr = string(node.Contents)
 		}
 	}
+
+	test.EnsureID(suite)
 
 	return test
 }
