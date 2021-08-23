@@ -392,6 +392,14 @@ func (me *Test) EnsureID(s Suite) {
 		me.ID = fmt.Sprintf("%s.%s", me.Classname, me.ID)
 	}
 
+	if me.Failure != nil {
+		me.ID = fmt.Sprintf("%s.%s", "Failure", me.ID)
+	}
+
+	if me.Error != nil {
+		me.ID = fmt.Sprintf("%s.%s", "Error", me.ID)
+	}
+
 	me.ID = UUID(uuid.MustParse(s.ID), me.ID).String()
 }
 
