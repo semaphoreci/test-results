@@ -66,6 +66,7 @@ func TestParseTime(t *testing.T) {
 		{"parses 1 correctly", "1", 1 * time.Second},
 		{"parses 60 correctly", "60", 1 * time.Minute},
 		{"parses 61.123 correctly", "61.123", 1*time.Minute + 1*time.Second + 123*time.Millisecond},
+		{"parses 8.10623168945312e-05s correctly", "8.10623168945312e-05", 81 * time.Microsecond},
 		{"parses invalid number correctly #1", "a60", 0},
 		{"parses invalid number correctly #2", "6a0", 0},
 	}

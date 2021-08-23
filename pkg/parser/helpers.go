@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -49,8 +50,14 @@ func ParseError(xml XMLElement) *Error {
 
 // ParseTime parsers time from junit.xml schemas
 func ParseTime(s string) time.Duration {
+
+	f, err := strconv.ParseFloat(s, 64)
+	if err != nil {
+		logger.Warn("Duration parsing failed: %v", err)
+		return 0
+	}
 	// append 's' to end of input to use `time` built in duration parser
-	d, err := time.ParseDuration(s + "s")
+	d, err := time.ParseDuration(fmt.Sprintf("%fs", f))
 	if err != nil {
 		logger.Warn("Duration parsing failed: %v", err)
 		return 0
