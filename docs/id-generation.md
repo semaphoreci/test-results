@@ -19,6 +19,7 @@ To generate consistent `id`'s between builds following method is implemented for
 
 - ID generation for `Tests`
 
-  The same rules apply as for `Test results` however every `Test ID` is namespaced by `Suite` ID and `Test classname` if present
+  The same rules apply as for `Test results` however every `Test ID` is namespaced by `Suite` ID and `Test classname` if present.
+  If a test is failed/errored the state is also added as namespace, as failed/errored cases can happen simultaneously in the same suite.
 
 For generating IDs we're using [UUID v3 generator](https://pkg.go.dev/github.com/google/uuid#NewMD5).
