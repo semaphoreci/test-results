@@ -1,5 +1,5 @@
 version: v1.0
-name: Build
+name: Integration tests
 agent:
   machine:
     type: e1-standard-2
@@ -35,20 +35,14 @@ blocks:
     dependencies:
       - Integration tests
     task:
-      prologue:
-        commands:
-          - artifact pull workflow bin/test-results -d /tmp/test-results
-          - sudo mv /tmp/test-results /usr/local/bin/test-results
-          - sudo chmod +x /usr/local/bin/test-results
-          - checkout
       jobs:
         - name: "Generate pipeline report"
           commands:
+            - checkout
             - test-results gen-pipeline-report
             - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}.json -d /tmp/junit.json
             - artifact push job /tmp/junit.json -d test-results/junit.json
             - diff /tmp/junit.json priv/workflow/out.json
-
 
 promotions:
   - name: Release

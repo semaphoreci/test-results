@@ -41,6 +41,12 @@ blocks:
             - make build
             - artifact push workflow bin/test-results -d bin/test-results
 
+after_pipeline:
+  task:
+    jobs:
+      - name: Submit Reports
+        commands:
+          - test-results gen-pipeline-report
 
 
 promotions:
@@ -48,7 +54,3 @@ promotions:
     pipeline_file: integration.yml
     auto_promote:
       when: "result = 'passed'"
-  - name: Reports
-    pipeline_file: reports.yml
-    auto_promote:
-      when: true
