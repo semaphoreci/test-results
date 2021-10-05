@@ -72,6 +72,12 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 				<testcase name="baz" file="foo/baz">
 				</testcase>
 			</testsuite>
+			<testsuite name="diff by classname">
+				<testcase name="bar" file="foo/bar" classname="foo">
+				</testcase>
+				<testcase name="bar" file="foo/bar" classname="bar">
+				</testcase>
+			</testsuite>
 		</testsuites>
 	`))
 	type test struct {
@@ -140,6 +146,22 @@ func Test_Generic_ParseTestSuites(t *testing.T) {
 					ID:   "9f6f64c2-9b45-3f43-a380-6358cc960cca",
 					Name: "baz",
 					File: "foo/baz",
+				},
+			},
+		},
+		{
+			ID:   "db748ed5-c393-3a56-85b1-12fbedbf9c46",
+			Name: "diff by classname",
+			Tests: []test{
+				{
+					ID:   "5f5244e4-8c37-3e5f-8d50-e22bb46391d7",
+					Name: "bar",
+					File: "foo/bar",
+				},
+				{
+					ID:   "aaffd1c8-90ce-33b9-898f-359e203b551b",
+					Name: "bar",
+					File: "foo/bar",
 				},
 			},
 		},
