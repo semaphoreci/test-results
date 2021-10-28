@@ -44,6 +44,7 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		var dir string
+		removeDir := true
 
 		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
 		if !found {
@@ -57,7 +58,6 @@ var genPipelineReportCmd = &cobra.Command{
 				logger.Error("Creating temporary directory failed %v", err)
 				return err
 			}
-			defer os.RemoveAll(dir)
 
 			dir, err = cli.PullArtifacts("workflow", path.Join("test-results", pipelineID), dir, cmd)
 			if err != nil {
@@ -65,11 +65,16 @@ var genPipelineReportCmd = &cobra.Command{
 			}
 		} else {
 			dir = args[0]
+			removeDir = false
 		}
 
 		result, err := cli.MergeFiles(dir, cmd)
 		if err != nil {
 			return err
+		}
+
+		if removeDir {
+			defer os.Remove(dir)
 		}
 
 		jsonData, err := json.Marshal(result)
