@@ -262,7 +262,7 @@ func NewSuite() Suite {
 func (me *Suite) Combine(other Suite) {
 	if me.ID == other.ID {
 		for i := range other.Tests {
-			if me.hasTest(other.Tests[i]) == false {
+			if !me.hasTest(other.Tests[i]) {
 				me.Tests = append(me.Tests, other.Tests[i])
 			}
 
