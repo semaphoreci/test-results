@@ -8,21 +8,22 @@ import (
 	"github.com/semaphoreci/test-results/pkg/parser"
 )
 
-// GoLang ...
+// GoLang parser struct
 type GoLang struct {
 }
 
-// NewGoLang ...
+// NewGoLang returns a new golang parser
 func NewGoLang() GoLang {
 	return GoLang{}
 }
 
-// GetName ...
+// GetName returns a name of the parser
 func (me GoLang) GetName() string {
 	return "golang"
 }
 
-// IsApplicable ...
+// IsApplicable returns true if this parser is applicable to file at given path
+// Checks for the presence of `go.version`` property on <testsuite> element.
 func (me GoLang) IsApplicable(path string) bool {
 	xmlElement, err := LoadXML(path)
 	logger.Debug("Checking applicability of %s parser", me.GetName())
@@ -65,7 +66,7 @@ func hasProperty(testsuiteElement parser.XMLElement, property string) bool {
 	return false
 }
 
-// Parse ...
+// Parse parses file at path and returns a well-defined TestResults struct
 func (me GoLang) Parse(path string) parser.TestResults {
 	results := parser.NewTestResults()
 
