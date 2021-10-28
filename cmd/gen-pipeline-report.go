@@ -57,6 +57,7 @@ var genPipelineReportCmd = &cobra.Command{
 				logger.Error("Creating temporary directory failed %v", err)
 				return err
 			}
+			defer os.RemoveAll(dir)
 
 			dir, err = cli.PullArtifacts("workflow", path.Join("test-results", pipelineID), dir, cmd)
 			if err != nil {
@@ -82,12 +83,12 @@ var genPipelineReportCmd = &cobra.Command{
 			return err
 		}
 
-		defer os.deletefileName.
-
 		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID+".json"), cmd)
 		if err != nil {
 			return err
 		}
+
+		defer os.Remove(fileName)
 
 		return nil
 	},
