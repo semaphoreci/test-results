@@ -82,6 +82,8 @@ var genPipelineReportCmd = &cobra.Command{
 			return err
 		}
 
+		defer os.deletefileName.
+
 		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID+".json"), cmd)
 		if err != nil {
 			return err

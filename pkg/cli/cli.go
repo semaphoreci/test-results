@@ -148,6 +148,7 @@ func WriteToTmpFile(data []byte) (string, error) {
 		logger.Error("Opening file %s: %v", file.Name(), err)
 		return "", err
 	}
+
 	return writeToFile(data, file)
 }
 
@@ -259,6 +260,9 @@ func SetLogLevel(cmd *cobra.Command) error {
 // MergeFiles merges all json files found in path into one big blob
 func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 	verbose, err := cmd.Flags().GetBool("verbose")
+	if err != nil {
+		return nil, err
+	}
 
 	_, err = CheckFile(path)
 	if err != nil {
@@ -324,6 +328,9 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
 	jsonFile, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
 	defer jsonFile.Close()
 	if err != nil {
 		return nil, err
