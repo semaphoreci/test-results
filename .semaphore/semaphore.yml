@@ -43,6 +43,13 @@ blocks:
 
 after_pipeline:
   task:
+    prologue:
+      commands:
+        - artifact pull workflow bin/test-results -d /tmp/test-results
+        - sudo mv /tmp/test-results /usr/local/bin/test-results
+        - sudo chmod +x /usr/local/bin/test-results
+        - test-results --version
+        - checkout
     jobs:
       - name: Submit Reports
         commands:

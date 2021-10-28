@@ -146,10 +146,17 @@ var publishCmd = &cobra.Command{
 			}
 		}
 
-		defer os.Remove(fileName)
+		defer removeTempFile(fileName)
 
 		return nil
 	},
+}
+
+func removeTempFile(fileName string) {
+	logger.Info("Removing temporary file %v", fileName)
+	if err := os.Remove(fileName); err != nil {
+		logger.Error("Removing temporary file failed %v", err)
+	}
 }
 
 func init() {

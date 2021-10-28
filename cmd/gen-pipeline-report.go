@@ -44,6 +44,7 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		var dir string
+		removeDir := true
 
 		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
 		if !found {
@@ -52,12 +53,11 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		if len(args) == 0 {
-			dir, err = ioutil.TempDir("/tmp", "test-results")
+			dir, err = ioutil.TempDir("/tmp", "test-results-report-")
 			if err != nil {
 				logger.Error("Creating temporary directory failed %v", err)
 				return err
 			}
-			defer os.RemoveAll(dir)
 
 			dir, err = cli.PullArtifacts("workflow", path.Join("test-results", pipelineID), dir, cmd)
 			if err != nil {
@@ -65,6 +65,7 @@ var genPipelineReportCmd = &cobra.Command{
 			}
 		} else {
 			dir = args[0]
+			removeDir = false
 		}
 
 		result, err := cli.MergeFiles(dir, cmd)
@@ -72,9 +73,15 @@ var genPipelineReportCmd = &cobra.Command{
 			return err
 		}
 
+		if removeDir {
+			if err = os.RemoveAll(dir); err != nil {
+				logger.Error("Removing temporary directory failed %v", err)
+			}
+		}
+
 		jsonData, err := json.Marshal(result)
 		if err != nil {
-			logger.Error("Marshaling results failed with: %v", err)
+			logger.Error("Marshaling results failed %v", err)
 			return err
 		}
 
@@ -85,10 +92,16 @@ var genPipelineReportCmd = &cobra.Command{
 
 		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID+".json"), cmd)
 		if err != nil {
+			if err = os.Remove(fileName); err != nil {
+				logger.Error("Removing temporary file failed %v", err)
+			}
 			return err
 		}
 
-		defer os.Remove(fileName)
+		err = os.Remove(fileName)
+		if err != nil {
+			logger.Error("Could no remove temnporary file %v", err)
+		}
 
 		return nil
 	},

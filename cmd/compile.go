@@ -19,6 +19,7 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
@@ -88,6 +89,8 @@ var compileCmd = &cobra.Command{
 			return err
 		}
 
+		defer removeTempDir(dirPath)
+
 		jsonData, err := json.Marshal(result)
 		if err != nil {
 			logger.Error("Marshaling results failed with: %v", err)
@@ -101,6 +104,13 @@ var compileCmd = &cobra.Command{
 
 		return nil
 	},
+}
+
+func removeTempDir(dirName string) {
+	logger.Info("Removing temporary directory %v", dirName)
+	if err := os.RemoveAll(dirName); err != nil {
+		logger.Error("Removing temporary directory failed %v", err)
+	}
 }
 
 func init() {
