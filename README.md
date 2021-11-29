@@ -1,1 +1,100 @@
-# test-results
+# Test results [![SemaphoreCI](https://semaphore.semaphoreci.com/badges/test-results-eins.svg)](https://semaphore.semaphoreci.com/projects/test-results-eins)
+
+Semaphore collects XML test reports and uses them to provide insight into your pipelines.
+
+With test reports, you enable your team to get an effective and consistent view of your CI/CD test suite across different test frameworks and stages in a CI/CD workflow. You get a clear failure report for each executed pipeline. Failures are extracted and highlighted, while the rest of the suite is available for analysis.
+
+The test-results command-line interface (CLI) is a tool that helps you compile and process [JUnit XML](https://github.com/windyroad/JUnit-Schema/blob/master/JUnit.xsd) files. The output of the test results CLI is a report in JSON format.
+
+This CLI is distributed as a part of the [Semaphore toolbox](https://github.com/semaphoreci/toolbox), and it is available in all Semaphore jobs.
+
+The main purpose of the CLI is to:
+
+- compile and publish JUnit XML files into a JSON report
+- merge multiple JSON reports into a single summary report
+
+## Compiling and publishing JUnit XML files
+
+Given your JUnit XML report is named `results.xml` you can run the following command to generate a report:
+
+```bash
+test-results publish results.xml
+```
+
+The above command parses the content of the `results.xml` file, and publishes the results to Semaphore.
+
+While parsing the content, the CLI tries to find the best parser for your result type. The following test runners have a dedicated parser:
+
+- exunit
+- golang
+- mocha
+- rspec
+
+If a dedicated parser is not found, the CLI will parse the file using a generic parser. The generic parser uses [JUnit XML Schema](https://github.com/windyroad/JUnit-Schema/blob/master/JUnit.xsd) definition to extract data from the report.
+
+The parser can be selected manually by using the `--parser` option.
+
+```bash
+test-results publish --parser exunit results.xml
+```
+
+The name of the generated report is based on the selected parser. If you want to overwrite this you can use the `--name` option:
+
+```bash
+test-results publish --name "Unit Tests" results.xml
+```
+
+The generated tests in a report will sometimes contain a prefix in the name. For example `Elixir.MyTest`. If you want to remove the `Elixir` prefix from the test names you can use `--suite-prefix` option:
+
+```bash
+test-results publish --suite-prefix "Elixir." results.xml
+```
+
+## Merging multiple JSON reports into a single summary report
+
+If you have multiple jobs in your pipeline that generate test results, you can merge them into a single report with the following command
+
+```bash
+test-results gen-pipeline-report
+```
+
+The above command assumes you are running it in a semaphore pipeline. As it uses `SEMAPHORE_PIPELINE_ID` environment variable to identify the pipeline and fetch the job level reports. 
+
+## Where are test reports stored?
+
+The test results CLI uses the [Semaphore Artifact Storage](https://docs.semaphoreci.com/essentials/artifacts/) to store the test reports:
+
+- the `test-results publish` command stores the report in the `test-results/junit.json` file on a job level
+- the `test-results gen-pipeline-report` command stores the report in the `test-results/${SEMAPHORE_PIPELINE_ID}.json` file on a workflow level
+
+By default, the generated artifacts have no expiration date. This can be controlled with `--expire-in` option:
+
+```bash
+test-results publish --expire-in 1d results.xml
+```
+
+## Skip uploading raw JUnit XML files
+
+By default, `test-results publish` will upload the raw JUnit XML file alongside the JSON report to the artifact storage. This can be disabled with the `--no-raw` option:
+
+```bash
+test-results publish --no-raw results.xml
+```
+
+## Overwrite existing reports
+
+By default `test-results publish` and `test-results gen-pipeline-report` will fail if the report is already present in the artifact storage. This behaviour can be disabled with the `--force` option:
+
+```bash
+# Publish the report
+test-results publish results.xml
+
+#...
+
+# other-results will overwrite results
+test-results publish --force other-results.xml
+```
+
+## Using the CLI on a local machine
+
+Latest CLI binaries are available [here](https://github.com/semaphoreci/test-results/releases/latest).
