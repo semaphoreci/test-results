@@ -1,4 +1,4 @@
-# Test results [![SemaphoreCI](https://semaphore.semaphoreci.com/badges/test-results-eins.svg)](https://semaphore.semaphoreci.com/projects/test-results-eins)
+# Test results [![SemaphoreCI](https://semaphore.semaphoreci.com/badges/test-results-cli.svg)](https://semaphore.semaphoreci.com/projects/test-results-cli)
 
 Semaphore collects XML test reports and uses them to provide insight into your pipelines.
 
