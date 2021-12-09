@@ -15,7 +15,7 @@ func LoadPath(path string) (*bytes.Reader, error) {
 	reader, found := fileloader.Load(path, &bytes.Reader{})
 
 	if !found {
-		file, err := ioutil.ReadFile(path)
+		file, err := ioutil.ReadFile(path) // #nosec
 
 		if err != nil {
 			return nil, err
