@@ -10,29 +10,39 @@ import (
 
 var readers map[string]*bytes.Reader = make(map[string]*bytes.Reader)
 
-// Load reader from internal buffer or create new one
+// Load reader from internal buffer if path was already loaded or create new one if not
 func Load(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 	return decode(path, reader)
 }
 
-// Ensure file exists at given path with contents read from reader
-func Ensure(reader *bytes.Reader) string {
+// Ensure puts reader data into temporary created file.
+func Ensure(reader *bytes.Reader) (fileName string) {
 	file, err := ioutil.TempFile("", "")
 	if err != nil {
 		panic(err)
 	}
 
-	reader.WriteTo(file)
-	defer file.Close()
+	fileName = file.Name()
 
-	return file.Name()
+	_, err = reader.WriteTo(file)
+	if err != nil {
+		panic(err)
+	}
+
+	defer file.Close() // #nosec
+
+	return
 }
 
 func decode(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 	foundReader, exists := readers[path]
 	if exists && foundReader != nil && foundReader.Size() == reader.Size() {
 		logger.Debug("Path read from cache")
-		foundReader.Seek(0, io.SeekStart)
+		_, err := foundReader.Seek(0, io.SeekStart)
+		if err != nil {
+			logger.Error("Cannot seek to start of reader: %v", err)
+		}
+
 		return foundReader, true
 	}
 	readers[path] = reader

@@ -30,7 +30,7 @@ func LoadFiles(inPaths []string, ext string) ([]string, error) {
 
 		switch file.IsDir() {
 		case true:
-			filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
+			err := filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
 				if d.Type().IsRegular() {
 					switch filepath.Ext(d.Name()) {
 					case ext:
@@ -39,6 +39,11 @@ func LoadFiles(inPaths []string, ext string) ([]string, error) {
 				}
 				return nil
 			})
+
+			if err != nil {
+				logger.Error("Walking through directory %s failed %v", path, err)
+				return paths, err
+			}
 
 		case false:
 			switch filepath.Ext(file.Name()) {
@@ -327,11 +332,11 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 // [TODO]: Test this
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
-	jsonFile, err := os.Open(path)
+	jsonFile, err := os.Open(path) // #nosec
 	if err != nil {
 		return nil, err
 	}
-	defer jsonFile.Close()
+	defer jsonFile.Close() // #nosec
 	if err != nil {
 		return nil, err
 	}
