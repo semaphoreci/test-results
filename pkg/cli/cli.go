@@ -13,6 +13,7 @@ import (
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
 	"github.com/semaphoreci/test-results/pkg/parsers"
+	"github.com/semaphoreci/test-results/pkg/transformer"
 	"github.com/spf13/cobra"
 )
 
@@ -352,4 +353,56 @@ func Load(path string) (*parser.Result, error) {
 	}
 
 	return &result, nil
+}
+
+// TransformXMLs transforms xml files using templates
+// TODO: Cleanup temporary files
+func TransformXMLs(paths []string, cmd *cobra.Command) ([]string, error) {
+	newPaths := make([]string, 0)
+	tplPath, err := cmd.Flags().GetString("template")
+	if err != nil {
+		logger.Error("Failed reading path: %v", err)
+		return newPaths, err
+	}
+
+	if tplPath != "" {
+		logger.Trace("Transforming xml files %v with template: %v", paths, tplPath)
+		dirPath, err := ioutil.TempDir("", "test-results-transformations-*")
+		if err != nil {
+			return newPaths, err
+		}
+
+		template, err := transformer.LoadTemplate(tplPath)
+		if err != nil {
+			return newPaths, err
+		}
+
+		for _, path := range paths {
+			xml, err := transformer.LoadXML(path)
+			if err != nil {
+				return newPaths, err
+			}
+
+			output, err := transformer.Transform(template, xml)
+			if err != nil {
+				return newPaths, err
+			}
+
+			tmpFile, err := ioutil.TempFile(dirPath, "transformed-*.xml")
+			if err != nil {
+				return newPaths, err
+			}
+
+			_, err = WriteToFile([]byte(output), tmpFile.Name())
+			if err != nil {
+				return newPaths, err
+			}
+
+			newPaths = append(newPaths, tmpFile.Name())
+		}
+	} else {
+		newPaths = paths
+	}
+
+	return newPaths, err
 }

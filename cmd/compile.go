@@ -27,85 +27,102 @@ import (
 )
 
 // compileCmd represents the compile command
-var compileCmd = &cobra.Command{
-	Use:   "compile <xml-file-path>... <json-file>]",
-	Short: "parses xml files to well defined json schema",
-	Long: `Parses xml file to well defined json schema
+func NewCompileCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "compile <xml-file-path>... <json-file>",
+		Short: "parses xml files to well defined json schema",
+		Long: `Parses xml file to well defined json schema
 
 	It traverses through directory sturcture specificed by <xml-file-path> and compiles
 	every .xml file.
 	`,
-	Args: cobra.MinimumNArgs(2),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		inputs := args[:len(args)-1]
-		output := args[len(args)-1]
+		Args: cobra.MinimumNArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			inputs := args[:len(args)-1]
+			output := args[len(args)-1]
 
-		err := cli.SetLogLevel(cmd)
-
-		if err != nil {
-			return err
-		}
-
-		paths, err := cli.LoadFiles(inputs, ".xml")
-		if err != nil {
-			return err
-		}
-
-		dirPath, err := ioutil.TempDir("", "test-results-*")
-
-		if err != nil {
-			return err
-		}
-
-		for _, path := range paths {
-			parser, err := cli.FindParser(path, cmd)
+			err := cli.SetLogLevel(cmd)
 			if err != nil {
 				return err
 			}
 
-			testResults, err := cli.Parse(parser, path, cmd)
+			paths, err := cli.LoadFiles(inputs, ".xml")
 			if err != nil {
 				return err
 			}
 
-			jsonData, err := cli.Marshal(testResults)
+			paths, err = cli.TransformXMLs(paths, cmd)
 			if err != nil {
 				return err
 			}
 
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+			dirPath, err := ioutil.TempDir("", "test-results-*")
 			if err != nil {
 				return err
 			}
 
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+			for _, path := range paths {
+				parser, err := cli.FindParser(path, cmd)
+				if err != nil {
+					return err
+				}
+
+				testResults, err := cli.Parse(parser, path, cmd)
+				if err != nil {
+					return err
+				}
+
+				jsonData, err := cli.Marshal(testResults)
+				if err != nil {
+					return err
+				}
+
+				tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+				if err != nil {
+					return err
+				}
+
+				_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+				if err != nil {
+					return err
+				}
+			}
+
+			result, err := cli.MergeFiles(dirPath, cmd)
 			if err != nil {
 				return err
 			}
-		}
 
-		result, err := cli.MergeFiles(dirPath, cmd)
-		if err != nil {
-			return err
-		}
+			jsonData, err := json.Marshal(result)
+			if err != nil {
+				logger.Error("Marshaling results failed with: %v", err)
+				return err
+			}
 
-		jsonData, err := json.Marshal(result)
-		if err != nil {
-			logger.Error("Marshaling results failed with: %v", err)
-			return err
-		}
+			_, err = cli.WriteToFile(jsonData, output)
+			if err != nil {
+				return err
+			}
 
-		_, err = cli.WriteToFile(jsonData, output)
-		if err != nil {
-			return err
-		}
+			defer os.RemoveAll(dirPath)
 
-		defer os.RemoveAll(dirPath)
+			return nil
+		},
+	}
 
-		return nil
-	},
+	desc := `path to template file`
+	cmd.Flags().StringP("template", "t", "", desc)
+	cmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.test-results.yaml)")
+	cmd.PersistentFlags().BoolP("verbose", "v", false, "verbose output")
+	cmd.PersistentFlags().BoolP("trace", "", false, "trace output")
+	cmd.PersistentFlags().StringP("name", "N", "", "name of the suite")
+	cmd.PersistentFlags().StringP("suite-prefix", "S", "", "prefix for each suite")
+	cmd.PersistentFlags().StringP("parser", "p", "auto", "override parser to be used")
+
+	return cmd
 }
 
 func init() {
+	compileCmd := NewCompileCmd()
 	rootCmd.AddCommand(compileCmd)
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strings"
 	"text/template"
 
 	"github.com/semaphoreci/test-results/pkg/logger"
@@ -59,13 +60,13 @@ func LoadTemplate(path string) (tpl template.Template, err error) {
 			return fieldFunc(node, "#tag")
 		},
 		"attributes": func(node map[string]interface{}) string {
-			attrs := ""
-			for k, v := range node {
-				if k[0] == '@' {
-					attrs = fmt.Sprintf("%s=\"%s\" %s", k[1:], v, attrs)
+			attributes := make([]string, 0)
+			for keyName, keyValue := range node {
+				if keyName[0] == '@' {
+					attributes = append(attributes, fmt.Sprintf("%s=\"%s\"", keyName[1:], keyValue))
 				}
 			}
-			return attrs
+			return strings.Join(attributes, " ")
 		},
 		"children": func(node map[string]interface{}) (values []map[string]interface{}) {
 			for k, v := range node {

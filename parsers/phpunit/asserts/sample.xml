@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="foo">
+<testsuites>
   <testsuite name="" tests="4" assertions="4" errors="0" warnings="0" failures="0" skipped="0" time="0.186278">
     <testsuite name="test1" tests="2" assertions="2" errors="0" warnings="0" failures="0" skipped="0" time="0.185621">
       <testsuite name="Tests\Tests1\FirstTest" file="/app/tests1/FirstTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.184274">

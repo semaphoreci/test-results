@@ -22,7 +22,7 @@ func Test_Transform(t *testing.T) {
 	// }
 }
 
-func TestLoadXML(t *testing.T) {
+func Test_LoadXML(t *testing.T) {
 	// _, err := transformer.LoadXML("/workspace/test-results/priv/sample.xml")
 	// if err != nil {
 	// 	t.Fail()

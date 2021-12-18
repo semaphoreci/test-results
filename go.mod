@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/google/uuid v1.3.0
+	github.com/josephburnett/jd v1.4.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
 	github.com/sirupsen/logrus v1.8.1

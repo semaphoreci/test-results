@@ -162,8 +162,6 @@ func (me Generic) newTest(xml parser.XMLElement, suite parser.Suite) parser.Test
 			test.Duration = parser.ParseTime(value)
 		case "classname":
 			test.Classname = value
-		case "class":
-			test.Classname = value
 		}
 	}
 
