@@ -31,7 +31,7 @@ blocks:
 
   - name: Security checks
     dependencies: []
-    task:            
+    task:
       secrets:
         - name: security-toolbox-shared-read-access
 
@@ -58,7 +58,7 @@ blocks:
             - "[ -f results.xml ] && test-results publish --name \"$SUITE_NAME\" results.xml"
 
   - name: Build
-    dependencies: ["Security checks", "Unit tests"]
+    dependencies: []
     task:
       prologue:
         commands:
@@ -71,6 +71,21 @@ blocks:
           commands:
             - make build
             - artifact push workflow bin/test-results -d bin/test-results
+  - name: Test PHP parser
+    dependencies: ["Build"]
+    task:
+      prologue:
+        commands:
+          - artifact pull workflow bin/test-results -d /tmp/test-results
+          - sudo mv /tmp/test-results /usr/local/bin/test-results
+          - sudo chmod +x /usr/local/bin/test-results
+          - test-results --version
+          - checkout
+      jobs:
+        - name: "PHP parser experiments"
+          commands:
+            - test-results transform --tpl php-parser/sample.tpl php-parser/sample.xml /tmp/junit.xml
+            - test-results publish /tmp/junit.xml
 
 after_pipeline:
   task:

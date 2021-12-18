@@ -7,7 +7,7 @@ import (
 	"github.com/semaphoreci/test-results/pkg/logger"
 )
 
-// XMLElement ...
+// XMLElement is an universal representation of an XML element
 type XMLElement struct {
 	XMLName    xml.Name
 	Attributes map[string]string `xml:"-"`
@@ -15,17 +15,17 @@ type XMLElement struct {
 	Contents   []byte            `xml:",chardata"`
 }
 
-// NewXMLElement ...
+// NewXMLElement creates new XMLElement
 func NewXMLElement() XMLElement {
 	return XMLElement{}
 }
 
-// Attr ...
+// Attr accesses attributes by name
 func (me *XMLElement) Attr(attr string) string {
 	return me.Attributes[attr]
 }
 
-// Tag ...
+// Tag return name of the tag of the XMLElement
 func (me *XMLElement) Tag() string {
 	return me.XMLName.Local
 }
