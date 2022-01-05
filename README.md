@@ -50,6 +50,16 @@ The generated tests in a report will sometimes contain a prefix in the name. For
 test-results publish --suite-prefix "Elixir." results.xml
 ```
 
+## Multiple reports from one job
+
+If your job generates multiple reports: `integration.xml`, `unit.xml` you can use this command to merge and publish them
+
+```bash
+test-results publish integration.xml unit.xml
+```
+
+In addition, each report is published separately to artifact storage as a `junit-<index>.xml`. `<index>` is a number starting from 0 that corresponds to the order of the report passed to the command line.
+
 ## Merging multiple JSON reports into a single summary report
 
 If you have multiple jobs in your pipeline that generate test results, you can merge them into a single report with the following command
@@ -58,7 +68,7 @@ If you have multiple jobs in your pipeline that generate test results, you can m
 test-results gen-pipeline-report
 ```
 
-The above command assumes you are running it in a semaphore pipeline. As it uses `SEMAPHORE_PIPELINE_ID` environment variable to identify the pipeline and fetch the job level reports. 
+The above command assumes you are running it in a semaphore pipeline. As it uses `SEMAPHORE_PIPELINE_ID` environment variable to identify the pipeline and fetch the job level reports.
 
 ## Where are test reports stored?
 
