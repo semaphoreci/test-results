@@ -337,6 +337,10 @@ func (me *Suite) Aggregate() {
 		}
 	}
 
+	if me.Summary.Duration != 0 {
+		summary.Duration = me.Summary.Duration
+	}
+
 	me.Summary = summary
 }
 
