@@ -11,7 +11,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version go 1.16
+          - sem-version go 1.17
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
@@ -31,7 +31,7 @@ blocks:
 
   - name: Security checks
     dependencies: []
-    task:            
+    task:
       secrets:
         - name: security-toolbox-shared-read-access
 
@@ -62,7 +62,7 @@ blocks:
     task:
       prologue:
         commands:
-          - sem-version go 1.16
+          - sem-version go 1.17
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
