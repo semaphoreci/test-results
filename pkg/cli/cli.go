@@ -136,7 +136,7 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 
 // WriteToFile saves data to given file
 func WriteToFile(data []byte, path string) (string, error) {
-	file, err := os.Create(path)
+	file, err := os.Create(path) // #nosec
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
