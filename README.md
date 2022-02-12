@@ -108,3 +108,7 @@ test-results publish --force other-results.xml
 ## Using the CLI on a local machine
 
 Latest CLI binaries are available [here](https://github.com/semaphoreci/test-results/releases/latest).
+
+## Contributing
+
+Bug reports and pull requests are welcome. If your test runner is not supported, see documentation pages on writing [a new parser](docs/custom-parsers.md)

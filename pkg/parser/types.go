@@ -15,31 +15,22 @@ type Properties map[string]string
 type State string
 
 const (
-	// StatePassed indicates that test was successful
-	StatePassed State = "passed"
-	// StateError indicates that test errored due to unexpected behaviour when running test i.e. exception
-	StateError State = "error"
-	// StateFailed indicates that test failed due to invalid test result
-	StateFailed State = "failed"
-	// StateSkipped indicates that test was skipped
-	StateSkipped State = "skipped"
-	// StateDisabled indicates that test was disabled
-	StateDisabled State = "disabled"
+	StatePassed   State = "passed"   // test was successful
+	StateError    State = "error"    // test errored due to unexpected behaviour when running test i.e. exception
+	StateFailed   State = "failed"   // test failed due to invalid test result
+	StateSkipped  State = "skipped"  // test was skipped
+	StateDisabled State = "disabled" // test was disabled
 )
 
 // Status stores information about parsing results
 type Status string
 
 const (
-	// StatusSuccess indicates that parsing was successful
-	StatusSuccess Status = "success"
-
-	// StatusError indicates that parsing failed due to error
-	StatusError Status = "error"
+	StatusSuccess Status = "success" // parsing was successful
+	StatusError   Status = "error"   // parsing failed due to error
 )
 
-// Result ...
-// [TODO] Better name is required...
+// Result is a collection of test results
 type Result struct {
 	TestResults []TestResults `json:"testResults"`
 }
@@ -101,16 +92,16 @@ func (me *Result) hasTestResults(testResults TestResults) (int, bool) {
 	return -1, false
 }
 
-// TestResults ...
+// TestResults represents well defined group of test suites and.
 type TestResults struct {
-	ID            string  `json:"id"`
-	Name          string  `json:"name"`
-	Framework     string  `json:"framework"`
-	IsDisabled    bool    `json:"isDisabled"`
-	Suites        []Suite `json:"suites"`
-	Summary       Summary `json:"summary"`
-	Status        Status  `json:"status"`
-	StatusMessage string  `json:"statusMessage"`
+	ID            string  `json:"id"`            // deterministic identifiers are required for test analytics, please follow https://github.com/semaphoreci/test-results/blob/master/docs/id-generation.md
+	Name          string  `json:"name"`          //
+	Framework     string  `json:"framework"`     // parsers use this field to determine if they're applicable
+	IsDisabled    bool    `json:"isDisabled"`    //
+	Suites        []Suite `json:"suites"`        //
+	Summary       Summary `json:"summary"`       //
+	Status        Status  `json:"status"`        // combined with StatusMessage can be used to provide insights into parser failures
+	StatusMessage string  `json:"statusMessage"` //
 }
 
 // NewTestResults ...
@@ -429,15 +420,15 @@ func NewError() Error {
 	return Error{}
 }
 
-// Summary ...
+// Summary contains group metrics
 type Summary struct {
-	Total    int           `json:"total"`
-	Passed   int           `json:"passed"`
-	Skipped  int           `json:"skipped"`
-	Error    int           `json:"error"`
-	Failed   int           `json:"failed"`
-	Disabled int           `json:"disabled"`
-	Duration time.Duration `json:"duration"`
+	Total    int           `json:"total"`    // Total tests in group
+	Passed   int           `json:"passed"`   // Passed tests in group
+	Skipped  int           `json:"skipped"`  // Skipped tests in group
+	Error    int           `json:"error"`    // Errored tests in group
+	Failed   int           `json:"failed"`   // Failed tests in group
+	Disabled int           `json:"disabled"` // Disabled tests in group
+	Duration time.Duration `json:"duration"` // Total duration of the group
 }
 
 // UUID ...

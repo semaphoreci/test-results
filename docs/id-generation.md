@@ -1,23 +1,21 @@
-## ID generation
+# ID generation
 
-This PR introduces `id` generator for tests results, test suites, and tests.
+Entity `id`'s are being generated in form of UUID formatted strings.
 
-`id`'s are being generated in form of UUID strings.
-
-To generate consistent `id`'s between builds following method is implemented for all parsers:
+To generate consistent `id`'s following namespacing method is used for all parsers:
 
 - ID generation for `Test results`(top-level element)
 
   1. If the element has an ID, generate UUID based on that ID
   2. If the element doesn't have an ID - generate UUID based on the `name` attribute
-  3. If the element has a framework name - generate UUID based on the `name` attribute and `framework`
+  3. If the element has a framework name - generate UUID based on the `name` and `framework` attributes
   4. Otherwise, generate uuid based on an empty string `""`
 
-- ID generation for `Suites`
+- ID generation for test `Suites`
 
   The same rules apply as for `Test results` however every `Suite ID` is namespaced by `Test results` ID
 
-- ID generation for `Tests`
+- ID generation for `Test` cases
 
   The same rules apply as for `Test results` however every `Test ID` is namespaced by `Suite` ID and `Test classname` if present.
   If a test is failed/errored the state is also added as namespace, as failed/errored cases can happen simultaneously in the same suite.

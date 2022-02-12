@@ -8,27 +8,28 @@ import (
 	"github.com/semaphoreci/test-results/pkg/parser"
 )
 
-// Generic ...
+// Generic parser struct
 type Generic struct {
 }
 
-// NewGeneric ...
+// NewGeneric returns a new generic parser
 func NewGeneric() Generic {
 	return Generic{}
 }
 
-// IsApplicable ...
+// IsApplicable returns true if this parser is applicable to file at given path
+// always true for the generic parser
 func (me Generic) IsApplicable(path string) bool {
 	logger.Debug("Checking applicability of %s parser", me.GetName())
 	return true
 }
 
-// GetName ...
+// GetName returns a name of the parser
 func (me Generic) GetName() string {
 	return "generic"
 }
 
-// Parse ...
+// Parse parses file at path and returns a well-defined TestResults struct
 func (me Generic) Parse(path string) parser.TestResults {
 	results := parser.NewTestResults()
 
