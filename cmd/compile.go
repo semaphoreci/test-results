@@ -19,6 +19,7 @@ limitations under the License.
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
@@ -98,6 +99,8 @@ var compileCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		defer os.RemoveAll(dirPath)
 
 		return nil
 	},

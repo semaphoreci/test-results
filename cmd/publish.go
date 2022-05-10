@@ -146,6 +146,8 @@ var publishCmd = &cobra.Command{
 			}
 		}
 
+		defer os.Remove(fileName)
+
 		return nil
 	},
 }

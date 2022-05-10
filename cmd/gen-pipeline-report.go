@@ -44,6 +44,7 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		var dir string
+		removeDir := true
 
 		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
 		if !found {
@@ -64,11 +65,16 @@ var genPipelineReportCmd = &cobra.Command{
 			}
 		} else {
 			dir = args[0]
+			removeDir = false
 		}
 
 		result, err := cli.MergeFiles(dir, cmd)
 		if err != nil {
 			return err
+		}
+
+		if removeDir {
+			defer os.Remove(dir)
 		}
 
 		jsonData, err := json.Marshal(result)
@@ -86,6 +92,8 @@ var genPipelineReportCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		defer os.Remove(fileName)
 
 		return nil
 	},

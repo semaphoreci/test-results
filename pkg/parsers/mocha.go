@@ -124,7 +124,7 @@ func (me Mocha) newSuite(xml parser.XMLElement, testResults parser.TestResults) 
 	for attr, value := range xml.Attributes {
 		switch attr {
 		case "name":
-			suite.Name = strings.Trim(value, "Elixir.")
+			suite.Name = strings.TrimPrefix(value, "Mocha")
 		case "tests":
 			suite.Summary.Total = parser.ParseInt(value)
 		case "failures":

@@ -262,7 +262,7 @@ func NewSuite() Suite {
 func (me *Suite) Combine(other Suite) {
 	if me.ID == other.ID {
 		for i := range other.Tests {
-			if me.hasTest(other.Tests[i]) == false {
+			if !me.hasTest(other.Tests[i]) {
 				me.Tests = append(me.Tests, other.Tests[i])
 			}
 
@@ -335,6 +335,10 @@ func (me *Suite) Aggregate() {
 		case StateDisabled:
 			summary.Disabled++
 		}
+	}
+
+	if me.Summary.Duration != 0 {
+		summary.Duration = me.Summary.Duration
 	}
 
 	me.Summary = summary

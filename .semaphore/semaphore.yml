@@ -6,41 +6,78 @@ agent:
     os_image: ubuntu1804
 
 blocks:
-  - name: Unit Test
+  - name: Unit tests
     dependencies: []
     task:
       prologue:
         commands:
-          - sem-version go 1.16
+          - sem-version go 1.17
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
           - go get ./...
           - go get -u gotest.tools/gotestsum
+
       jobs:
-        - name: "Test"
+        - name: 🧪 Go tests
           commands:
-            - gotestsum --junitfile /tmp/junit.xml
+            - export SUITE_NAME="🧪 Go tests"
+            - gotestsum --junitfile junit.xml
 
       epilogue:
         always:
           commands:
-            - test-results publish /tmp/junit.xml
-  - name: Build
+            - test-results publish --name "$SUITE_NAME" junit.xml
+
+  - name: Security checks
     dependencies: []
+    task:
+      secrets:
+        - name: security-toolbox-shared-read-access
+
+      prologue:
+        commands:
+          - checkout
+          - mv ~/.ssh/security-toolbox ~/.ssh/id_rsa
+          - sudo chmod 600 ~/.ssh/id_rsa
+
+      jobs:
+        - name: 🛡️ Check dependencies
+          commands:
+            - export SUITE_NAME="🛡️ Check dependencies"
+            - make check.deps
+
+        - name: 🛡️ Check code
+          commands:
+            - export SUITE_NAME="🛡️ Check code"
+            - make check.static
+
+      epilogue:
+        always:
+          commands:
+            - "[ -f results.xml ] && test-results publish --name \"$SUITE_NAME\" results.xml"
+
+  - name: Build
+    dependencies: ["Security checks", "Unit tests"]
     task:
       prologue:
         commands:
-          - sem-version go 1.16
+          - sem-version go 1.17
           - "export GOPATH=~/go"
           - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
       jobs:
-        - name: Build
+        - name: 🏗️ Build binary
           commands:
             - make build
             - artifact push workflow bin/test-results -d bin/test-results
 
+after_pipeline:
+  task:
+    jobs:
+      - name: Submit Reports
+        commands:
+          - test-results gen-pipeline-report
 
 
 promotions:
@@ -48,7 +85,3 @@ promotions:
     pipeline_file: integration.yml
     auto_promote:
       when: "result = 'passed'"
-  - name: Reports
-    pipeline_file: reports.yml
-    auto_promote:
-      when: true

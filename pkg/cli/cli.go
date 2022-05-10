@@ -30,7 +30,7 @@ func LoadFiles(inPaths []string, ext string) ([]string, error) {
 
 		switch file.IsDir() {
 		case true:
-			filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
+			err := filepath.WalkDir(path, func(path string, d os.DirEntry, err error) error {
 				if d.Type().IsRegular() {
 					switch filepath.Ext(d.Name()) {
 					case ext:
@@ -39,6 +39,11 @@ func LoadFiles(inPaths []string, ext string) ([]string, error) {
 				}
 				return nil
 			})
+
+			if err != nil {
+				logger.Error("Walking through directory %s failed %v", path, err)
+				return paths, err
+			}
 
 		case false:
 			switch filepath.Ext(file.Name()) {
@@ -131,7 +136,7 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 
 // WriteToFile saves data to given file
 func WriteToFile(data []byte, path string) (string, error) {
-	file, err := os.Create(path)
+	file, err := os.Create(path) // #nosec
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
@@ -148,6 +153,7 @@ func WriteToTmpFile(data []byte) (string, error) {
 		logger.Error("Opening file %s: %v", file.Name(), err)
 		return "", err
 	}
+
 	return writeToFile(data, file)
 }
 
@@ -259,6 +265,9 @@ func SetLogLevel(cmd *cobra.Command) error {
 // MergeFiles merges all json files found in path into one big blob
 func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 	verbose, err := cmd.Flags().GetBool("verbose")
+	if err != nil {
+		return nil, err
+	}
 
 	_, err = CheckFile(path)
 	if err != nil {
@@ -320,11 +329,14 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 }
 
 // Load ...
-// [TODO]: TEST THIS!!!
+// [TODO]: Test this
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
-	jsonFile, err := os.Open(path)
-	defer jsonFile.Close()
+	jsonFile, err := os.Open(path) // #nosec
+	if err != nil {
+		return nil, err
+	}
+	defer jsonFile.Close() // #nosec
 	if err != nil {
 		return nil, err
 	}

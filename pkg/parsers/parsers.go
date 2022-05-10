@@ -36,5 +36,5 @@ func FindParser(name string, path string) (parser.Parser, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("No applicable parsers found")
+	return nil, fmt.Errorf("no applicable parsers found")
 }
