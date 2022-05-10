@@ -52,7 +52,7 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		if len(args) == 0 {
-			dir, err = ioutil.TempDir("/tmp", "test-results")
+			dir, err = ioutil.TempDir("", "test-results")
 			if err != nil {
 				logger.Error("Creating temporary directory failed %v", err)
 				return err

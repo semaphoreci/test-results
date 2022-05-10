@@ -142,7 +142,7 @@ func WriteToFile(data []byte, path string) (string, error) {
 
 // WriteToTmpFile saves data to temporary file
 func WriteToTmpFile(data []byte) (string, error) {
-	file, err := ioutil.TempFile("/tmp", "test-results")
+	file, err := ioutil.TempFile("", "test-results")
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", file.Name(), err)
