@@ -12,22 +12,20 @@ blocks:
       prologue:
         commands:
           - sem-version go 1.18
-          - "export GOPATH=~/go"
-          - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
-          - go get ./...
-          - go get -u gotest.tools/gotestsum
+          - go mod download
+          - go install gotest.tools/gotestsum@latest
 
       jobs:
         - name: 🧪 Go tests
           commands:
             - export SUITE_NAME="🧪 Go tests"
-            - gotestsum --junitfile junit.xml
+            - gotestsum --junitfile results.xml
 
       epilogue:
         always:
           commands:
-            - test-results publish --name "$SUITE_NAME" junit.xml
+            - "[[ -f results.xml ]] && test-results publish --name \"$SUITE_NAME\" results.xml"
 
   - name: Security checks
     dependencies: []
@@ -62,14 +60,11 @@ blocks:
     task:
       prologue:
         commands:
-<<<<<<< HEAD
-          - sem-version go 1.17
-=======
           - sem-version go 1.18
->>>>>>> 907db39... feat: upgrade to golang 1.18, update dependencies
-          - "export GOPATH=~/go"
-          - "export PATH=/home/semaphore/go/bin:$PATH"
           - checkout
+          - go mod download
+          - go install gotest.tools/gotestsum@latest
+
       jobs:
         - name: 🏗️ Build binary
           commands:
@@ -82,7 +77,6 @@ after_pipeline:
       - name: Submit Reports
         commands:
           - test-results gen-pipeline-report
-
 
 promotions:
   - name: Integration tests
