@@ -158,13 +158,5 @@ func init() {
 	publishCmd.Flags().BoolP("no-raw", "", false, desc)
 	publishCmd.Flags().BoolP("force", "f", false, "force artifact push, passes -f flag to artifact CLI")
 
-	desc = `Removes the files after the given amount of time.
-Nd for N days
-Nw for N weeks
-Nm for N months
-Ny for N years
-`
-	publishCmd.Flags().StringP("expire-in", "", "", desc)
-
 	rootCmd.AddCommand(publishCmd)
 }

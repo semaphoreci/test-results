@@ -183,20 +183,10 @@ func PushArtifacts(level string, file string, destination string, cmd *cobra.Com
 		return "", err
 	}
 
-	expireIn, err := cmd.Flags().GetString("expire-in")
-	if err != nil {
-		logger.Error("Reading flag error: %v", err)
-		return "", err
-	}
-
 	artifactsPush := exec.Command("artifact")
 	artifactsPush.Args = append(artifactsPush.Args, "push", level, file, "-d", destination)
 	if verbose {
 		artifactsPush.Args = append(artifactsPush.Args, "-v")
-	}
-
-	if expireIn != "" {
-		artifactsPush.Args = append(artifactsPush.Args, "--expire-in", expireIn)
 	}
 
 	if force {

@@ -77,11 +77,7 @@ The test results CLI uses the [Semaphore Artifact Storage](https://docs.semaphor
 - the `test-results publish` command stores the report in the `test-results/junit.json` file on a job level
 - the `test-results gen-pipeline-report` command stores the report in the `test-results/${SEMAPHORE_PIPELINE_ID}.json` file on a workflow level
 
-By default, the generated artifacts have no expiration date. This can be controlled with `--expire-in` option:
-
-```bash
-test-results publish --expire-in 1d results.xml
-```
+Expiration date of the artifacts can be controlled via [Retention Policies](https://docs.semaphoreci.com/essentials/artifacts/#artifact-retention-policies).
 
 ## Skip uploading raw JUnit XML files
 

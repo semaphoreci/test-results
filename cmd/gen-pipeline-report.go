@@ -100,13 +100,6 @@ var genPipelineReportCmd = &cobra.Command{
 }
 
 func init() {
-	desc := `Removes the files after the given amount of time.
-Nd for N days
-Nw for N weeks
-Nm for N months
-Ny for N years
-`
-	genPipelineReportCmd.Flags().StringP("expire-in", "", "", desc)
 	genPipelineReportCmd.Flags().BoolP("force", "f", false, "force artifact push, passes -f flag to artifact CLI")
 	rootCmd.AddCommand(genPipelineReportCmd)
 }
