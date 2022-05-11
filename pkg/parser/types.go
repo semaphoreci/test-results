@@ -440,6 +440,17 @@ type Summary struct {
 	Duration time.Duration `json:"duration"`
 }
 
+//Merge merges two summaries together summing each field
+func (s *Summary) Merge(withSummary *Summary) {
+	s.Total += withSummary.Total
+	s.Passed += withSummary.Passed
+	s.Skipped += withSummary.Skipped
+	s.Error += withSummary.Error
+	s.Failed += withSummary.Failed
+	s.Disabled += withSummary.Disabled
+	s.Duration += withSummary.Duration
+}
+
 // UUID ...
 func UUID(id uuid.UUID, str string) uuid.UUID {
 	return uuid.NewMD5(id, []byte(str))

@@ -43,6 +43,12 @@ blocks:
             - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}.json -d /tmp/junit.json
             - artifact push job /tmp/junit.json -d test-results/junit.json
             - diff /tmp/junit.json priv/workflow/out.json
+        - name: "Generate pipeline summary"
+          commands:
+            - checkout
+            - test-results gen-pipeline-report
+            - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json
+            - diff /tmp/summary.json priv/workflow/summary-out.json
 
 promotions:
   - name: Release

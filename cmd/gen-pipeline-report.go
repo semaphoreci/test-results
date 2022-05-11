@@ -18,6 +18,7 @@ limitations under the License.
 
 import (
 	"encoding/json"
+	"github.com/semaphoreci/test-results/pkg/parser"
 	"io/ioutil"
 	"os"
 	"path"
@@ -44,7 +45,6 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		var dir string
-		removeDir := true
 
 		pipelineID, found := os.LookupEnv("SEMAPHORE_PIPELINE_ID")
 		if !found {
@@ -58,6 +58,7 @@ var genPipelineReportCmd = &cobra.Command{
 				logger.Error("Creating temporary directory failed %v", err)
 				return err
 			}
+			defer os.Remove(dir)
 
 			dir, err = cli.PullArtifacts("workflow", path.Join("test-results", pipelineID), dir, cmd)
 			if err != nil {
@@ -65,16 +66,11 @@ var genPipelineReportCmd = &cobra.Command{
 			}
 		} else {
 			dir = args[0]
-			removeDir = false
 		}
 
 		result, err := cli.MergeFiles(dir, cmd)
 		if err != nil {
 			return err
-		}
-
-		if removeDir {
-			defer os.Remove(dir)
 		}
 
 		jsonData, err := json.Marshal(result)
@@ -87,16 +83,43 @@ var genPipelineReportCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		defer os.Remove(fileName)
 
 		_, err = cli.PushArtifacts("workflow", fileName, path.Join("test-results", pipelineID+".json"), cmd)
 		if err != nil {
 			return err
 		}
 
-		defer os.Remove(fileName)
+		if len(result.TestResults) > 0 {
+			err = pushSummaries(result.TestResults, pipelineID, cmd)
+			if err != nil {
+				return err
+			}
+		}
 
 		return nil
 	},
+}
+
+func pushSummaries(testResult []parser.TestResults, pipelineID string, cmd *cobra.Command) error {
+	summaryReport := parser.Summary{}
+	for _, results := range testResult {
+		summaryReport.Merge(&results.Summary)
+	}
+
+	jsonSummary, err := json.Marshal(summaryReport)
+	if err != nil {
+		return err
+	}
+
+	summaryFileName, err := cli.WriteToTmpFile(jsonSummary)
+	if err != nil {
+		return err
+	}
+	defer os.Remove(summaryFileName)
+
+	_, err = cli.PushArtifacts("workflow", summaryFileName, path.Join("test-results", pipelineID+"-summary.json"), cmd)
+	return err
 }
 
 func init() {
