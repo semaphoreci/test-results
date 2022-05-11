@@ -90,15 +90,16 @@ var genPipelineReportCmd = &cobra.Command{
 			return err
 		}
 
-		if len(result.TestResults) > 0 {
-			return pushSummaries(result.TestResults, pipelineID, cmd)
-		}
-
-		return nil
+		return pushSummaries(result.TestResults, pipelineID, cmd)
 	},
 }
 
 func pushSummaries(testResult []parser.TestResults, pipelineID string, cmd *cobra.Command) error {
+	if len(testResult) == 0 {
+		logger.Info("no test results to process")
+		return nil
+	}
+
 	logger.Info("starting to generate summary")
 	summaryReport := parser.Summary{}
 	for _, results := range testResult {

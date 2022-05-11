@@ -309,6 +309,33 @@ func Test_Suite_Aggregate(t *testing.T) {
 	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 110}, suite.Summary, "should sum up tests duration when there is no suite duration present")
 }
 
+func Test_Summary_Merge(t *testing.T) {
+	summary1 := Summary{Total: 10, Passed: 6, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 10}
+	summary2 := Summary{Total: 20, Passed: 1, Failed: 16, Skipped: 1, Error: 1, Disabled: 1, Duration: 100}
+	summary3 := Summary{Total: 15, Passed: 10, Failed: 2, Skipped: 1, Error: 1, Disabled: 1, Duration: 10}
+	summary4 := Summary{Total: 25, Passed: 2, Failed: 1, Skipped: 20, Error: 1, Disabled: 1, Duration: 105}
+
+	result := Summary{}
+	for _, s := range []Summary{summary1, summary2, summary3, summary4} {
+		result.Merge(&s)
+	}
+
+	assert.Equal(t, Summary{
+		Total:    70,
+		Passed:   19,
+		Skipped:  23,
+		Error:    4,
+		Failed:   20,
+		Disabled: 4,
+		Duration: 225,
+	}, result)
+
+	result = Summary{}
+	result.Merge(&Summary{})
+	assert.Equal(t, Summary{}, result, "empty summaries should be zeroed")
+
+}
+
 func Test_NewTest(t *testing.T) {
 	test := NewTest()
 
