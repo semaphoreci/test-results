@@ -99,27 +99,24 @@ var genPipelineReportCmd = &cobra.Command{
 }
 
 func pushSummaries(testResult []parser.TestResults, pipelineID string, cmd *cobra.Command) error {
+	logger.Info("starting to generate summary")
 	summaryReport := parser.Summary{}
-	logger.Info("starting to merge summaries")
 	for _, results := range testResult {
 		summaryReport.Merge(&results.Summary)
 	}
 
-	logger.Info("starting to marshal json")
 	jsonSummary, err := json.Marshal(summaryReport)
 	if err != nil {
 		return err
 	}
-	logger.Info("starting to write tmp file")
+
 	summaryFileName, err := cli.WriteToTmpFile(jsonSummary)
 	if err != nil {
 		return err
 	}
 	defer os.Remove(summaryFileName)
 
-	logger.Info("starting to push")
 	_, err = cli.PushArtifacts("workflow", summaryFileName, path.Join("test-results", pipelineID+"-summary.json"), cmd)
-	logger.Info("wrapping up")
 	return err
 }
 
