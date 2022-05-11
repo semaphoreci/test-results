@@ -12,6 +12,7 @@ var availableParsers = []parser.Parser{
 	NewExUnit(),
 	NewMocha(),
 	NewGoLang(),
+	NewPHPUnit(),
 	NewGeneric(),
 }
 

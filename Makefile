@@ -8,6 +8,7 @@ regen:
 	go run main.go compile priv/parsers/rspec/in.xml priv/parsers/rspec/out.json
 	go run main.go compile priv/parsers/exunit/in.xml priv/parsers/exunit/out.json
 	go run main.go compile priv/parsers/golang/in.xml priv/parsers/golang/out.json
+	go run main.go compile priv/parsers/phpunit/in.xml priv/parsers/phpunit/out.json
 	go run main.go compile priv/merging priv/merging/out.json
 	go run main.go compile priv/merging priv/parsers priv/workflow/out.json
 
