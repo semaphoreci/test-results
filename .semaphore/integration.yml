@@ -30,7 +30,9 @@ blocks:
             - test-results publish priv/merging
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - diff priv/merging/out.json /tmp/junit.json
-  - name: Integration test - generate pipeline report
+  - name: Integration tests - generate pipeline report
+    dependencies:
+      - Integration tests
     task:
       jobs:
         - name: "generate pipeline report"
@@ -40,7 +42,7 @@ blocks:
 
   - name: Integration tests - workflow level
     dependencies:
-      - Integration test - generate pipeline report
+      - Integration tests - generate pipeline report
     task:
       jobs:
         - name: "Generate pipeline report"
