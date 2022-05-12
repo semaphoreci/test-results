@@ -34,7 +34,7 @@ var publishCmd = &cobra.Command{
 	Short: "parses xml file to well defined json schema and publishes results to artifacts storage",
 	Long: `Parses xml file to well defined json schema and publishes results to artifacts storage
 
-	It traverses through directory sturcture specificed by <xml-file-path>, compiles
+	It traverses through directory structure specified by <xml-file-path>, compiles
 	every .xml file and publishes it as one artifact.
 	`,
 	Args: cobra.MinimumNArgs(1),
@@ -101,6 +101,10 @@ var publishCmd = &cobra.Command{
 
 		_, err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
 		if err != nil {
+			return err
+		}
+
+		if err = pushSummaries(result.TestResults, "job", path.Join("test-results", "summary.json"), cmd); err != nil {
 			return err
 		}
 

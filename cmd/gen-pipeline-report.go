@@ -90,11 +90,11 @@ var genPipelineReportCmd = &cobra.Command{
 			return err
 		}
 
-		return pushSummaries(result.TestResults, pipelineID, cmd)
+		return pushSummaries(result.TestResults, "workflow", path.Join("test-results", pipelineID+"-summary.json"), cmd)
 	},
 }
 
-func pushSummaries(testResult []parser.TestResults, pipelineID string, cmd *cobra.Command) error {
+func pushSummaries(testResult []parser.TestResults, level, path string, cmd *cobra.Command) error {
 	if len(testResult) == 0 {
 		logger.Info("no test results to process")
 		return nil
@@ -117,7 +117,7 @@ func pushSummaries(testResult []parser.TestResults, pipelineID string, cmd *cobr
 	}
 	defer os.Remove(summaryFileName)
 
-	_, err = cli.PushArtifacts("workflow", summaryFileName, path.Join("test-results", pipelineID+"-summary.json"), cmd)
+	_, err = cli.PushArtifacts(level, summaryFileName, path, cmd)
 	return err
 }
 
