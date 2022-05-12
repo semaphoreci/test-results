@@ -47,12 +47,81 @@ func Test_PHPUnit_ParseTestSuite(t *testing.T) {
 	assert.Equal(t, parser.StatusSuccess, testResults.Status)
 	assert.Equal(t, "", testResults.StatusMessage)
 
-	assert.Equal(t, "\\test1\\Tests\\Tests1\\FirstTest", testResults.Suites[0].Name)
-	assert.Equal(t, "\\test1\\Tests\\Tests1\\SecondTest", testResults.Suites[1].Name)
-	assert.Equal(t, "\\test2\\Tests\\Tests2\\FirstTest", testResults.Suites[2].Name)
-	assert.Equal(t, "\\test2\\Tests\\Tests2\\SecondTest", testResults.Suites[3].Name)
+	assert.Equal(t, "test1\\Tests\\Tests1\\FirstTest", testResults.Suites[0].Name)
+	assert.Equal(t, "test1\\Tests\\Tests1\\SecondTest", testResults.Suites[1].Name)
+	assert.Equal(t, "test2\\Tests\\Tests2\\FirstTest", testResults.Suites[2].Name)
+	assert.Equal(t, "test2\\Tests\\Tests2\\SecondTest", testResults.Suites[3].Name)
 
 	assert.Equal(t, 4, len(testResults.Suites))
 	assert.Equal(t, 8, testResults.Summary.Total)
+}
 
+func Test_PHPUnit_flattenTestSuite(t *testing.T) {
+	path := fileloader.Ensure(bytes.NewReader([]byte(`
+		<?xml version="1.0" encoding="UTF-8"?>
+		<testsuites>
+			<testsuite name="foo">
+				<testsuite name="1">
+					<testcase></testcase>
+				</testsuite>
+				<testsuite name="2">
+					<testcase></testcase>
+				</testsuite>
+				<testsuite name="3">
+					<testcase></testcase>
+				</testsuite>
+			</testsuite>
+			<testsuite name="bar">
+				<testsuite name="1">
+					<testcase></testcase>
+				</testsuite>
+			</testsuite>
+			<testsuite name="baz">
+				<testsuite name="1">
+					<testsuite name="test">
+						<testcase></testcase>
+					</testsuite>
+				</testsuite>
+			</testsuite>
+			<testsuite name="im empty">
+				<testsuite name="with no cases">
+					<testsuite name="so im not present in report">
+					</testsuite>
+				</testsuite>
+			</testsuite>
+		</testsuites>
+	`)))
+
+	xml, err := LoadXML(path)
+	flattenTestSuites(xml)
+	assert.Nil(t, err)
+	assert.Equal(t, 5, len(xml.Children))
+	assert.Equal(t, "foo\\1", xml.Children[0].Attr("name"))
+	assert.Equal(t, "foo\\2", xml.Children[1].Attr("name"))
+	assert.Equal(t, "foo\\3", xml.Children[2].Attr("name"))
+	assert.Equal(t, "bar\\1", xml.Children[3].Attr("name"))
+	assert.Equal(t, "baz\\1\\test", xml.Children[4].Attr("name"))
+}
+
+func Test_PHPUnit_prefixSuiteName(t *testing.T) {
+	assertions := []struct {
+		prefix         string
+		name           string
+		expectedResult string
+		desc           string
+	}{
+		{prefix: "", name: "foo", expectedResult: "foo", desc: "no prefix"},
+		{prefix: "", name: "", expectedResult: "", desc: "empty"},
+		{prefix: "bar", name: "", expectedResult: "bar", desc: "no name"},
+		{prefix: "bar", name: "foo", expectedResult: "bar\\foo", desc: "with prefix #1"},
+		{prefix: "bar\\baz", name: "foo", expectedResult: "bar\\baz\\foo", desc: "with prefix #2"},
+	}
+
+	for _, tt := range assertions {
+		t.Run(tt.desc, func(t *testing.T) {
+			actualResult := prefixSuiteName(tt.name, tt.prefix)
+
+			assert.Equal(t, tt.expectedResult, actualResult)
+		})
+	}
 }

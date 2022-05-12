@@ -43,7 +43,7 @@ func (me PHPUnit) Parse(path string) parser.TestResults {
 		return results
 	}
 
-	flatten(xmlElement)
+	flattenTestSuites(xmlElement)
 
 	switch xmlElement.Tag() {
 	case "testsuites":
@@ -64,33 +64,45 @@ func (me PHPUnit) Parse(path string) parser.TestResults {
 	return results
 }
 
-func flatten(xmlElement *parser.XMLElement) {
-	suiteResult := []parser.XMLElement{}
+func flattenTestSuites(xmlElement *parser.XMLElement) {
+	newSuites := []parser.XMLElement{}
 
 	for _, node := range xmlElement.Children {
 		switch node.Tag() {
 		case "testsuite":
-			flattenTestSuite(node, node.Attr("name"), &suiteResult)
+			flattenTestSuite(node, node.Attr("name"), &newSuites)
 		}
 	}
 
-	xmlElement.Children = suiteResult
+	xmlElement.Children = newSuites
 }
 
-func flattenTestSuite(rootXmlElement parser.XMLElement, suitePrefix string, suiteResult *[]parser.XMLElement) {
+func flattenTestSuite(xmlNode parser.XMLElement, suiteNamePrefix string, newSuites *[]parser.XMLElement) {
 loop:
-	for _, node := range rootXmlElement.Children {
-		switch node.Tag() {
+	for _, childNode := range xmlNode.Children {
+		switch childNode.Tag() {
 		case "testsuite":
-			flattenTestSuite(node, suitePrefix+"\\"+node.Attr("name"), suiteResult)
+			newSuitePrefix := prefixSuiteName(childNode.Attr("name"), suiteNamePrefix)
+			flattenTestSuite(childNode, newSuitePrefix, newSuites)
 
 		case "testcase":
-			rootXmlElement.Attributes["name"] = suitePrefix
-			*suiteResult = append(*suiteResult, rootXmlElement)
+			xmlNode.Attributes["name"] = suiteNamePrefix
+			*newSuites = append(*newSuites, xmlNode)
 			break loop
 		}
 	}
+}
 
+func prefixSuiteName(suiteName string, prefix string) string {
+	if prefix == "" {
+		return suiteName
+	}
+
+	if suiteName == "" {
+		return prefix
+	}
+
+	return prefix + "\\" + suiteName
 }
 
 func (me PHPUnit) newTestResults(xml parser.XMLElement) parser.TestResults {
