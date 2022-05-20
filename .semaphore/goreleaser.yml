@@ -8,7 +8,7 @@ blocks:
   - name: Release
     task:
       secrets:
-        - name: sem-robot-ghtoken
+        - name: sem-robot-test-results
       prologue:
         commands:
           - sem-version go 1.18
