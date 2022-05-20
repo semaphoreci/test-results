@@ -29,6 +29,7 @@ While parsing the content, the CLI tries to find the best parser for your result
 - golang
 - mocha
 - rspec
+- phpunit
 
 If a dedicated parser is not found, the CLI will parse the file using a generic parser. The generic parser uses [JUnit XML Schema](https://github.com/windyroad/JUnit-Schema/blob/master/JUnit.xsd) definition to extract data from the report.
 
