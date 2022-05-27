@@ -39,7 +39,6 @@ const (
 )
 
 // Result ...
-// [TODO] Better name is required...
 type Result struct {
 	TestResults []TestResults `json:"testResults"`
 }
@@ -316,7 +315,6 @@ func (me *Suite) hasTest(test Test) bool {
 }
 
 // Aggregate all tests in suite
-// TODO: add flag to skip aggregating already present data
 func (me *Suite) Aggregate() {
 	summary := Summary{}
 
