@@ -307,6 +307,10 @@ func Test_Suite_Aggregate(t *testing.T) {
 	suite.Summary.Duration = 0
 	suite.Aggregate()
 	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 110}, suite.Summary, "should sum up tests duration when there is no suite duration present")
+
+	suite.Summary.Duration = -100
+	suite.Aggregate()
+	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 110}, suite.Summary, "should sum up tests duration when there duration is invalid")
 }
 
 func Test_Summary_Merge(t *testing.T) {
