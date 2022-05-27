@@ -32,7 +32,7 @@ var compileCmd = &cobra.Command{
 	Short: "parses xml files to well defined json schema",
 	Long: `Parses xml file to well defined json schema
 
-	It traverses through directory sturcture specificed by <xml-file-path> and compiles
+	It traverses through directory structure specified by <xml-file-path> and compiles
 	every .xml file.
 	`,
 	Args: cobra.MinimumNArgs(2),

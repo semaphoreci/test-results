@@ -319,7 +319,6 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 }
 
 // Load ...
-// [TODO]: Test this
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
 	jsonFile, err := os.Open(path) // #nosec

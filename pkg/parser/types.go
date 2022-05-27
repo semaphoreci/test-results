@@ -39,7 +39,6 @@ const (
 )
 
 // Result ...
-// [TODO] Better name is required...
 type Result struct {
 	TestResults []TestResults `json:"testResults"`
 }
@@ -316,7 +315,6 @@ func (me *Suite) hasTest(test Test) bool {
 }
 
 // Aggregate all tests in suite
-// TODO: add flag to skip aggregating already present data
 func (me *Suite) Aggregate() {
 	summary := Summary{}
 
@@ -438,6 +436,17 @@ type Summary struct {
 	Failed   int           `json:"failed"`
 	Disabled int           `json:"disabled"`
 	Duration time.Duration `json:"duration"`
+}
+
+//Merge merges two summaries together summing each field
+func (s *Summary) Merge(withSummary *Summary) {
+	s.Total += withSummary.Total
+	s.Passed += withSummary.Passed
+	s.Skipped += withSummary.Skipped
+	s.Error += withSummary.Error
+	s.Failed += withSummary.Failed
+	s.Disabled += withSummary.Disabled
+	s.Duration += withSummary.Duration
 }
 
 // UUID ...
