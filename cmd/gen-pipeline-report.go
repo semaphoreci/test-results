@@ -18,13 +18,13 @@ limitations under the License.
 
 import (
 	"encoding/json"
-	"github.com/semaphoreci/test-results/pkg/parser"
 	"io/ioutil"
 	"os"
 	"path"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/semaphoreci/test-results/pkg/logger"
+	"github.com/semaphoreci/test-results/pkg/parser"
 	"github.com/spf13/cobra"
 )
 
