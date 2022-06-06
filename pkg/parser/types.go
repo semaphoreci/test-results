@@ -71,7 +71,7 @@ func (me *Result) Combine(other Result) {
 	}
 }
 
-// Flatten ...
+// Flatten makes sure we don't have duplicated suites in test results
 func (me *TestResults) Flatten() {
 	testResults := NewTestResults()
 
@@ -335,7 +335,8 @@ func (me *Suite) Aggregate() {
 		}
 	}
 
-	if me.Summary.Duration > 0 {
+	// If current duration is not zero and current duration is bigger than calculated duration, use it
+	if me.Summary.Duration > 0 && me.Summary.Duration > summary.Duration {
 		summary.Duration = me.Summary.Duration
 	}
 

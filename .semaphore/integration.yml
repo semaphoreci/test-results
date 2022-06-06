@@ -24,12 +24,16 @@ blocks:
           commands:
             - test-results publish priv/parsers/$PARSER/in.xml
             - artifact pull job test-results/junit.json -d /tmp/junit.json
+            - cat <<< $(jq --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json
+            - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
 
         - name: "Merging - directory as input"
           commands:
             - test-results publish priv/merging
             - artifact pull job test-results/junit.json -d /tmp/junit.json
+            - cat <<< $(jq --sort-keys . priv/merging/out.json) > priv/merging/out.json
+            - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
             - diff priv/merging/out.json /tmp/junit.json
   - name: Integration tests - generate pipeline report
     dependencies:
@@ -49,10 +53,14 @@ blocks:
           commands:
             - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}.json -d /tmp/junit.json
             - artifact push job /tmp/junit.json -d test-results/junit.json
+            - cat <<< $(jq --sort-keys . priv/workflow/out.json) > priv/workflow/out.json
+            - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
             - diff /tmp/junit.json priv/workflow/out.json
         - name: "Generate pipeline summary"
           commands:
             - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json
+            - cat <<< $(jq --sort-keys . priv/workflow/summary-out.json) > priv/workflow/summary-out.json
+            - cat <<< $(jq --sort-keys . /tmp/summary.json) > /tmp/summary.json
             - diff /tmp/summary.json priv/workflow/summary-out.json
 
 promotions:

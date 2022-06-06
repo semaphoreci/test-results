@@ -294,7 +294,7 @@ func Test_Suite_Aggregate(t *testing.T) {
 	suite.Tests = append(suite.Tests, test)
 	suite.Aggregate()
 
-	assert.Equal(t, Summary{Total: 4, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Duration: 10}, suite.Summary)
+	assert.Equal(t, Summary{Total: 4, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Duration: 60}, suite.Summary)
 
 	test = NewTest()
 	test.State = StateDisabled
@@ -302,7 +302,7 @@ func Test_Suite_Aggregate(t *testing.T) {
 	suite.Tests = append(suite.Tests, test)
 	suite.Aggregate()
 
-	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 10}, suite.Summary, "should not sum up tests duration if a suite duration is present")
+	assert.Equal(t, Summary{Total: 5, Passed: 1, Failed: 1, Skipped: 1, Error: 1, Disabled: 1, Duration: 110}, suite.Summary, "should not sum up tests duration if a suite duration is present")
 
 	suite.Summary.Duration = 0
 	suite.Aggregate()
