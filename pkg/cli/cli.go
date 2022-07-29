@@ -134,6 +134,11 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 	return jsonData, nil
 }
 
+func WriteToStdOut(data []byte) (err error) {
+	_, err = os.Stdout.Write(data)
+	return
+}
+
 // WriteToFile saves data to given file
 func WriteToFile(data []byte, path string) (string, error) {
 	file, err := os.Create(path) // #nosec

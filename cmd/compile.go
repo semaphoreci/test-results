@@ -35,10 +35,13 @@ var compileCmd = &cobra.Command{
 	It traverses through directory structure specified by <xml-file-path> and compiles
 	every .xml file.
 	`,
-	Args: cobra.MinimumNArgs(2),
+	Args: cobra.MinimumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		inputs := args[:len(args)-1]
-		output := args[len(args)-1]
+		var output string
+		if len(args) > 1 {
+			output = args[len(args)-1]
+		}
 
 		err := cli.SetLogLevel(cmd)
 
@@ -95,7 +98,12 @@ var compileCmd = &cobra.Command{
 			return err
 		}
 
-		_, err = cli.WriteToFile(jsonData, output)
+		if len(output) > 0 {
+			_, err = cli.WriteToFile(jsonData, output)
+		} else {
+			err = cli.WriteToStdOut(jsonData)
+		}
+
 		if err != nil {
 			return err
 		}
