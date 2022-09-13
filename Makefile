@@ -22,6 +22,9 @@ test.watch:
 build:
 	CGO_ENABLED=0 go build -o bin/test-results
 
+build.windows:
+	CGO_ENABLED=0 GOOS=windows go build -o bin/test-results
+
 release.major:
 	git fetch --tags
 	latest=$$(git tag | sort --version-sort | tail -n 1); new=$$(echo $$latest | cut -c 2- | awk -F '.' '{ print "v" $$1+1 ".0.0" }');          echo $$new; git tag $$new; git push origin $$new
