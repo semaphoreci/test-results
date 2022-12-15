@@ -365,19 +365,18 @@ func (me *Suite) AppendTest(test Test) {
 }
 
 type SemEnv struct {
-	IP         string `json:"ip"`
-	PipelineId string `json:"pipeline_id"`
-	WorkflowId string `json:"workflow_id"`
+	PipelineId string `json:"pipelineId"`
+	WorkflowId string `json:"workflowId"`
 
-	JobName string `json:"name"`
-	JobId   string `json:"id"`
+	JobName string `json:"jobName"`
+	JobId   string `json:"jobId"`
 
-	AgentType    string `json:"agent_type"`
-	AgentOsImage string `json:"agent_os_image"`
+	AgentType    string `json:"agentType"`
+	AgentOsImage string `json:"agentOsImage"`
 
-	GitRefType string `json:"git_ref_type"`
-	GitRefName string `json:"git_ref_name"`
-	GitRefSha  string `json:"ref_sha"`
+	GitRefType string `json:"gitRefType"`
+	GitRefName string `json:"gitRefName"`
+	GitRefSha  string `json:"gitRefSha"`
 }
 
 func NewSemEnv() *SemEnv {
@@ -396,7 +395,6 @@ func NewSemEnv() *SemEnv {
 	}
 
 	return &SemEnv{
-		IP:           os.Getenv("IP"),
 		PipelineId:   os.Getenv("SEMAPHORE_PIPELINE_ID"),
 		WorkflowId:   os.Getenv("SEMAPHORE_WORKFLOW_ID"),
 		JobName:      os.Getenv("SEMAPHORE_JOB_NAME"),
@@ -422,7 +420,7 @@ type Test struct {
 	Error     *Error        `json:"error"`
 	SystemOut string        `json:"systemOut"`
 	SystemErr string        `json:"systemErr"`
-	SemEnv    *SemEnv       `json:"semaphore_env"`
+	SemEnv    *SemEnv       `json:"semaphoreEnv"`
 }
 
 // NewTest ...

@@ -370,7 +370,6 @@ func Test_NewTest(t *testing.T) {
 		// branch
 		assert.Equal(t, branchTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, branchTest.SemEnv, &SemEnv{
-			IP:           "192.168.0.1",
 			PipelineId:   "1",
 			WorkflowId:   "2",
 			JobId:        "3",
@@ -385,7 +384,6 @@ func Test_NewTest(t *testing.T) {
 		// pr
 		assert.Equal(t, prTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, prTest.SemEnv, &SemEnv{
-			IP:           "192.168.0.1",
 			PipelineId:   "1",
 			WorkflowId:   "2",
 			JobId:        "3",
@@ -400,7 +398,6 @@ func Test_NewTest(t *testing.T) {
 		// tag
 		assert.Equal(t, tagTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, tagTest.SemEnv, &SemEnv{
-			IP:           "192.168.0.1",
 			PipelineId:   "1",
 			WorkflowId:   "2",
 			JobId:        "3",
