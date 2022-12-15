@@ -341,7 +341,6 @@ func Test_Summary_Merge(t *testing.T) {
 }
 
 func Test_NewTest(t *testing.T) {
-	t.Setenv("IP", "192.168.0.1")
 	t.Setenv("SEMAPHORE_PIPELINE_ID", "1")
 	t.Setenv("SEMAPHORE_WORKFLOW_ID", "2")
 	t.Setenv("SEMAPHORE_JOB_NAME", "Test job")
@@ -379,6 +378,7 @@ func Test_NewTest(t *testing.T) {
 			GitRefType:   "branch",
 			GitRefName:   "awsm-w95",
 			GitRefSha:    "1234567890abcdef",
+			CollectedAt:  branchTest.SemEnv.CollectedAt,
 		})
 
 		// pr
@@ -393,6 +393,7 @@ func Test_NewTest(t *testing.T) {
 			GitRefType:   "pull-request",
 			GitRefName:   "pr-awsm-w95",
 			GitRefSha:    "fedcba0987654321",
+			CollectedAt:  prTest.SemEnv.CollectedAt,
 		})
 
 		// tag
@@ -407,6 +408,7 @@ func Test_NewTest(t *testing.T) {
 			GitRefType:   "tag",
 			GitRefName:   "awsm-w95",
 			GitRefSha:    "1234567890abcdef",
+			CollectedAt:  tagTest.SemEnv.CollectedAt,
 		})
 	})
 

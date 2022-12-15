@@ -377,6 +377,8 @@ type SemEnv struct {
 	GitRefType string `json:"gitRefType"`
 	GitRefName string `json:"gitRefName"`
 	GitRefSha  string `json:"gitRefSha"`
+
+	CollectedAt string `json:"collectedAt"`
 }
 
 func NewSemEnv() *SemEnv {
@@ -404,6 +406,7 @@ func NewSemEnv() *SemEnv {
 		GitRefType:   os.Getenv("SEMAPHORE_GIT_REF_TYPE"),
 		GitRefName:   refName,
 		GitRefSha:    refSha,
+		CollectedAt:  fmt.Sprintf("%d", time.Now().Unix()),
 	}
 }
 
@@ -420,7 +423,7 @@ type Test struct {
 	Error     *Error        `json:"error"`
 	SystemOut string        `json:"systemOut"`
 	SystemErr string        `json:"systemErr"`
-	SemEnv    *SemEnv       `json:"semaphoreEnv"`
+	SemEnv    *SemEnv       `json:"semEnv"`
 }
 
 // NewTest ...
