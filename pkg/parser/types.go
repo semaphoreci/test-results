@@ -365,20 +365,19 @@ func (me *Suite) AppendTest(test Test) {
 }
 
 type SemEnv struct {
-	PipelineId string `json:"pipelineId"`
-	WorkflowId string `json:"workflowId"`
+	IP         string `json:"ip"`
+	PipelineId string `json:"pipeline_id"`
+	WorkflowId string `json:"workflow_id"`
 
-	JobName string `json:"jobName"`
-	JobId   string `json:"jobId"`
+	JobName string `json:"name"`
+	JobId   string `json:"id"`
 
-	AgentType    string `json:"agentType"`
-	AgentOsImage string `json:"agentOsImage"`
+	AgentType    string `json:"agent_type"`
+	AgentOsImage string `json:"agent_os_image"`
 
-	GitRefType string `json:"gitRefType"`
-	GitRefName string `json:"gitRefName"`
-	GitRefSha  string `json:"gitRefSha"`
-
-	CollectedAt string `json:"collectedAt"`
+	GitRefType string `json:"git_ref_type"`
+	GitRefName string `json:"git_ref_name"`
+	GitRefSha  string `json:"ref_sha"`
 }
 
 func NewSemEnv() *SemEnv {
@@ -397,6 +396,7 @@ func NewSemEnv() *SemEnv {
 	}
 
 	return &SemEnv{
+		IP:           os.Getenv("IP"),
 		PipelineId:   os.Getenv("SEMAPHORE_PIPELINE_ID"),
 		WorkflowId:   os.Getenv("SEMAPHORE_WORKFLOW_ID"),
 		JobName:      os.Getenv("SEMAPHORE_JOB_NAME"),
@@ -406,7 +406,6 @@ func NewSemEnv() *SemEnv {
 		GitRefType:   os.Getenv("SEMAPHORE_GIT_REF_TYPE"),
 		GitRefName:   refName,
 		GitRefSha:    refSha,
-		CollectedAt:  fmt.Sprintf("%d", time.Now().Unix()),
 	}
 }
 
@@ -423,7 +422,7 @@ type Test struct {
 	Error     *Error        `json:"error"`
 	SystemOut string        `json:"systemOut"`
 	SystemErr string        `json:"systemErr"`
-	SemEnv    *SemEnv       `json:"semEnv"`
+	SemEnv    *SemEnv       `json:"semaphore_env"`
 }
 
 // NewTest ...
@@ -500,11 +499,11 @@ func (s *Summary) Merge(withSummary *Summary) {
 }
 
 type TestIdentity struct {
-	TestSuiteId string 
-	TestId      string 
-	TestName    string 
-	FileName    string 
-	RunnerName  string 
+	TestSuiteId string
+	TestId      string
+	TestName    string
+	FileName    string
+	RunnerName  string
 }
 
 func (t *TestIdentity) String() []string {

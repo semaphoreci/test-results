@@ -341,6 +341,7 @@ func Test_Summary_Merge(t *testing.T) {
 }
 
 func Test_NewTest(t *testing.T) {
+	t.Setenv("IP", "192.168.0.1")
 	t.Setenv("SEMAPHORE_PIPELINE_ID", "1")
 	t.Setenv("SEMAPHORE_WORKFLOW_ID", "2")
 	t.Setenv("SEMAPHORE_JOB_NAME", "Test job")
@@ -369,6 +370,7 @@ func Test_NewTest(t *testing.T) {
 		// branch
 		assert.Equal(t, branchTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, branchTest.SemEnv, &SemEnv{
+			IP:           "192.168.0.1",
 			PipelineId:   "1",
 			WorkflowId:   "2",
 			JobId:        "3",
@@ -378,12 +380,12 @@ func Test_NewTest(t *testing.T) {
 			GitRefType:   "branch",
 			GitRefName:   "awsm-w95",
 			GitRefSha:    "1234567890abcdef",
-			CollectedAt:  branchTest.SemEnv.CollectedAt,
 		})
 
 		// pr
 		assert.Equal(t, prTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, prTest.SemEnv, &SemEnv{
+			IP:           "192.168.0.1",
 			PipelineId:   "1",
 			WorkflowId:   "2",
 			JobId:        "3",
@@ -393,12 +395,12 @@ func Test_NewTest(t *testing.T) {
 			GitRefType:   "pull-request",
 			GitRefName:   "pr-awsm-w95",
 			GitRefSha:    "fedcba0987654321",
-			CollectedAt:  prTest.SemEnv.CollectedAt,
 		})
 
 		// tag
 		assert.Equal(t, tagTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, tagTest.SemEnv, &SemEnv{
+			IP:           "192.168.0.1",
 			PipelineId:   "1",
 			WorkflowId:   "2",
 			JobId:        "3",
@@ -408,7 +410,6 @@ func Test_NewTest(t *testing.T) {
 			GitRefType:   "tag",
 			GitRefName:   "awsm-w95",
 			GitRefSha:    "1234567890abcdef",
-			CollectedAt:  tagTest.SemEnv.CollectedAt,
 		})
 	})
 
