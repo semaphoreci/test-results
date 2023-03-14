@@ -51,6 +51,21 @@ func TestFindParser(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			desc: "finds rspec parser automatically for the suite with rspec prefix",
+			name: "auto",
+			path: fileloader.Ensure(bytes.NewReader([]byte(`
+				<?xml version="1.0"?>
+					<testsuite name="rspec1">
+						<testcase name="bar">
+						</testcase>
+						<testcase name="baz">
+						</testcase>
+					</testsuite>
+			`))),
+			want:    RSpec{},
+			wantErr: false,
+		},
+		{
 			desc: "finds exunit parser automatically",
 			name: "auto",
 			path: fileloader.Ensure(bytes.NewReader([]byte(`
