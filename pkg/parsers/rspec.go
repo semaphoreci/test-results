@@ -37,7 +37,7 @@ func (me RSpec) IsApplicable(path string) bool {
 		for attr, value := range xmlElement.Attributes {
 			switch attr {
 			case "name":
-				if value == "rspec" {
+				if strings.HasPrefix(value, "rspec") {
 					return true
 				}
 			}
