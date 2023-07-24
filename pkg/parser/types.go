@@ -499,6 +499,30 @@ func (s *Summary) Merge(withSummary *Summary) {
 	s.Duration += withSummary.Duration
 }
 
+type TestIdentity struct {
+	TestSuiteId string 
+	TestId      string 
+	TestName    string 
+	FileName    string 
+	RunnerName  string 
+}
+
+func (t *TestIdentity) String() []string {
+	return []string{t.TestSuiteId, t.TestId, t.TestName, t.FileName, t.RunnerName}
+}
+
+type TestResult struct {
+	TestId   string
+	GitSha   string
+	Duration time.Duration
+	JobId    string
+	State    State
+}
+
+func (t *TestResult) String() []string {
+	return []string{t.TestId, t.GitSha, fmt.Sprintf("%d", t.Duration.Milliseconds()), t.JobId, string(t.State)}
+}
+
 // UUID ...
 func UUID(id uuid.UUID, str string) uuid.UUID {
 	return uuid.NewMD5(id, []byte(str))
