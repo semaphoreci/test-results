@@ -365,8 +365,13 @@ func (me *Suite) AppendTest(test Test) {
 }
 
 type SemEnv struct {
+	ProjectId      string `json:"projectId"`
+	OrganizationId string `json:"organizationId"`
+
 	PipelineId string `json:"pipelineId"`
 	WorkflowId string `json:"workflowId"`
+
+	JobStartedAt string `json:"pipelineStartedAt"`
 
 	JobName string `json:"jobName"`
 	JobId   string `json:"jobId"`
@@ -395,7 +400,9 @@ func NewSemEnv() *SemEnv {
 	}
 
 	return &SemEnv{
+		ProjectId:    os.Getenv("SEMAPHORE_PROJECT_ID"),
 		PipelineId:   os.Getenv("SEMAPHORE_PIPELINE_ID"),
+		JobStartedAt: os.Getenv("SEMAPHORE_JOB_CREATION_TIME"),
 		WorkflowId:   os.Getenv("SEMAPHORE_WORKFLOW_ID"),
 		JobName:      os.Getenv("SEMAPHORE_JOB_NAME"),
 		JobId:        os.Getenv("SEMAPHORE_JOB_ID"),
@@ -441,14 +448,6 @@ func (me *Test) EnsureID(s Suite) {
 		me.ID = fmt.Sprintf("%s.%s", me.Classname, me.ID)
 	}
 
-	if me.Failure != nil {
-		me.ID = fmt.Sprintf("%s.%s", "Failure", me.ID)
-	}
-
-	if me.Error != nil {
-		me.ID = fmt.Sprintf("%s.%s", "Error", me.ID)
-	}
-
 	me.ID = UUID(uuid.MustParse(s.ID), me.ID).String()
 }
 
@@ -485,7 +484,7 @@ type Summary struct {
 	Duration time.Duration `json:"duration"`
 }
 
-//Merge merges two summaries together summing each field
+// Merge merges two summaries together summing each field
 func (s *Summary) Merge(withSummary *Summary) {
 	s.Total += withSummary.Total
 	s.Passed += withSummary.Passed
@@ -523,4 +522,27 @@ func (t *TestResult) String() []string {
 // UUID ...
 func UUID(id uuid.UUID, str string) uuid.UUID {
 	return uuid.NewMD5(id, []byte(str))
+}
+
+type CsvTestResult struct {
+	TestId     string
+	TestName   string
+	FileName   string
+	RunnerName string
+	GitSha     string
+	Duration   string
+	JobId      string
+	State      string
+	CreatedAt  string
+	BranchName string
+	ProjectId  string
+}
+
+func ResultsCsv(results []CsvTestResult) [][]string {
+	// {"test_id", "test_name", "file_name", "runner_name", "git_sha", "duration", "job_id", "state", "created_at", "branch_name", "project_id"}
+	csv := [][]string{}
+	for _, result := range results {
+		csv = append(csv, []string{result.TestId, result.TestName, result.FileName, result.RunnerName, result.GitSha, result.Duration, result.JobId, result.State, result.CreatedAt, result.BranchName, result.ProjectId})
+	}
+	return csv
 }

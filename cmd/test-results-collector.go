@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/csv"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -92,8 +93,10 @@ func genTest(testSuiteId string, cmd *cobra.Command, args []string) error {
 	// test result contains test id, git sha, duration, job id and state
 	logger.Info("Generating test identity and test result CSV")
 
-	testIdentitys := [][]string{{"test_suite_id", "test_id", "test_name", "file_name", "runner_name"}}
-	testResults := [][]string{{"test_id", "git_sha", "duration", "job_id", "state"}}
+	testResults := []parser.CsvTestResult{}
+
+	// testIdentitys := [][]string{{"test_suite_id", "test_id", "test_name", "file_name", "runner_name"}}
+	// testResults := [][]string{{"test_id", "git_sha", "duration", "job_id", "state"}}
 	for _, result := range results.TestResults {
 		for _, suite := range result.Suites {
 			for _, test := range suite.Tests {
@@ -106,26 +109,25 @@ func genTest(testSuiteId string, cmd *cobra.Command, args []string) error {
 				if result.Framework == "" {
 					runnerName = suite.Package
 				}
-				testIdentity := parser.TestIdentity{TestSuiteId: testSuiteId, TestId: test.ID, TestName: test.Name, FileName: fileName, RunnerName: runnerName}
-				testResult := parser.TestResult{TestId: test.ID, GitSha: test.SemEnv.GitRefSha, Duration: test.Duration, JobId: test.SemEnv.JobId, State: test.State}
 
-				testIdentitys = append(testIdentitys, testIdentity.String())
-				testResults = append(testResults, testResult.String())
+				testResult := parser.CsvTestResult{
+					TestId:     test.ID,
+					GitSha:     test.SemEnv.GitRefSha,
+					Duration:   fmt.Sprintf("%d", test.Duration.Milliseconds()),
+					JobId:      test.SemEnv.JobId,
+					State:      string(test.State),
+					RunnerName: runnerName,
+					TestName:   test.Name,
+					FileName:   fileName,
+					CreatedAt:  test.SemEnv.JobStartedAt,
+					BranchName: test.SemEnv.GitRefName,
+					ProjectId:  test.SemEnv.ProjectId,
+				}
+
+				testResults = append(testResults, testResult)
 			}
 		}
 	}
-
-	testIdFile, err := ioutil.TempFile("", "test-identity")
-	if err != nil {
-		logger.Error("Creating temporary file failed %v", err)
-		return err
-	}
-	err = csv.NewWriter(testIdFile).WriteAll(testIdentitys)
-	if err != nil {
-		logger.Error("Writing test identitys to CSV failed %v", err)
-		return err
-	}
-
 
 	testResFile, err := ioutil.TempFile("", "test-identity")
 	if err != nil {
@@ -133,18 +135,9 @@ func genTest(testSuiteId string, cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	err = csv.NewWriter(testResFile).WriteAll(testResults)
+	err = csv.NewWriter(testResFile).WriteAll(parser.ResultsCsv(testResults))
 	if err != nil {
 		logger.Error("Writing test results to CSV failed %v", err)
-		return err
-	}
-
-	_, err = cli.PushArtifacts("workflow", testIdFile.Name(), path.Join("test-results-collector", "test-identity.csv"), cmd)
-	if err != nil {
-		return err
-	}
-	_, err = cli.PushArtifacts("workflow", testResFile.Name(), path.Join("test-results-collector", "test-result.csv"), cmd)
-	if err != nil {
 		return err
 	}
 
