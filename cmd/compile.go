@@ -107,5 +107,7 @@ var compileCmd = &cobra.Command{
 }
 
 func init() {
+	compileCmd.Flags().Int32P("trim-output-to", "s", 0, "trim stdout to N characters, defaults to 0(unlimited)")
+	compileCmd.Flags().BoolP("omit-output-for-passed", "o", false, "omit stdout if test passed, defaults to false")
 	rootCmd.AddCommand(compileCmd)
 }
