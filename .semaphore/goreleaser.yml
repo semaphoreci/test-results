@@ -14,6 +14,6 @@ blocks:
           - sem-version go 1.18
           - checkout
       jobs:
-      - name: goreleaser
-        commands:
-          - curl -sL https://git.io/goreleaser | bash
+        - name: goreleaser
+          commands:
+            - curl -sL https://git.io/goreleaser | VERSION=v1.18.2 bash
