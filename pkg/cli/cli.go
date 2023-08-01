@@ -121,7 +121,66 @@ func Parse(p parser.Parser, path string, cmd *cobra.Command) (parser.Result, err
 
 	result.TestResults = append(result.TestResults, testResults)
 
+	err = DecorateResults(&result, cmd)
+	if err != nil {
+		logger.Error("Decorating results failed with error: %v", err)
+		return result, err
+	}
+
 	return result, nil
+}
+
+func DecorateResults(result *parser.Result, cmd *cobra.Command) error {
+	omitStdoutForPassed, err := cmd.Flags().GetBool("omit-output-for-passed")
+	if err != nil {
+		logger.Error("Reading flag omit-output-for-passed failed with error: %v", err)
+		return err
+	}
+
+	if omitStdoutForPassed {
+		for idx := range result.TestResults {
+			for suiteIdx := range result.TestResults[idx].Suites {
+				for caseIdx := range result.TestResults[idx].Suites[suiteIdx].Tests {
+					if result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].State == "passed" {
+						result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemErr = ""
+						result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemOut = ""
+					}
+				}
+			}
+		}
+	}
+
+	trimStdoutTo, err := cmd.Flags().GetInt32("trim-output-to")
+	if err != nil {
+		logger.Error("Reading flag trim-output-to failed with error: %v", err)
+		return err
+	}
+
+	if trimStdoutTo > 0 {
+		for idx := range result.TestResults {
+			for suiteIdx := range result.TestResults[idx].Suites {
+				if len(result.TestResults[idx].Suites[suiteIdx].SystemErr) > int(trimStdoutTo) {
+					result.TestResults[idx].Suites[suiteIdx].SystemErr = result.TestResults[idx].Suites[suiteIdx].SystemErr[:trimStdoutTo]
+				}
+
+				if len(result.TestResults[idx].Suites[suiteIdx].SystemOut) > int(trimStdoutTo) {
+					result.TestResults[idx].Suites[suiteIdx].SystemOut = result.TestResults[idx].Suites[suiteIdx].SystemOut[:trimStdoutTo]
+				}
+
+				for caseIdx := range result.TestResults[idx].Suites[suiteIdx].Tests {
+					if len(result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemErr) > int(trimStdoutTo) {
+						result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemErr = result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemErr[:trimStdoutTo]
+					}
+
+					if len(result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemOut) > int(trimStdoutTo) {
+						result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemOut = result.TestResults[idx].Suites[suiteIdx].Tests[caseIdx].SystemOut[:trimStdoutTo]
+					}
+				}
+			}
+		}
+	}
+
+	return nil
 }
 
 // Marshal provides json output for given test results
