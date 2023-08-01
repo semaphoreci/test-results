@@ -60,6 +60,12 @@ var combineCmd = &cobra.Command{
 			result.Combine(*newResult)
 		}
 
+		err = cli.DecorateResults(&result, cmd)
+		if err != nil {
+			logger.Error("Decorating results failed with error: %v", err)
+			return err
+		}
+
 		jsonData, err := cli.Marshal(result)
 		if err != nil {
 			return err
@@ -74,5 +80,7 @@ var combineCmd = &cobra.Command{
 }
 
 func init() {
+	combineCmd.Flags().Int32P("trim-output-to", "s", 0, "trim stdout to N characters, defaults to 0(unlimited)")
+	combineCmd.Flags().BoolP("omit-output-for-passed", "o", false, "omit stdout if test passed, defaults to false")
 	rootCmd.AddCommand(combineCmd)
 }
