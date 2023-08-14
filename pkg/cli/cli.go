@@ -196,6 +196,7 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 // WriteToFile saves data to given file
 func WriteToFile(data []byte, path string) (string, error) {
 	file, err := os.Create(path) // #nosec
+	defer file.Close()
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
@@ -206,7 +207,8 @@ func WriteToFile(data []byte, path string) (string, error) {
 
 // WriteToTmpFile saves data to temporary file
 func WriteToTmpFile(data []byte) (string, error) {
-	file, err := ioutil.TempFile("", "test-results")
+	file, err := os.CreateTemp("", "test-results")
+	defer file.Close()
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", file.Name(), err)
