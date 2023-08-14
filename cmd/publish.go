@@ -19,7 +19,6 @@ limitations under the License.
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -50,7 +49,7 @@ var publishCmd = &cobra.Command{
 			return err
 		}
 
-		dirPath, err := ioutil.TempDir("", "test-results-*")
+		dirPath, err := os.MkdirTemp("", "test-results-*")
 
 		if err != nil {
 			return err
@@ -74,7 +73,7 @@ var publishCmd = &cobra.Command{
 				return err
 			}
 
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+			tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
 			if err != nil {
 				return err
 			}

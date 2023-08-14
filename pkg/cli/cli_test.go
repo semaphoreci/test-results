@@ -2,7 +2,6 @@ package cli_test
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -44,7 +43,7 @@ func Test_LoadFiles(t *testing.T) {
 }
 
 func generateFile(t *testing.T) string {
-	filePath, err := ioutil.TempFile("", "file-*.xml")
+	filePath, err := os.CreateTemp("", "file-*.xml")
 	if err != nil {
 		t.Errorf("Failed to create temporary file: %v", err)
 	}
@@ -53,20 +52,20 @@ func generateFile(t *testing.T) string {
 }
 
 func generateDir(t *testing.T) string {
-	dirPath, err := ioutil.TempDir("", "")
+	dirPath, err := os.MkdirTemp("", "")
 	assert.Nil(t, err)
 
-	nestedDir, err := ioutil.TempDir(dirPath, "xml-*")
+	nestedDir, err := os.MkdirTemp(dirPath, "xml-*")
 	assert.Nil(t, err)
 
 	for i := 0; i < 5; i++ {
-		_, err = ioutil.TempFile(nestedDir, "file-*.xml")
+		_, err = os.CreateTemp(nestedDir, "file-*.xml")
 		assert.Nil(t, err)
 	}
 
-	nestedDir, _ = ioutil.TempDir(dirPath, "json-*")
+	nestedDir, _ = os.MkdirTemp(dirPath, "json-*")
 	for i := 0; i < 3; i++ {
-		_, err := ioutil.TempFile(nestedDir, "file-*.json")
+		_, err := os.MkdirTemp(nestedDir, "file-*.json")
 		assert.Nil(t, err)
 	}
 

@@ -18,7 +18,6 @@ limitations under the License.
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
@@ -51,7 +50,7 @@ var compileCmd = &cobra.Command{
 			return err
 		}
 
-		dirPath, err := ioutil.TempDir("", "test-results-*")
+		dirPath, err := os.MkdirTemp("", "test-results-*")
 
 		if err != nil {
 			return err
@@ -75,7 +74,7 @@ var compileCmd = &cobra.Command{
 				return err
 			}
 
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+			tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
 			if err != nil {
 				return err
 			}
