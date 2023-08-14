@@ -202,6 +202,7 @@ func WriteToFile(data []byte, path string) (string, error) {
 		logger.Error("Opening file %s: %v", path, err)
 		return "", err
 	}
+
 	return writeToFile(data, file)
 }
 
@@ -223,6 +224,11 @@ func writeToFile(data []byte, file *os.File) (string, error) {
 
 	_, err := file.Write(data)
 	if err != nil {
+		logger.Error("Output file write failed: %v", err)
+		return "", err
+	}
+
+	if err = file.Sync(); err != nil {
 		logger.Error("Output file write failed: %v", err)
 		return "", err
 	}
@@ -387,9 +393,7 @@ func Load(path string) (*parser.Result, error) {
 		return nil, err
 	}
 	defer jsonFile.Close() // #nosec
-	if err != nil {
-		return nil, err
-	}
+
 	bytes, err := io.ReadAll(jsonFile)
 	if err != nil {
 		return nil, err

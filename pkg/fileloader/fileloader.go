@@ -18,15 +18,20 @@ func Load(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 // Ensure puts reader data into temporary created file.
 func Ensure(reader *bytes.Reader) (fileName string) {
 	file, err := os.CreateTemp("", "")
-	defer file.Close() // #nosec
 	if err != nil {
 		panic(err)
 	}
+
+	defer file.Close() // #nosec
 
 	fileName = file.Name()
 
 	_, err = reader.WriteTo(file)
 	if err != nil {
+		panic(err)
+	}
+
+	if err = file.Sync(); err != nil {
 		panic(err)
 	}
 
