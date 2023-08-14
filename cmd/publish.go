@@ -56,6 +56,8 @@ var publishCmd = &cobra.Command{
 			return err
 		}
 
+		defer os.RemoveAll(dirPath)
+
 		for _, path := range paths {
 			parser, err := cli.FindParser(path, cmd)
 			if err != nil {
@@ -98,6 +100,8 @@ var publishCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		defer os.Remove(fileName)
 
 		_, err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
 		if err != nil {
@@ -149,8 +153,6 @@ var publishCmd = &cobra.Command{
 				}
 			}
 		}
-
-		defer os.Remove(fileName)
 
 		return nil
 	},

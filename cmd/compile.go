@@ -57,6 +57,8 @@ var compileCmd = &cobra.Command{
 			return err
 		}
 
+		defer os.RemoveAll(dirPath)
+
 		for _, path := range paths {
 			parser, err := cli.FindParser(path, cmd)
 			if err != nil {
@@ -99,8 +101,6 @@ var compileCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-
-		defer os.RemoveAll(dirPath)
 
 		return nil
 	},
