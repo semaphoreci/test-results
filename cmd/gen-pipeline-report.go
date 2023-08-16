@@ -18,7 +18,6 @@ limitations under the License.
 
 import (
 	"encoding/json"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -53,7 +52,7 @@ var genPipelineReportCmd = &cobra.Command{
 		}
 
 		if len(args) == 0 {
-			dir, err = ioutil.TempDir("", "test-results")
+			dir, err = os.MkdirTemp("", "test-results")
 			if err != nil {
 				logger.Error("Creating temporary directory failed %v", err)
 				return err

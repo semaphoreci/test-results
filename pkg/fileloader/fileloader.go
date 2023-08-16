@@ -3,7 +3,7 @@ package fileloader
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
+	"os"
 
 	"github.com/semaphoreci/test-results/pkg/logger"
 )
@@ -17,10 +17,12 @@ func Load(path string, reader *bytes.Reader) (*bytes.Reader, bool) {
 
 // Ensure puts reader data into temporary created file.
 func Ensure(reader *bytes.Reader) (fileName string) {
-	file, err := ioutil.TempFile("", "")
+	file, err := os.CreateTemp("", "")
 	if err != nil {
 		panic(err)
 	}
+
+	defer file.Close() // #nosec
 
 	fileName = file.Name()
 
@@ -29,7 +31,9 @@ func Ensure(reader *bytes.Reader) (fileName string) {
 		panic(err)
 	}
 
-	defer file.Close() // #nosec
+	if err = file.Sync(); err != nil {
+		panic(err)
+	}
 
 	return
 }

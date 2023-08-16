@@ -3,8 +3,8 @@ package cli
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -196,17 +196,20 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 // WriteToFile saves data to given file
 func WriteToFile(data []byte, path string) (string, error) {
 	file, err := os.Create(path) // #nosec
+	defer file.Close()
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
 		return "", err
 	}
+
 	return writeToFile(data, file)
 }
 
 // WriteToTmpFile saves data to temporary file
 func WriteToTmpFile(data []byte) (string, error) {
-	file, err := ioutil.TempFile("", "test-results")
+	file, err := os.CreateTemp("", "test-results")
+	defer file.Close()
 
 	if err != nil {
 		logger.Error("Opening file %s: %v", file.Name(), err)
@@ -221,6 +224,11 @@ func writeToFile(data []byte, file *os.File) (string, error) {
 
 	_, err := file.Write(data)
 	if err != nil {
+		logger.Error("Output file write failed: %v", err)
+		return "", err
+	}
+
+	if err = file.Sync(); err != nil {
 		logger.Error("Output file write failed: %v", err)
 		return "", err
 	}
@@ -385,10 +393,8 @@ func Load(path string) (*parser.Result, error) {
 		return nil, err
 	}
 	defer jsonFile.Close() // #nosec
-	if err != nil {
-		return nil, err
-	}
-	bytes, err := ioutil.ReadAll(jsonFile)
+
+	bytes, err := io.ReadAll(jsonFile)
 	if err != nil {
 		return nil, err
 	}

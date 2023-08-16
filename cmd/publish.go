@@ -19,7 +19,6 @@ limitations under the License.
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path"
 
@@ -50,11 +49,13 @@ var publishCmd = &cobra.Command{
 			return err
 		}
 
-		dirPath, err := ioutil.TempDir("", "test-results-*")
+		dirPath, err := os.MkdirTemp("", "test-results-*")
 
 		if err != nil {
 			return err
 		}
+
+		defer os.RemoveAll(dirPath)
 
 		for _, path := range paths {
 			parser, err := cli.FindParser(path, cmd)
@@ -72,7 +73,7 @@ var publishCmd = &cobra.Command{
 				return err
 			}
 
-			tmpFile, err := ioutil.TempFile(dirPath, "result-*.json")
+			tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
 			if err != nil {
 				return err
 			}
@@ -98,6 +99,8 @@ var publishCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		defer os.Remove(fileName)
 
 		_, err = cli.PushArtifacts("job", fileName, path.Join("test-results", "junit.json"), cmd)
 		if err != nil {
@@ -149,8 +152,6 @@ var publishCmd = &cobra.Command{
 				}
 			}
 		}
-
-		defer os.Remove(fileName)
 
 		return nil
 	},
