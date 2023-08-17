@@ -102,7 +102,8 @@ func pushSummaries(testResult []parser.TestResults, level, path string, cmd *cob
 	logger.Info("starting to generate summary")
 	summaryReport := parser.Summary{}
 	for _, results := range testResult {
-		summaryReport.Merge(&results.Summary)
+		summary := results.Summary
+		summaryReport.Merge(&summary)
 	}
 
 	jsonSummary, err := json.Marshal(summaryReport)
