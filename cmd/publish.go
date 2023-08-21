@@ -82,6 +82,11 @@ var publishCmd = &cobra.Command{
 			if err != nil {
 				return err
 			}
+
+			err = tmpFile.Close()
+			if err != nil {
+				return err
+			}
 		}
 
 		result, err := cli.MergeFiles(dirPath, cmd)
