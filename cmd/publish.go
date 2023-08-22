@@ -78,7 +78,7 @@ var publishCmd = &cobra.Command{
 				return err
 			}
 
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+			_, err = cli.WriteToFile(jsonData, tmpFile)
 			if err != nil {
 				return err
 			}

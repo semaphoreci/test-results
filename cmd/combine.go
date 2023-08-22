@@ -71,7 +71,7 @@ var combineCmd = &cobra.Command{
 			return err
 		}
 
-		_, err = cli.WriteToFile(jsonData, output)
+		_, err = cli.WriteToFilePath(jsonData, output)
 		if err != nil {
 			return err
 		}

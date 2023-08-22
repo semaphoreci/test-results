@@ -79,7 +79,7 @@ var compileCmd = &cobra.Command{
 				return err
 			}
 
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+			_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
 			if err != nil {
 				return err
 			}
@@ -96,7 +96,7 @@ var compileCmd = &cobra.Command{
 			return err
 		}
 
-		_, err = cli.WriteToFile(jsonData, output)
+		_, err = cli.WriteToFilePath(jsonData, output)
 		if err != nil {
 			return err
 		}

@@ -3,10 +3,11 @@ package cli_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/semaphoreci/test-results/pkg/parser"
-	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
+
+	"github.com/semaphoreci/test-results/pkg/parser"
+	"github.com/stretchr/testify/require"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/stretchr/testify/assert"
@@ -136,7 +137,7 @@ func TestWriteToTmpFile(t *testing.T) {
 	})
 }
 
-func TestWriteToFile(t *testing.T) {
+func TestWriteToFilePath(t *testing.T) {
 	tr := parser.TestResults{
 		ID:         "1234",
 		Name:       "Test",
@@ -159,7 +160,7 @@ func TestWriteToFile(t *testing.T) {
 	jsonData, _ := json.Marshal(&result)
 
 	t.Run("Write to one file", func(t *testing.T) {
-		file, err := cli.WriteToFile(jsonData, "out")
+		file, err := cli.WriteToFilePath(jsonData, "out")
 		assert.NoError(t, err)
 		os.Remove(file)
 	})
@@ -175,7 +176,7 @@ func TestWriteToFile(t *testing.T) {
 			tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
 			require.NoError(t, err)
 
-			_, err = cli.WriteToFile(jsonData, tmpFile.Name())
+			_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
 			require.NoError(t, err)
 		}
 	})
