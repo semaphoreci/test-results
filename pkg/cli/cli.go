@@ -193,8 +193,12 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 	return jsonData, nil
 }
 
-// WriteToFile saves data to given file
-func WriteToFile(data []byte, path string) (string, error) {
+func WriteToFile(data []byte, file *os.File) (string, error) {
+	return writeToFile(data, file)
+}
+
+// WriteToFilePathPath saves data to given file
+func WriteToFilePath(data []byte, path string) (string, error) {
 	file, err := os.Create(path) // #nosec
 	defer file.Close()
 
