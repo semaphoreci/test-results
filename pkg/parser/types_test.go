@@ -346,8 +346,10 @@ func Test_NewTest(t *testing.T) {
 	t.Setenv("SEMAPHORE_WORKFLOW_ID", "2")
 	t.Setenv("SEMAPHORE_JOB_NAME", "Test job")
 	t.Setenv("SEMAPHORE_JOB_ID", "3")
+	t.Setenv("SEMAPHORE_PROJECT_ID", "123")
 	t.Setenv("SEMAPHORE_AGENT_MACHINE_TYPE", "t1-awsm")
 	t.Setenv("SEMAPHORE_AGENT_MACHINE_OS_IMAGE", "w95")
+	t.Setenv("SEMAPHORE_JOB_CREATION_TIME", "1693481195")
 
 	// For branch
 	t.Setenv("SEMAPHORE_GIT_REF_TYPE", "branch")
@@ -371,8 +373,10 @@ func Test_NewTest(t *testing.T) {
 		assert.Equal(t, branchTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, branchTest.SemEnv, &SemEnv{
 			PipelineId:   "1",
+			ProjectId:    "123",
 			WorkflowId:   "2",
 			JobId:        "3",
+			JobStartedAt: "1693481195",
 			JobName:      "Test job",
 			AgentType:    "t1-awsm",
 			AgentOsImage: "w95",
@@ -385,8 +389,10 @@ func Test_NewTest(t *testing.T) {
 		assert.Equal(t, prTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, prTest.SemEnv, &SemEnv{
 			PipelineId:   "1",
+			ProjectId:    "123",
 			WorkflowId:   "2",
 			JobId:        "3",
+			JobStartedAt: "1693481195",
 			JobName:      "Test job",
 			AgentType:    "t1-awsm",
 			AgentOsImage: "w95",
@@ -399,8 +405,10 @@ func Test_NewTest(t *testing.T) {
 		assert.Equal(t, tagTest.State, StatePassed, "is in passed state by default")
 		assert.Equal(t, tagTest.SemEnv, &SemEnv{
 			PipelineId:   "1",
+			ProjectId:    "123",
 			WorkflowId:   "2",
 			JobId:        "3",
+			JobStartedAt: "1693481195",
 			JobName:      "Test job",
 			AgentType:    "t1-awsm",
 			AgentOsImage: "w95",
