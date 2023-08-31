@@ -95,8 +95,6 @@ func genTest(testSuiteId string, cmd *cobra.Command, args []string) error {
 
 	testResults := []parser.CsvTestResult{}
 
-	// testIdentitys := [][]string{{"test_suite_id", "test_id", "test_name", "file_name", "runner_name"}}
-	// testResults := [][]string{{"test_id", "git_sha", "duration", "job_id", "state"}}
 	for _, result := range results.TestResults {
 		for _, suite := range result.Suites {
 			for _, test := range suite.Tests {
@@ -118,6 +116,7 @@ func genTest(testSuiteId string, cmd *cobra.Command, args []string) error {
 					State:      string(test.State),
 					RunnerName: runnerName,
 					TestName:   test.Name,
+					TestGroup:  test.Classname,
 					FileName:   fileName,
 					CreatedAt:  test.SemEnv.JobStartedAt,
 					BranchName: test.SemEnv.GitRefName,
