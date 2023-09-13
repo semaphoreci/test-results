@@ -35,7 +35,7 @@ blocks:
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
         - name: Merging - directory as input
           commands:
-            - test-results publish priv/merging
+            - test-results publish priv/merging -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - cat <<< $(jq --sort-keys . priv/merging/out.json) > priv/merging/out.json
             - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
