@@ -28,7 +28,7 @@ blocks:
                 - phpunit
                 - embedded
           commands:
-            - test-results publish priv/parsers/$PARSER/in.xml
+            - test-results publish priv/parsers/$PARSER/in.xml -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - cat <<< $(jq --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json
             - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
