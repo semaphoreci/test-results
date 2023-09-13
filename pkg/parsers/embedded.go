@@ -69,9 +69,6 @@ func flatten(root *parser.XMLElement) {
 		switch node.Tag() {
 		case "testsuite":
 			flattenSingleSuite(node, node.Attr("name"), &newSuites)
-		case "testcase":
-			node.Attributes["name"] = node.Attr("name")
-			newSuites = append(newSuites, node)
 		}
 	}
 
@@ -79,14 +76,18 @@ func flatten(root *parser.XMLElement) {
 }
 
 func flattenSingleSuite(xmlNode parser.XMLElement, suiteNamePrefix string, newSuites *[]parser.XMLElement) {
+	childNodeAdded := false
 	for _, childNode := range xmlNode.Children {
 		switch childNode.Tag() {
 		case "testsuite":
 			newSuitePrefix := prefixSuiteName(childNode.Attr("name"), suiteNamePrefix)
 			flattenSingleSuite(childNode, newSuitePrefix, newSuites)
 		case "testcase":
-			xmlNode.Attributes["name"] = suiteNamePrefix
-			*newSuites = append(*newSuites, xmlNode)
+			if !childNodeAdded {
+				xmlNode.Attributes["name"] = suiteNamePrefix
+				*newSuites = append(*newSuites, xmlNode)
+				childNodeAdded = true
+			}
 		}
 	}
 }
@@ -118,7 +119,7 @@ func (e Embedded) newTestResults(xmlElement parser.XMLElement) parser.TestResult
 	for _, node := range xmlElement.Children {
 		switch node.Tag() {
 		case "testsuite":
-			results.Suites = append(results.Suites, e.newSuite(node, &results))
+			results.Suites = append(results.Suites, e.newSuite(node, results))
 		}
 	}
 	results.Summary.Passed = results.Summary.Total - results.Summary.Error - results.Summary.Failed
@@ -126,7 +127,7 @@ func (e Embedded) newTestResults(xmlElement parser.XMLElement) parser.TestResult
 	return results
 }
 
-func (e Embedded) newSuite(xml parser.XMLElement, testResults *parser.TestResults) parser.Suite {
+func (e Embedded) newSuite(xml parser.XMLElement, testResults parser.TestResults) parser.Suite {
 	suite := parser.NewSuite()
 
 	logger.Trace("Parsing Suite element with name: %s", xml.Attr("name"))
@@ -145,12 +146,18 @@ func (e Embedded) newSuite(xml parser.XMLElement, testResults *parser.TestResult
 			suite.Summary.Error = parser.ParseInt(value)
 		case "disabled":
 			suite.Summary.Disabled = parser.ParseInt(value)
+		case "timestamp":
+			suite.Timestamp = value
+		case "hostname":
+			suite.Hostname = value
+		case "id":
+			suite.ID = value
 		case "package":
 			suite.Package = value
 		}
 	}
 
-	suite.EnsureID(*testResults)
+	suite.EnsureID(testResults)
 
 	for _, node := range xml.Children {
 		switch node.Tag() {
