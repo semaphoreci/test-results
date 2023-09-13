@@ -14,6 +14,7 @@ var availableParsers = []parser.Parser{
 	NewGoLang(),
 	NewPHPUnit(),
 	NewGeneric(),
+	NewEmbedded(),
 }
 
 // FindParser ...

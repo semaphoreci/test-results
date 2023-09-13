@@ -197,7 +197,7 @@ func WriteToFile(data []byte, file *os.File) (string, error) {
 	return writeToFile(data, file)
 }
 
-// WriteToFilePathPath saves data to given file
+// WriteToFilePath saves data to given file
 func WriteToFilePath(data []byte, path string) (string, error) {
 	file, err := os.Create(path) // #nosec
 	defer file.Close()
