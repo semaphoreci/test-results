@@ -28,14 +28,14 @@ blocks:
                 - phpunit
                 - embedded
           commands:
-            - test-results publish priv/parsers/$PARSER/in.xml
+            - test-results publish priv/parsers/$PARSER/in.xml -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - cat <<< $(jq --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json
             - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
         - name: Merging - directory as input
           commands:
-            - test-results publish priv/merging -p $PARSER
+            - test-results publish priv/merging
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - cat <<< $(jq --sort-keys . priv/merging/out.json) > priv/merging/out.json
             - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
