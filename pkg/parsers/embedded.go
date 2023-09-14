@@ -56,7 +56,7 @@ func (e Embedded) Parse(path string) parser.TestResults {
 		tag := xmlElement.Tag()
 		logger.Debug("Invalid root element found: <%s>", tag)
 		results.Status = parser.StatusError
-		results.StatusMessage = fmt.Sprintf("Invalid root element found: <%s>, must be one of <testsuites>, <testsuite>", tag)
+		results.StatusMessage = fmt.Sprintf("Invalid root element found: <%s>,  must be <testsuites>", tag)
 	}
 
 	return results
