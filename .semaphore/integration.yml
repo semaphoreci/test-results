@@ -17,18 +17,23 @@ blocks:
     dependencies: []
     task:
       jobs:
-        - name: "Parsers"
+        - name: Parsers
           matrix:
-              - env_var: PARSER
-                values: ["generic", "rspec", "golang", "exunit", "phpunit"]
+            - env_var: PARSER
+              values:
+                - generic
+                - rspec
+                - golang
+                - exunit
+                - phpunit
+                - embedded
           commands:
-            - test-results publish priv/parsers/$PARSER/in.xml
+            - test-results publish priv/parsers/$PARSER/in.xml -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
             - cat <<< $(jq --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json
             - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
-
-        - name: "Merging - directory as input"
+        - name: Merging - directory as input
           commands:
             - test-results publish priv/merging
             - artifact pull job test-results/junit.json -d /tmp/junit.json
@@ -40,33 +45,24 @@ blocks:
       - Integration tests
     task:
       jobs:
-        - name: "generate pipeline report"
+        - name: generate pipeline report
           commands:
             - test-results gen-pipeline-report
-
   - name: Integration tests - workflow level
     dependencies:
       - Integration tests - generate pipeline report
     task:
       jobs:
-        - name: "Generate pipeline report"
+        - name: Generate pipeline summary
           commands:
-            - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}.json -d /tmp/junit.json
-            - artifact push job /tmp/junit.json -d test-results/junit.json
-            - cat <<< $(jq --sort-keys . priv/workflow/out.json) > priv/workflow/out.json
-            - cat <<< $(jq --sort-keys . /tmp/junit.json) > /tmp/junit.json
-            - diff /tmp/junit.json priv/workflow/out.json
-        - name: "Generate pipeline summary"
-          commands:
-            - artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json
+            - 'artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json'
             - cat <<< $(jq --sort-keys . priv/workflow/summary-out.json) > priv/workflow/summary-out.json
             - cat <<< $(jq --sort-keys . /tmp/summary.json) > /tmp/summary.json
             - diff /tmp/summary.json priv/workflow/summary-out.json
-
 promotions:
   - name: Release
     pipeline_file: goreleaser.yml
     auto_promote_on:
       - result: passed
         branch:
-          - "^refs/tags/v*"
+          - ^refs/tags/v*

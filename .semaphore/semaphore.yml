@@ -4,7 +4,6 @@ agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu2004
-
 blocks:
   - name: Unit tests
     dependencies: []
@@ -15,48 +14,42 @@ blocks:
           - checkout
           - go mod download
           - go install gotest.tools/gotestsum@latest
-
       jobs:
-        - name: 🧪 Go tests
+        - name: "\U0001F9EA Go tests"
           commands:
-            - export SUITE_NAME="🧪 Go tests"
+            - "export SUITE_NAME=\"\U0001F9EA Go tests\""
             - gotestsum --junitfile results.xml
-
       epilogue:
         always:
           commands:
-            - "[[ -f results.xml ]] && test-results publish --name \"$SUITE_NAME\" results.xml"
-
+            - '[[ -f results.xml ]] && test-results publish --name "$SUITE_NAME" results.xml'
   - name: Security checks
     dependencies: []
     task:
       secrets:
         - name: security-toolbox-shared-read-access
-
       prologue:
         commands:
           - checkout
           - mv ~/.ssh/security-toolbox ~/.ssh/id_rsa
           - sudo chmod 600 ~/.ssh/id_rsa
-
       jobs:
-        - name: 🛡️ Check dependencies
+        - name: "\U0001F6E1️ Check dependencies"
           commands:
-            - export SUITE_NAME="🛡️ Check dependencies"
+            - "export SUITE_NAME=\"\U0001F6E1️ Check dependencies\""
             - make check.deps
-
-        - name: 🛡️ Check code
+        - name: "\U0001F6E1️ Check code"
           commands:
-            - export SUITE_NAME="🛡️ Check code"
+            - "export SUITE_NAME=\"\U0001F6E1️ Check code\""
             - make check.static
-
       epilogue:
         always:
           commands:
-            - "[[ -f results.xml ]] && test-results publish --name \"$SUITE_NAME\" results.xml"
-
+            - '[[ -f results.xml ]] && test-results publish --name "$SUITE_NAME" results.xml'
   - name: Build
-    dependencies: ["Security checks", "Unit tests"]
+    dependencies:
+      - Security checks
+      - Unit tests
     task:
       prologue:
         commands:
@@ -64,22 +57,19 @@ blocks:
           - checkout
           - go mod download
           - go install gotest.tools/gotestsum@latest
-
       jobs:
-        - name: 🏗️ Build binary
+        - name: "\U0001F3D7️ Build binary"
           commands:
             - make build
             - artifact push workflow bin/test-results -d bin/test-results
-
 after_pipeline:
   task:
     jobs:
       - name: Submit Reports
         commands:
           - test-results gen-pipeline-report
-
 promotions:
   - name: Integration tests
     pipeline_file: integration.yml
     auto_promote:
-      when: "result = 'passed'"
+      when: result = 'passed'
