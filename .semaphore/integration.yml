@@ -20,7 +20,6 @@ blocks:
         - name: Parsers
           matrix:
             - env_var: PARSER
-<<<<<<< HEAD
               values:
                 - generic
                 - rspec
@@ -28,9 +27,6 @@ blocks:
                 - exunit
                 - phpunit
                 - embedded
-=======
-              values: ["generic", "rspec", "golang", "exunit", "phpunit"]
->>>>>>> b1daf8d (fix: integration tests)
           commands:
             - test-results publish priv/parsers/$PARSER/in.xml -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
