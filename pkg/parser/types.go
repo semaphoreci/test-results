@@ -528,6 +528,7 @@ type CsvTestResult struct {
 	TestId     string
 	TestName   string
 	TestGroup  string
+	TestSuite  string
 	FileName   string
 	RunnerName string
 	GitSha     string
@@ -540,10 +541,9 @@ type CsvTestResult struct {
 }
 
 func ResultsCsv(results []CsvTestResult) [][]string {
-	// {"test_id", "test_name", "test_group", "file_name", "runner_name", "git_sha", "duration", "job_id", "state", "created_at", "branch_name", "project_id"}
 	csv := [][]string{}
 	for _, result := range results {
-		csv = append(csv, []string{result.TestId, result.TestName, result.TestGroup, result.FileName, result.RunnerName, result.GitSha, result.Duration, result.JobId, result.State, result.CreatedAt, result.BranchName, result.ProjectId})
+		csv = append(csv, []string{result.TestId, result.TestName, result.TestGroup, result.TestSuite, result.FileName, result.RunnerName, result.GitSha, result.Duration, result.JobId, result.State, result.CreatedAt, result.BranchName, result.ProjectId})
 	}
 	return csv
 }

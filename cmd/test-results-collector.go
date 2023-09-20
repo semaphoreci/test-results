@@ -117,6 +117,7 @@ func genTest(testSuiteId string, cmd *cobra.Command, args []string) error {
 					RunnerName: runnerName,
 					TestName:   test.Name,
 					TestGroup:  test.Classname,
+					TestSuite:  suite.Name,
 					FileName:   fileName,
 					CreatedAt:  test.SemEnv.JobStartedAt,
 					BranchName: test.SemEnv.GitRefName,
