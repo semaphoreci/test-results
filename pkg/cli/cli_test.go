@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/semaphoreci/test-results/pkg/parser"
-	"github.com/stretchr/testify/require"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_LoadFiles(t *testing.T) {
@@ -72,20 +73,22 @@ func generateDir(t *testing.T) string {
 }
 
 func generateDirWithFilesAndNestedDir(t *testing.T, fNumber, dirNumber int) string {
-	dirPath, err := os.MkdirTemp("", "")
+	dirPath, err := os.MkdirTemp("", "random-dir-*")
 	assert.Nil(t, err)
 
-	nestedDir, err := os.MkdirTemp(dirPath, "xml-*")
+	xmlNestedDir, err := os.MkdirTemp(dirPath, "xml-*")
+	assert.Nil(t, err)
+
+	jsonNestedDir, err := os.MkdirTemp(dirPath, "json-*")
 	assert.Nil(t, err)
 
 	for i := 0; i < fNumber; i++ {
-		_, err = os.CreateTemp(nestedDir, "file-*.xml")
+		_, err = os.CreateTemp(xmlNestedDir, "file-*.xml")
 		assert.Nil(t, err)
 	}
 
-	nestedDir, _ = os.MkdirTemp(dirPath, "json-*")
 	for i := 0; i < dirNumber; i++ {
-		_, err := os.MkdirTemp(nestedDir, "file-*.json")
+		_, err := os.CreateTemp(jsonNestedDir, "file-*.json")
 		assert.Nil(t, err)
 	}
 
@@ -124,16 +127,22 @@ func TestWriteToTmpFile(t *testing.T) {
 		fileNumber := 3000
 		files := make([]string, 0, fileNumber)
 
+		var wg sync.WaitGroup
+
+		wg.Add(fileNumber)
+
 		for i := 0; i < fileNumber; i++ {
-			file, err := cli.WriteToTmpFile(jsonData)
-			assert.NoError(t, err)
+			go func() {
+				defer wg.Done()
+				file, err := cli.WriteToTmpFile(jsonData)
+				defer os.Remove(file)
+				assert.NoError(t, err)
 
-			files = append(files, file)
+				files = append(files, file)
+			}()
 		}
 
-		for _, file := range files {
-			os.Remove(file)
-		}
+		wg.Wait()
 	})
 }
 
@@ -172,12 +181,19 @@ func TestWriteToFilePath(t *testing.T) {
 
 		defer os.RemoveAll(dirPath)
 
-		for i := 0; i < fileNumber; i++ {
-			tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
-			require.NoError(t, err)
+		var wg sync.WaitGroup
 
-			_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
-			require.NoError(t, err)
+		wg.Add(fileNumber)
+
+		for i := 0; i < fileNumber; i++ {
+			go func() {
+				defer wg.Done()
+				tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
+				require.NoError(t, err)
+
+				_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
+				require.NoError(t, err)
+			}()
 		}
 	})
 }
