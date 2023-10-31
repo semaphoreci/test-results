@@ -199,13 +199,12 @@ func WriteToFile(data []byte, file *os.File) (string, error) {
 
 // WriteToFilePath saves data to given file
 func WriteToFilePath(data []byte, path string) (string, error) {
-	file, err := os.Create(path) // #nosec
-	defer file.Close()
-
+	file, err := os.Create(path)
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
 		return "", err
 	}
+	defer file.Close()
 
 	return writeToFile(data, file)
 }
@@ -213,12 +212,11 @@ func WriteToFilePath(data []byte, path string) (string, error) {
 // WriteToTmpFile saves data to temporary file
 func WriteToTmpFile(data []byte) (string, error) {
 	file, err := os.CreateTemp("", "test-results")
-	defer file.Close()
-
 	if err != nil {
 		logger.Error("Opening file %s: %v", file.Name(), err)
 		return "", err
 	}
+	defer file.Close()
 
 	return writeToFile(data, file)
 }

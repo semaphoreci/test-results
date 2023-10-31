@@ -246,11 +246,11 @@ type Suite struct {
 	Timestamp  string     `json:"timestamp"`
 	Hostname   string     `json:"hostname"`
 	Package    string     `json:"package"`
-	Tests      []Test     `json:"tests"`
 	Properties Properties `json:"properties"`
 	Summary    Summary    `json:"summary"`
 	SystemOut  string     `json:"systemOut"`
 	SystemErr  string     `json:"systemErr"`
+	Tests      []Test     `json:"tests"`
 }
 
 // NewSuite ...
@@ -384,7 +384,7 @@ type SemEnv struct {
 	GitRefSha  string `json:"gitRefSha"`
 }
 
-func NewSemEnv() *SemEnv {
+func NewSemEnv() SemEnv {
 	refName := ""
 	refSha := ""
 	switch os.Getenv("SEMAPHORE_GIT_REF_TYPE") {
@@ -399,7 +399,7 @@ func NewSemEnv() *SemEnv {
 		refSha = os.Getenv("SEMAPHORE_GIT_PR_SHA")
 	}
 
-	return &SemEnv{
+	return SemEnv{
 		ProjectId:    os.Getenv("SEMAPHORE_PROJECT_ID"),
 		PipelineId:   os.Getenv("SEMAPHORE_PIPELINE_ID"),
 		JobStartedAt: os.Getenv("SEMAPHORE_JOB_CREATION_TIME"),
@@ -427,7 +427,7 @@ type Test struct {
 	Error     *Error        `json:"error"`
 	SystemOut string        `json:"systemOut"`
 	SystemErr string        `json:"systemErr"`
-	SemEnv    *SemEnv       `json:"semaphoreEnv"`
+	SemEnv    SemEnv        `json:"semaphoreEnv"`
 }
 
 // NewTest ...
@@ -440,15 +440,10 @@ func NewTest() Test {
 
 // EnsureID ...
 func (me *Test) EnsureID(s Suite) {
-	if me.ID == "" {
-		me.ID = me.Name
-	}
+	// Determine the ID based on the various test details
+	testIdentity := fmt.Sprintf("%s.%s.%s.%s.%s", me.ID, me.Name, me.Classname, me.Package, me.File)
 
-	if me.Classname != "" {
-		me.ID = fmt.Sprintf("%s.%s", me.Classname, me.ID)
-	}
-
-	me.ID = UUID(uuid.MustParse(s.ID), me.ID).String()
+	me.ID = UUID(uuid.MustParse(s.ID), testIdentity).String()
 }
 
 type err struct {
@@ -493,18 +488,6 @@ func (s *Summary) Merge(withSummary *Summary) {
 	s.Failed += withSummary.Failed
 	s.Disabled += withSummary.Disabled
 	s.Duration += withSummary.Duration
-}
-
-type TestIdentity struct {
-	TestSuiteId string
-	TestId      string
-	TestName    string
-	FileName    string
-	RunnerName  string
-}
-
-func (t *TestIdentity) String() []string {
-	return []string{t.TestSuiteId, t.TestId, t.TestName, t.FileName, t.RunnerName}
 }
 
 type TestResult struct {
