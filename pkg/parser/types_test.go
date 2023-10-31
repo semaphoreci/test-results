@@ -371,7 +371,7 @@ func Test_NewTest(t *testing.T) {
 	t.Run("T", func(t *testing.T) {
 		// branch
 		assert.Equal(t, branchTest.State, StatePassed, "is in passed state by default")
-		assert.Equal(t, branchTest.SemEnv, &SemEnv{
+		assert.Equal(t, branchTest.SemEnv, SemEnv{
 			PipelineId:   "1",
 			ProjectId:    "123",
 			WorkflowId:   "2",
@@ -387,7 +387,7 @@ func Test_NewTest(t *testing.T) {
 
 		// pr
 		assert.Equal(t, prTest.State, StatePassed, "is in passed state by default")
-		assert.Equal(t, prTest.SemEnv, &SemEnv{
+		assert.Equal(t, prTest.SemEnv, SemEnv{
 			PipelineId:   "1",
 			ProjectId:    "123",
 			WorkflowId:   "2",
@@ -403,7 +403,7 @@ func Test_NewTest(t *testing.T) {
 
 		// tag
 		assert.Equal(t, tagTest.State, StatePassed, "is in passed state by default")
-		assert.Equal(t, tagTest.SemEnv, &SemEnv{
+		assert.Equal(t, tagTest.SemEnv, SemEnv{
 			PipelineId:   "1",
 			ProjectId:    "123",
 			WorkflowId:   "2",

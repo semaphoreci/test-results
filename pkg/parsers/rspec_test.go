@@ -1,215 +1,27 @@
 package parsers
 
 import (
-	"bytes"
 	"testing"
-	"time"
 
-	"github.com/semaphoreci/test-results/pkg/fileloader"
 	"github.com/semaphoreci/test-results/pkg/parser"
-	"github.com/stretchr/testify/assert"
 )
 
-func Test_RSpec_ParseTestSuite(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-				<testcase name="bar">
-				</testcase>
-				<testcase id="1" classname="Foo" name="foo bar" file="foo/bar.o" time="0.1234">
-				</testcase>
-			</testsuite>
-	`))
+func Test_RSpec_CommonParse(t *testing.T) {
+	parserWants := map[string]parser.TestResults{
+		"empty":        {ID: "99ec6b78-8d28-33bb-9c4b-e38fd0000bf4", Name: "Rspec Suite", Framework: "rspec", IsDisabled: false, Summary: parser.Summary{Total: 0, Passed: 0, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, Status: "error", StatusMessage: "EOF", Suites: []parser.Suite{}},
+		"basic":        {ID: "99ec6b78-8d28-33bb-9c4b-e38fd0000bf4", Name: "Rspec Suite", Framework: "rspec", IsDisabled: false, Summary: parser.Summary{Total: 3, Passed: 3, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, Status: "success", StatusMessage: "", Suites: []parser.Suite{{ID: "961b9fe2-d1d3-3f8a-9d14-2adc16701583", Name: "foo", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 3, Passed: 3, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "03891380-f78d-3ad2-9095-30cc51a85076", File: "", Classname: "", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}, {ID: "6ecfb2de-99ef-39cf-a1e4-abd5684ff98f", File: "", Classname: "", Package: "", Name: "baz", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}, {ID: "03891380-f78d-3ad2-9095-30cc51a85076", File: "", Classname: "", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}}},
+		"multi-suite":  {ID: "dda9b4d2-9e8d-3547-9fd0-24bd78148a7a", Name: "ff", Framework: "rspec", IsDisabled: false, Summary: parser.Summary{Total: 10, Passed: 10, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, Status: "success", StatusMessage: "", Suites: []parser.Suite{{ID: "03999e27-03e1-37e7-adbf-e712e5f35d67", Name: "foo", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 2, Passed: 2, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "a30beb90-b62a-3a18-92e8-e071aa9b0ae8", File: "", Classname: "", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}, {ID: "9c0d06f6-a28c-3187-9618-4901992bee66", File: "", Classname: "", Package: "", Name: "baz", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}, {ID: "7a9dd0d0-961d-36b7-af47-94deab34e474", Name: "1234", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 2, Passed: 2, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "a30beb90-b62a-3a18-92e8-e071aa9b0ae8", File: "", Classname: "", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}, {ID: "9c0d06f6-a28c-3187-9618-4901992bee66", File: "", Classname: "", Package: "", Name: "baz", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}, {ID: "f2385b0c-5155-3ead-ac47-64e58b31546f", Name: "", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 2, Passed: 2, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "a30beb90-b62a-3a18-92e8-e071aa9b0ae8", File: "", Classname: "", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}, {ID: "9c0d06f6-a28c-3187-9618-4901992bee66", File: "", Classname: "", Package: "", Name: "baz", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}, {ID: "d1a81530-f601-38c2-af37-a8356472a6d0", Name: "foo/bar:123", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 1, Passed: 1, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "0f9464bf-7411-30bb-b904-4ca6d072a72c", File: "foo/bar:123", Classname: "", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}, {ID: "6d4a7e05-ad28-356d-8702-88354c932af5", Name: "foo/baz", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 1, Passed: 1, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "2f700dbd-786b-3a26-a106-aab9961212d3", File: "foo/baz", Classname: "", Package: "", Name: "baz", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}, {ID: "5cb1cb0c-6e74-30b5-a3c9-915413b4d6db", Name: "foo/bar", IsSkipped: false, IsDisabled: false, Timestamp: "", Hostname: "", Package: "", Properties: parser.Properties(nil), Summary: parser.Summary{Total: 2, Passed: 2, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, SystemOut: "", SystemErr: "", Tests: []parser.Test{{ID: "c30a583e-58ec-3a0c-b70e-261b962eb5c0", File: "foo/bar", Classname: "foo", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}, {ID: "8bff79c0-77f6-3cb0-ae98-bbb3742b2a38", File: "foo/bar", Classname: "bar", Package: "", Name: "bar", Duration: 0, State: "passed", Failure: (*parser.Failure)(nil), Error: (*parser.Error)(nil), SystemOut: "", SystemErr: "", SemEnv: parser.SemEnv{ProjectId: "", OrganizationId: "", PipelineId: "", WorkflowId: "", JobStartedAt: "", JobName: "", JobId: "", AgentType: "", AgentOsImage: "", GitRefType: "", GitRefName: "", GitRefSha: ""}}}}}},
+		"invalid-root": {ID: "99ec6b78-8d28-33bb-9c4b-e38fd0000bf4", Name: "Rspec Suite", Framework: "rspec", IsDisabled: false, Summary: parser.Summary{Total: 0, Passed: 0, Skipped: 0, Error: 0, Failed: 0, Disabled: 0, Duration: 0}, Status: "error", StatusMessage: "Invalid root element found: <nontestsuites>, must be one of <testsuites>, <testsuite>", Suites: []parser.Suite{}},
+	}
 
-	path := fileloader.Ensure(reader)
-
-	p := NewRSpec()
-	testResults := p.Parse(path)
-	assert.Equal(t, "Rspec Suite", testResults.Name)
-	assert.Equal(t, "rspec", testResults.Framework)
-	assert.Equal(t, "99ec6b78-8d28-33bb-9c4b-e38fd0000bf4", testResults.ID)
-	assert.Equal(t, parser.StatusSuccess, testResults.Status)
-	assert.Equal(t, "", testResults.StatusMessage)
-	assert.Equal(t, 2, len(testResults.Suites))
-
-	assert.Equal(t, "foo", testResults.Suites[0].Name)
-	assert.Equal(t, "961b9fe2-d1d3-3f8a-9d14-2adc16701583", testResults.Suites[0].ID)
-	assert.Equal(t, 3, len(testResults.Suites[0].Tests))
-	assert.Equal(t, 3, testResults.Suites[0].Summary.Total)
-	assert.Equal(t, 3, testResults.Suites[0].Summary.Passed)
-	assert.Equal(t, 0, testResults.Suites[0].Summary.Disabled)
-	assert.Equal(t, 0, testResults.Suites[0].Summary.Failed)
-	assert.Equal(t, 0, testResults.Suites[0].Summary.Error)
-	assert.Equal(t, 0, testResults.Suites[0].Summary.Skipped)
-	assert.Equal(t, time.Duration(0), testResults.Suites[0].Summary.Duration)
-
-	assert.Equal(t, "bar", testResults.Suites[0].Tests[0].Name)
-	assert.Equal(t, "baz", testResults.Suites[0].Tests[1].Name)
-	assert.Equal(t, "bar", testResults.Suites[0].Tests[2].Name)
-
-	assert.Equal(t, "foo bar", testResults.Suites[1].Tests[0].Name)
-	assert.Equal(t, "96eef1d9-d6ee-32c3-8de2-801a5c64e5c2", testResults.Suites[1].Tests[0].ID)
-	assert.Equal(t, "Foo", testResults.Suites[1].Tests[0].Classname)
-	assert.Equal(t, "foo/bar.o", testResults.Suites[1].Tests[0].File)
-	assert.Equal(t, time.Duration(123400000), testResults.Suites[1].Tests[0].Duration)
-
-	assert.Equal(t, "2bd6df3a-319b-30bf-8193-b2fdeb1deabd", testResults.Suites[0].Tests[0].ID)
-	assert.Equal(t, "c8ffb89f-c186-3104-aa72-c0c18452f5b5", testResults.Suites[0].Tests[1].ID)
-	assert.Equal(t, "2bd6df3a-319b-30bf-8193-b2fdeb1deabd", testResults.Suites[0].Tests[2].ID)
-
+	testCases := buildParserTestCases(commonParserTestCases, parserWants)
+	runParserTests(t, NewRSpec(), testCases)
 }
 
-func Test_RSpec_ParseTestSuites(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-		<testsuites name="ff">
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-			<testsuite name="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-			<testsuite id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-			<testsuite name="1235">
-				<testcase name="bar" file="foo/bar:123">
-				</testcase>
-				<testcase name="baz" file="foo/baz">
-				</testcase>
-			</testsuite>
-		</testsuites>
-	`))
-	type test struct {
-		ID   string
-		Name string
-		File string
-	}
+func Test_RSpec_SpecificParse(t *testing.T) {
+	specificParserTestCases := map[string]string{}
+	parserWants := map[string]parser.TestResults{}
 
-	var fixtures = []struct {
-		ID    string
-		Name  string
-		Tests []test
-	}{
-		{
-			ID:   "03999e27-03e1-37e7-adbf-e712e5f35d67",
-			Name: "foo",
-			Tests: []test{
-				{
-					ID:   "5830975e-54e3-3951-8b40-c786de5131e6",
-					Name: "bar",
-				},
-				{
-					ID:   "42680dd4-916d-3895-978f-c56dec5bb1f0",
-					Name: "baz",
-				},
-			},
-		},
-		{
-			ID:   "7a9dd0d0-961d-36b7-af47-94deab34e474",
-			Name: "1234",
-			Tests: []test{
-				{
-					ID:   "5830975e-54e3-3951-8b40-c786de5131e6",
-					Name: "bar",
-				},
-				{
-					ID:   "42680dd4-916d-3895-978f-c56dec5bb1f0",
-					Name: "baz",
-				},
-			},
-		},
-		{
-			ID:   "f2385b0c-5155-3ead-ac47-64e58b31546f",
-			Name: "",
-			Tests: []test{
-				{
-					ID:   "5830975e-54e3-3951-8b40-c786de5131e6",
-					Name: "bar",
-				},
-				{
-					ID:   "42680dd4-916d-3895-978f-c56dec5bb1f0",
-					Name: "baz",
-				},
-			},
-		},
-		{
-			ID:   "d1a81530-f601-38c2-af37-a8356472a6d0",
-			Name: "foo/bar:123",
-			Tests: []test{
-				{
-					ID:   "6d356aa1-05b8-3015-a446-ed898d92f9e0",
-					Name: "bar",
-					File: "foo/bar:123",
-				},
-			},
-		},
-		{
-			ID:   "6d4a7e05-ad28-356d-8702-88354c932af5",
-			Name: "foo/baz",
-			Tests: []test{
-				{
-					ID:   "7e0510b2-d80f-32b2-a880-097ca189b7aa",
-					Name: "baz",
-					File: "foo/baz",
-				},
-			},
-		},
-	}
-
-	path := fileloader.Ensure(reader)
-
-	p := NewRSpec()
-	testResults := p.Parse(path)
-
-	assert.Equal(t, "ff", testResults.Name)
-	assert.Equal(t, "rspec", testResults.Framework)
-	assert.Equal(t, "dda9b4d2-9e8d-3547-9fd0-24bd78148a7a", testResults.ID)
-	assert.Equal(t, parser.StatusSuccess, testResults.Status)
-	assert.Equal(t, "", testResults.StatusMessage)
-
-	for i, suite := range testResults.Suites {
-		fixture := fixtures[i]
-		assert.Equal(t, fixture.ID, suite.ID)
-		assert.Equal(t, fixture.Name, suite.Name)
-		for i := range fixture.Tests {
-			assert.Equal(t, fixture.Tests[i].Name, suite.Tests[i].Name)
-			assert.Equal(t, fixture.Tests[i].ID, suite.Tests[i].ID)
-			assert.Equal(t, fixture.Tests[i].File, suite.Tests[i].File)
-		}
-	}
-}
-
-func Test_RSpec_ParseInvalidRoot(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-		<nontestsuites name="ff">
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-		</nontestsuites>
-	`))
-
-	path := fileloader.Ensure(reader)
-
-	p := NewRSpec()
-	testResults := p.Parse(path)
-	assert.Equal(t, parser.StatusError, testResults.Status)
-	assert.NotEmpty(t, testResults.StatusMessage)
+	testCases := buildParserTestCases(specificParserTestCases, parserWants)
+	runParserTests(t, NewRSpec(), testCases)
 }
