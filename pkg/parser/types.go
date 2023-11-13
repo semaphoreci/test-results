@@ -365,8 +365,7 @@ func (me *Suite) AppendTest(test Test) {
 }
 
 type SemEnv struct {
-	ProjectId      string `json:"projectId"`
-	OrganizationId string `json:"organizationId"`
+	ProjectId string `json:"projectId"`
 
 	PipelineId string `json:"pipelineId"`
 	WorkflowId string `json:"workflowId"`

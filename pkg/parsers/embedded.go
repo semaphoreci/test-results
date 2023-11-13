@@ -2,6 +2,7 @@ package parsers
 
 import (
 	"fmt"
+
 	"github.com/semaphoreci/test-results/pkg/logger"
 	"github.com/semaphoreci/test-results/pkg/parser"
 )

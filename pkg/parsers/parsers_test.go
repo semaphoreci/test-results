@@ -100,6 +100,21 @@ func buildParserTestCases(inputs map[string]string, wants map[string]parser.Test
 }
 
 func runParserTests(t *testing.T, parser parser.Parser, testCases []parserTestCase) {
+	t.Setenv("IP", "192.168.0.1")
+	t.Setenv("SEMAPHORE_PIPELINE_ID", "ppl-id")
+	t.Setenv("SEMAPHORE_WORKFLOW_ID", "wf-id")
+	t.Setenv("SEMAPHORE_JOB_NAME", "job-name")
+	t.Setenv("SEMAPHORE_JOB_ID", "job-id")
+	t.Setenv("SEMAPHORE_PROJECT_ID", "project-id")
+	t.Setenv("SEMAPHORE_AGENT_MACHINE_TYPE", "agent-machine-type")
+	t.Setenv("SEMAPHORE_AGENT_MACHINE_OS_IMAGE", "agent-machine-os-image")
+	t.Setenv("SEMAPHORE_JOB_CREATION_TIME", "job-creation-time")
+
+	// For branch
+	t.Setenv("SEMAPHORE_GIT_REF_TYPE", "git-ref-type")
+	t.Setenv("SEMAPHORE_GIT_BRANCH", "git-branch")
+	t.Setenv("SEMAPHORE_GIT_SHA", "git-sha")
+
 	for _, tc := range testCases {
 		xml := bytes.NewReader([]byte(tc.Input))
 		path := fileloader.Ensure(xml)
