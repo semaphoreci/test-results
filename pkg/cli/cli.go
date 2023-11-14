@@ -195,12 +195,12 @@ func Marshal(testResults parser.Result) ([]byte, error) {
 	return jsonData, nil
 }
 
-func WriteToFile(data []byte, file *os.File) (string, error) {
-	return writeToFile(data, file)
+func WriteToFile(data []byte, file *os.File, compress bool) (string, error) {
+	return writeToFile(data, file, compress)
 }
 
 // WriteToFilePath saves data to given file
-func WriteToFilePath(data []byte, path string) (string, error) {
+func WriteToFilePath(data []byte, path string, compress bool) (string, error) {
 	file, err := os.Create(filepath.Clean(path))
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
@@ -208,11 +208,11 @@ func WriteToFilePath(data []byte, path string) (string, error) {
 	}
 	defer file.Close()
 
-	return writeToFile(data, file)
+	return writeToFile(data, file, compress)
 }
 
 // WriteToTmpFile saves data to temporary file
-func WriteToTmpFile(data []byte) (string, error) {
+func WriteToTmpFile(data []byte, compress bool) (string, error) {
 	file, err := os.CreateTemp("", "test-results")
 	if err != nil {
 		logger.Error("Opening file %s: %v", file.Name(), err)
@@ -220,19 +220,23 @@ func WriteToTmpFile(data []byte) (string, error) {
 	}
 	defer file.Close()
 
-	return writeToFile(data, file)
+	return writeToFile(data, file, compress)
 }
 
-func writeToFile(data []byte, file *os.File) (string, error) {
+func writeToFile(data []byte, file *os.File, compress bool) (string, error) {
 	logger.Info("Saving results to %s", file.Name())
 
-	compressedData, err := GzipCompress(data)
-	if err != nil {
-		logger.Error("Output file write failed: %v", err)
-		return "", err
+	dataToWrite := data
+	if compress {
+		compressedData, err := GzipCompress(data)
+		if err != nil {
+			logger.Error("Output file write failed: %v", err)
+			return "", err
+		}
+		dataToWrite = compressedData
 	}
 
-	_, err = file.Write(compressedData)
+	_, err := file.Write(dataToWrite)
 	if err != nil {
 		logger.Error("Output file write failed: %v", err)
 		return "", err

@@ -117,31 +117,37 @@ func TestWriteToTmpFile(t *testing.T) {
 	jsonData, _ := json.Marshal(&result)
 
 	t.Run("Write to one tmp file", func(t *testing.T) {
-		file, err := cli.WriteToTmpFile(jsonData)
+		file, err := cli.WriteToTmpFile(jsonData, false)
 		assert.NoError(t, err)
 		os.Remove(file)
 	})
 
 	t.Run("Write to three thousand tmp files", func(t *testing.T) {
 		fileNumber := 3000
-		files := make([]string, 0, fileNumber)
 
 		var wg sync.WaitGroup
+		errChan := make(chan error, fileNumber)
 
 		wg.Add(fileNumber)
 
 		for i := 0; i < fileNumber; i++ {
-			go func() {
+			go func(i int) {
 				defer wg.Done()
-				file, err := cli.WriteToTmpFile(jsonData)
+				file, err := cli.WriteToTmpFile(jsonData, false)
 				defer os.Remove(file)
-				assert.NoError(t, err)
-
-				files = append(files, file)
-			}()
+				if err != nil {
+					errChan <- err
+					return
+				}
+			}(i)
 		}
 
 		wg.Wait()
+		close(errChan)
+
+		for err := range errChan {
+			require.NoError(t, err)
+		}
 	})
 }
 
@@ -168,7 +174,7 @@ func TestWriteToFilePath(t *testing.T) {
 	jsonData, _ := json.Marshal(&result)
 
 	t.Run("Write to one file", func(t *testing.T) {
-		file, err := cli.WriteToFilePath(jsonData, "out")
+		file, err := cli.WriteToFilePath(jsonData, "out", false)
 		assert.NoError(t, err)
 		os.Remove(file)
 	})
@@ -181,18 +187,32 @@ func TestWriteToFilePath(t *testing.T) {
 		defer os.RemoveAll(dirPath)
 
 		var wg sync.WaitGroup
+		errChan := make(chan error, fileNumber)
 
 		wg.Add(fileNumber)
 
 		for i := 0; i < fileNumber; i++ {
-			go func() {
+			go func(i int) {
 				defer wg.Done()
 				tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
-				require.NoError(t, err)
+				if err != nil {
+					errChan <- err
+					return
+				}
 
-				_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
-				require.NoError(t, err)
-			}()
+				_, err = cli.WriteToFilePath(jsonData, tmpFile.Name(), false)
+				if err != nil {
+					errChan <- err
+					return
+				}
+			}(i)
+		}
+
+		wg.Wait()
+		close(errChan)
+
+		for err := range errChan {
+			require.NoError(t, err)
 		}
 	})
 }

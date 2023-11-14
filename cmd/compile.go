@@ -40,7 +40,11 @@ var compileCmd = &cobra.Command{
 		output := args[len(args)-1]
 
 		err := cli.SetLogLevel(cmd)
+		if err != nil {
+			return err
+		}
 
+		skipCompression, err := cmd.Flags().GetBool("no-compress")
 		if err != nil {
 			return err
 		}
@@ -79,7 +83,7 @@ var compileCmd = &cobra.Command{
 				return err
 			}
 
-			_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
+			_, err = cli.WriteToFilePath(jsonData, tmpFile.Name(), !skipCompression)
 			if err != nil {
 				return err
 			}
@@ -96,7 +100,7 @@ var compileCmd = &cobra.Command{
 			return err
 		}
 
-		_, err = cli.WriteToFilePath(jsonData, output)
+		_, err = cli.WriteToFilePath(jsonData, output, !skipCompression)
 		if err != nil {
 			return err
 		}

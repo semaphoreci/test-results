@@ -38,6 +38,11 @@ var combineCmd = &cobra.Command{
 			return err
 		}
 
+		skipCompression, err := cmd.Flags().GetBool("no-compress")
+		if err != nil {
+			return err
+		}
+
 		paths, err := cli.LoadFiles(inputs, ".json")
 		if err != nil {
 			return err
@@ -71,7 +76,7 @@ var combineCmd = &cobra.Command{
 			return err
 		}
 
-		_, err = cli.WriteToFilePath(jsonData, output)
+		_, err = cli.WriteToFilePath(jsonData, output, !skipCompression)
 		if err != nil {
 			return err
 		}

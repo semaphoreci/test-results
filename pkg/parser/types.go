@@ -505,27 +505,3 @@ func (t *TestResult) String() []string {
 func UUID(id uuid.UUID, str string) uuid.UUID {
 	return uuid.NewMD5(id, []byte(str))
 }
-
-type CsvTestResult struct {
-	TestId     string
-	TestName   string
-	TestGroup  string
-	TestSuite  string
-	FileName   string
-	RunnerName string
-	GitSha     string
-	Duration   string
-	JobId      string
-	State      string
-	CreatedAt  string
-	BranchName string
-	ProjectId  string
-}
-
-func ResultsCsv(results []CsvTestResult) [][]string {
-	csv := [][]string{}
-	for _, result := range results {
-		csv = append(csv, []string{result.TestId, result.TestName, result.TestGroup, result.TestSuite, result.FileName, result.RunnerName, result.GitSha, result.Duration, result.JobId, result.State, result.CreatedAt, result.BranchName, result.ProjectId})
-	}
-	return csv
-}

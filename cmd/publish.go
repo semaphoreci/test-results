@@ -44,6 +44,11 @@ var publishCmd = &cobra.Command{
 			return err
 		}
 
+		skipCompression, err := cmd.Flags().GetBool("no-compress")
+		if err != nil {
+			return err
+		}
+
 		paths, err := cli.LoadFiles(inputs, ".xml")
 		if err != nil {
 			return err
@@ -78,7 +83,7 @@ var publishCmd = &cobra.Command{
 				return err
 			}
 
-			_, err = cli.WriteToFile(jsonData, tmpFile)
+			_, err = cli.WriteToFile(jsonData, tmpFile, !skipCompression)
 			if err != nil {
 				return err
 			}
@@ -100,7 +105,7 @@ var publishCmd = &cobra.Command{
 			return err
 		}
 
-		fileName, err := cli.WriteToTmpFile(jsonData)
+		fileName, err := cli.WriteToTmpFile(jsonData, !skipCompression)
 		if err != nil {
 			return err
 		}
