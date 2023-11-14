@@ -1,6 +1,8 @@
 package cli
 
 import (
+	"bytes"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -224,7 +226,13 @@ func WriteToTmpFile(data []byte) (string, error) {
 func writeToFile(data []byte, file *os.File) (string, error) {
 	logger.Info("Saving results to %s", file.Name())
 
-	_, err := file.Write(data)
+	compressedData, err := GzipCompress(data)
+	if err != nil {
+		logger.Error("Output file write failed: %v", err)
+		return "", err
+	}
+
+	_, err = file.Write(compressedData)
 	if err != nil {
 		logger.Error("Output file write failed: %v", err)
 		return "", err
@@ -390,22 +398,75 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 // Load ...
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
-	jsonFile, err := os.Open(path) // #nosec
+	jsonFile, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	defer jsonFile.Close() // #nosec
+	defer jsonFile.Close()
 
 	bytes, err := io.ReadAll(jsonFile)
 	if err != nil {
 		return nil, err
 	}
 
-	err = json.Unmarshal(bytes, &result)
+	decompressedBytes, err := GzipDecompress(bytes)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(decompressedBytes, &result)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &result, nil
+}
+
+func IsGzipCompressed(bytes []byte) bool {
+	if len(bytes) < 2 {
+		return false
+	}
+
+	return bytes[0] == 0x1f && bytes[1] == 0x8b
+}
+
+// takes a slice of data bytes, compresses it and replaces with compressed bytes
+func GzipCompress(data []byte) ([]byte, error) {
+	var buf bytes.Buffer
+
+	writer := gzip.NewWriter(&buf)
+
+	_, err := writer.Write(data)
+	if err != nil {
+		return data, err
+	}
+
+	err = writer.Close()
+	if err != nil {
+		return data, err
+	}
+
+	return buf.Bytes(), nil
+}
+
+func GzipDecompress(data []byte) ([]byte, error) {
+	if !IsGzipCompressed(data) {
+		return data, nil
+	}
+
+	reader, err := gzip.NewReader(bytes.NewReader(data))
+	if err != nil {
+		logger.Error("Decompression failed: %v", err)
+		return data, err
+	}
+	defer reader.Close()
+
+	newData, err := io.ReadAll(reader)
+	if err != nil {
+		logger.Error("Decompression failed: %v", err)
+		return data, err
+	}
+
+	return newData, nil
 }
