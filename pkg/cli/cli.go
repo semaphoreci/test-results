@@ -201,7 +201,7 @@ func WriteToFile(data []byte, file *os.File) (string, error) {
 
 // WriteToFilePath saves data to given file
 func WriteToFilePath(data []byte, path string) (string, error) {
-	file, err := os.Create(path)
+	file, err := os.Create(filepath.Clean(path))
 	if err != nil {
 		logger.Error("Opening file %s: %v", path, err)
 		return "", err
@@ -398,7 +398,7 @@ func MergeFiles(path string, cmd *cobra.Command) (*parser.Result, error) {
 // Load ...
 func Load(path string) (*parser.Result, error) {
 	var result parser.Result
-	jsonFile, err := os.Open(path)
+	jsonFile, err := os.Open(filepath.Clean(path))
 	if err != nil {
 		return nil, err
 	}
