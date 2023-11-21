@@ -16,6 +16,8 @@ import (
 	"github.com/semaphoreci/test-results/pkg/parser"
 	"github.com/semaphoreci/test-results/pkg/parsers"
 	"github.com/spf13/cobra"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 )
 
 // LoadFiles checks if path exists and can be `stat`ed at given `path`
@@ -105,6 +107,11 @@ func Parse(p parser.Parser, path string, cmd *cobra.Command) (parser.Result, err
 		logger.Debug("Overriding test results name to %s", testResultsName)
 		testResults.Name = testResultsName
 		testResults.RegenerateID()
+	}
+
+	if testResults.Name == "" {
+		logger.Debug("Attempting to name test results automatically")
+		testResults.Name = cases.Title(language.English, cases.NoLower).String(fmt.Sprintf("%s Suite", p.GetName()))
 	}
 
 	suitePrefix, err := cmd.Flags().GetString("suite-prefix")
