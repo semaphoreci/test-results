@@ -1,210 +1,573 @@
 package parsers
 
 import (
-	"bytes"
 	"testing"
 
-	"github.com/semaphoreci/test-results/pkg/fileloader"
 	"github.com/semaphoreci/test-results/pkg/parser"
-	"github.com/stretchr/testify/assert"
 )
 
-func Test_Generic_ParseTestSuite(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-				<testcase name="bar">
-				</testcase>
-			</testsuite>
-	`))
+func Test_Generic_CommonParse(t *testing.T) {
+	parserWants := map[string]parser.TestResults{
+		"empty": {
+			ID:         "",
+			Name:       "",
+			Framework:  "",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    0,
+				Passed:   0,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "error",
+			StatusMessage: "EOF",
+			Suites:        []parser.Suite{},
+		},
+		"basic": {
+			ID:         "17990af8-cb17-371c-9a8e-215e0e201902",
+			Name:       "Generic Suite",
+			Framework:  "",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    3,
+				Passed:   3,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "success",
+			StatusMessage: "",
+			Suites: []parser.Suite{
+				{
+					ID:         "b088d75b-c907-3ac1-9f80-489cfacb1619",
+					Name:       "foo",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    3,
+						Passed:   3,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "ef10d448-a91f-32a7-8fc3-fd5172c721a1",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "e4bc6441-fb93-34ea-997b-01ef03694739",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "ef10d448-a91f-32a7-8fc3-fd5172c721a1",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+			},
+		},
+		"multi-suite": {
+			ID:         "cd9c81c6-06c6-3623-b337-6819885fbfe8",
+			Name:       "ff",
+			Framework:  "",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    10,
+				Passed:   10,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "success",
+			StatusMessage: "",
+			Suites: []parser.Suite{
+				{
+					ID:         "b3d01848-18ba-3046-b1c9-8806a10742d6",
+					Name:       "foo",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "02875c11-ed95-3c22-9dfa-e8b518cd0c7b",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "46540538-366f-38bb-a7ae-ad8ec6eb732c",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "b3d01848-18ba-3046-b1c9-8806a10742d6",
+					Name:       "1234",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "02875c11-ed95-3c22-9dfa-e8b518cd0c7b",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "46540538-366f-38bb-a7ae-ad8ec6eb732c",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "b3d01848-18ba-3046-b1c9-8806a10742d6",
+					Name:       "",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "02875c11-ed95-3c22-9dfa-e8b518cd0c7b",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "46540538-366f-38bb-a7ae-ad8ec6eb732c",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "376e439f-2352-341a-8400-ff142935ddda",
+					Name:       "1235",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "4f38be3c-b04b-35cb-8a24-fdb6b25fed01",
+							File:      "foo/bar:123",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "87130424-6a9f-3363-81d0-8094bb06d2da",
+							File:      "foo/baz",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "db748ed5-c393-3a56-85b1-12fbedbf9c46",
+					Name:       "diff by classname",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "15d634ab-2881-39ab-aa5c-2b9150b5b78d",
+							File:      "foo/bar",
+							Classname: "foo",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "e6e5ef50-7e9a-31d1-b398-7293542604f3",
+							File:      "foo/bar",
+							Classname: "bar",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+			},
+		},
+		"invalid-root": {
+			ID:         "",
+			Name:       "",
+			Framework:  "",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    0,
+				Passed:   0,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "error",
+			StatusMessage: "Invalid root element found: <nontestsuites>, must be one of <testsuites>, <testsuite>",
+			Suites:        []parser.Suite{},
+		},
+	}
 
-	path := fileloader.Ensure(reader)
-
-	p := NewGeneric()
-	testResults := p.Parse(path)
-	assert.Equal(t, "Generic Suite", testResults.Name)
-	assert.Equal(t, "17990af8-cb17-371c-9a8e-215e0e201902", testResults.ID)
-	assert.Equal(t, parser.StatusSuccess, testResults.Status)
-	assert.Equal(t, "", testResults.StatusMessage)
-
-	assert.Equal(t, "foo", testResults.Suites[0].Name)
-	assert.Equal(t, "b088d75b-c907-3ac1-9f80-489cfacb1619", testResults.Suites[0].ID)
-
-	assert.Equal(t, "bar", testResults.Suites[0].Tests[0].Name)
-	assert.Equal(t, "baz", testResults.Suites[0].Tests[1].Name)
-	assert.Equal(t, "bar", testResults.Suites[0].Tests[2].Name)
-
-	assert.Equal(t, "a4e4268d-208f-398d-baa5-f7fd5f904216", testResults.Suites[0].Tests[0].ID)
-	assert.Equal(t, "237dc38f-c2ec-3ee4-af95-3b9d003da11c", testResults.Suites[0].Tests[1].ID)
-	assert.Equal(t, "a4e4268d-208f-398d-baa5-f7fd5f904216", testResults.Suites[0].Tests[2].ID)
-
+	testCases := buildParserTestCases(commonParserTestCases, parserWants)
+	runParserTests(t, NewGeneric(), testCases)
 }
 
-func Test_Generic_ParseTestSuites(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-		<testsuites name="ff">
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-			<testsuite name="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-			<testsuite id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-			<testsuite name="1235">
-				<testcase name="bar" file="foo/bar:123">
-				</testcase>
-				<testcase name="baz" file="foo/baz">
-				</testcase>
-			</testsuite>
-			<testsuite name="diff by classname">
-				<testcase name="bar" file="foo/bar" classname="foo">
-				</testcase>
-				<testcase name="bar" file="foo/bar" classname="bar">
-				</testcase>
-			</testsuite>
-		</testsuites>
-	`))
-	type test struct {
-		ID   string
-		Name string
-		File string
-	}
+func Test_Generic_SpecificParse(t *testing.T) {
+	specificParserTestCases := map[string]string{}
+	parserWants := map[string]parser.TestResults{}
 
-	var fixtures = []struct {
-		ID    string
-		Name  string
-		Tests []test
-	}{
-		{
-			ID:   "b3d01848-18ba-3046-b1c9-8806a10742d6",
-			Name: "foo",
-			Tests: []test{
-				{
-					ID:   "a718e5fd-8ba4-3f28-a837-b89ec9e6e2e9",
-					Name: "bar",
-				},
-				{
-					ID:   "7e336b3f-0878-3a72-b5cd-69c794251a2a",
-					Name: "baz",
-				},
-			},
-		},
-		{
-			ID:   "b3d01848-18ba-3046-b1c9-8806a10742d6",
-			Name: "1234",
-			Tests: []test{
-				{
-					ID:   "a718e5fd-8ba4-3f28-a837-b89ec9e6e2e9",
-					Name: "bar",
-				},
-				{
-					ID:   "7e336b3f-0878-3a72-b5cd-69c794251a2a",
-					Name: "baz",
-				},
-			},
-		},
-		{
-			ID:   "b3d01848-18ba-3046-b1c9-8806a10742d6",
-			Name: "",
-			Tests: []test{
-				{
-					ID:   "a718e5fd-8ba4-3f28-a837-b89ec9e6e2e9",
-					Name: "bar",
-				},
-				{
-					ID:   "7e336b3f-0878-3a72-b5cd-69c794251a2a",
-					Name: "baz",
-				},
-			},
-		},
-		{
-			ID:   "376e439f-2352-341a-8400-ff142935ddda",
-			Name: "1235",
-			Tests: []test{
-				{
-					ID:   "1ccf0a01-e251-3fad-8dbc-4b4112a5902a",
-					Name: "bar",
-					File: "foo/bar:123",
-				},
-				{
-					ID:   "9f6f64c2-9b45-3f43-a380-6358cc960cca",
-					Name: "baz",
-					File: "foo/baz",
-				},
-			},
-		},
-		{
-			ID:   "db748ed5-c393-3a56-85b1-12fbedbf9c46",
-			Name: "diff by classname",
-			Tests: []test{
-				{
-					ID:   "5f5244e4-8c37-3e5f-8d50-e22bb46391d7",
-					Name: "bar",
-					File: "foo/bar",
-				},
-				{
-					ID:   "aaffd1c8-90ce-33b9-898f-359e203b551b",
-					Name: "bar",
-					File: "foo/bar",
-				},
-			},
-		},
-	}
-
-	path := fileloader.Ensure(reader)
-
-	p := NewGeneric()
-	testResults := p.Parse(path)
-	assert.Equal(t, "ff", testResults.Name)
-	assert.Equal(t, "cd9c81c6-06c6-3623-b337-6819885fbfe8", testResults.ID)
-	assert.Equal(t, parser.StatusSuccess, testResults.Status)
-	assert.Equal(t, "", testResults.StatusMessage)
-
-	for i, suite := range testResults.Suites {
-		fixture := fixtures[i]
-		assert.Equal(t, fixture.ID, suite.ID)
-		assert.Equal(t, fixture.Name, suite.Name)
-		for i := range fixture.Tests {
-			assert.Equal(t, fixture.Tests[i].Name, suite.Tests[i].Name)
-			assert.Equal(t, fixture.Tests[i].ID, suite.Tests[i].ID)
-			assert.Equal(t, fixture.Tests[i].File, suite.Tests[i].File)
-		}
-	}
-}
-
-func Test_Generic_ParseInvalidRoot(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-		<nontestsuites name="ff">
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testcase name="baz">
-				</testcase>
-			</testsuite>
-		</nontestsuites>
-	`))
-
-	path := fileloader.Ensure(reader)
-
-	p := NewGeneric()
-	testResults := p.Parse(path)
-	assert.Equal(t, parser.StatusError, testResults.Status)
-	assert.NotEmpty(t, testResults.StatusMessage)
+	testCases := buildParserTestCases(specificParserTestCases, parserWants)
+	runParserTests(t, NewGeneric(), testCases)
 }

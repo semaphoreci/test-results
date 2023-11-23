@@ -1,130 +1,471 @@
 package parsers
 
 import (
-	"bytes"
-	"github.com/semaphoreci/test-results/pkg/fileloader"
-	"github.com/semaphoreci/test-results/pkg/parser"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/semaphoreci/test-results/pkg/parser"
 )
 
-func Test_Embedded_ParseTestSuites(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-	    <testsuites>
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testsuite name="zap" id="4321">
-					<testcase name="baz">
-					</testcase>
-				</testsuite>
-				<testsuite name="zup" id="54321">
-					<testcase name="bar">
-					</testcase>
-				</testsuite>
-				<testsuite name="testNumSuccess(boolean)" tests="2" failures="0" errors="1" disabled="0"
-					skipped="0" package="">
-					<properties />
-					<testcase name="[1] testVirtualMetrics=true"
-						classname="io.testcompany.ZedCounterAdminTest" time="0">
-						<error message="expected: &lt;true&gt; but was: &lt;false&gt;"
-							type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
-			at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
-			at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
-			at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
-			at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
-			at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:31)
-			at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:180)
-			at io.testcompany.ZedCounterAdminTest.testNumSuccess(ZedCounterAdminTest.java:35)
-			at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-			at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
-			at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-			at java.base/java.lang.reflect.Method.invoke(Method.java:568)
-			at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
-			at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-			at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
-			at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
-			at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
-		]]></error>
-					</testcase>
-				<testcase name="[2] testVirtualMetrics=false"
-					classname="io.testcompany.ZedCounterAdminTest" time="0.1"></testcase>
-			</testsuite>
-		</testsuite>
-	</testsuites>
-	`))
+func Test_Embedded_CommonParse(t *testing.T) {
+	parserWants := map[string]parser.TestResults{
+		"empty": {
+			ID:         "c5bec5ae-e57f-3dac-98fa-825a5a2cfd55",
+			Name:       "Suite",
+			Framework:  "embedded",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    0,
+				Passed:   0,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "error",
+			StatusMessage: "EOF",
+			Suites:        []parser.Suite{},
+		},
+		"basic": {
+			ID:         "c5bec5ae-e57f-3dac-98fa-825a5a2cfd55",
+			Name:       "Suite",
+			Framework:  "embedded",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    0,
+				Passed:   0,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "error",
+			StatusMessage: "Invalid root element found: <testsuite>, must be <testsuites>",
+			Suites:        []parser.Suite{},
+		},
+		"multi-suite": {
+			ID:         "e5daf1d3-9529-39d7-9540-1ae32be44597",
+			Name:       "ff",
+			Framework:  "embedded",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    0,
+				Passed:   0,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "success",
+			StatusMessage: "",
+			Suites: []parser.Suite{
+				{
+					ID:         "ffb1f320-3376-329b-b2af-ba38a8f54b9e",
+					Name:       "foo",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "bf1cc6f2-0718-328a-a459-63decbcdffa4",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "15dc34e6-d36f-34bd-888d-b9b7e4520409",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "ffb1f320-3376-329b-b2af-ba38a8f54b9e",
+					Name:       "1234",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "bf1cc6f2-0718-328a-a459-63decbcdffa4",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "15dc34e6-d36f-34bd-888d-b9b7e4520409",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "ffb1f320-3376-329b-b2af-ba38a8f54b9e",
+					Name:       "",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "bf1cc6f2-0718-328a-a459-63decbcdffa4",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "15dc34e6-d36f-34bd-888d-b9b7e4520409",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "e8401d00-7a2a-3657-8dcc-6f70363209b4",
+					Name:       "1235",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "ca5ded3d-e00f-3ecd-bec2-45ba1c6e8f1e",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "e8e2c6a9-04d4-3bae-b22b-d7a59df84872",
+							File:      "",
+							Classname: "",
+							Package:   "",
+							Name:      "baz",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+				{
+					ID:         "025c7d51-d97d-3a7b-a0a8-e77f52257f21",
+					Name:       "diff by classname",
+					IsSkipped:  false,
+					IsDisabled: false,
+					Timestamp:  "",
+					Hostname:   "",
+					Package:    "",
+					Properties: parser.Properties(nil),
+					Summary: parser.Summary{
+						Total:    2,
+						Passed:   2,
+						Skipped:  0,
+						Error:    0,
+						Failed:   0,
+						Disabled: 0,
+						Duration: 0,
+					},
+					SystemOut: "",
+					SystemErr: "",
+					Tests: []parser.Test{
+						{
+							ID:        "9479025e-2885-3a99-a1c2-d70b43de3775",
+							File:      "",
+							Classname: "foo",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+						{
+							ID:        "495cb879-c83b-3b99-8724-2ecb28d5282e",
+							File:      "",
+							Classname: "bar",
+							Package:   "",
+							Name:      "bar",
+							Duration:  0,
+							State:     "passed",
+							Failure:   (*parser.Failure)(nil),
+							Error:     (*parser.Error)(nil),
+							SystemOut: "",
+							SystemErr: "",
+							SemEnv: parser.SemEnv{
+								ProjectId:    "project-id",
+								PipelineId:   "ppl-id",
+								WorkflowId:   "wf-id",
+								JobStartedAt: "job-creation-time",
+								JobName:      "job-name",
+								JobId:        "job-id",
+								AgentType:    "agent-machine-type",
+								AgentOsImage: "agent-machine-os-image",
+								GitRefType:   "git-ref-type",
+								GitRefName:   "",
+								GitRefSha:    "",
+							},
+						},
+					},
+				},
+			},
+		},
+		"invalid-root": {
+			ID:         "c5bec5ae-e57f-3dac-98fa-825a5a2cfd55",
+			Name:       "Suite",
+			Framework:  "embedded",
+			IsDisabled: false,
+			Summary: parser.Summary{
+				Total:    0,
+				Passed:   0,
+				Skipped:  0,
+				Error:    0,
+				Failed:   0,
+				Disabled: 0,
+				Duration: 0,
+			},
+			Status:        "error",
+			StatusMessage: "Invalid root element found: <nontestsuites>,  must be <testsuites>",
+			Suites:        []parser.Suite{},
+		},
+	}
 
-	path := fileloader.Ensure(reader)
-
-	e := NewEmbedded()
-	testResults := e.Parse(path)
-	assert.Equal(t, "Suite", testResults.Name)
-	assert.Equal(t, "embedded", testResults.Framework)
-	assert.Equal(t, "c5bec5ae-e57f-3dac-98fa-825a5a2cfd55", testResults.ID)
-	assert.Equal(t, parser.StatusSuccess, testResults.Status)
-	assert.Equal(t, "", testResults.StatusMessage)
-
-	require.Equal(t, 4, len(testResults.Suites))
-
-	assert.Equal(t, "foo", testResults.Suites[0].Name)
-	assert.Equal(t, "60e78e69-056c-3806-b86f-19fc2f9b5124", testResults.Suites[0].ID)
-	require.Len(t, testResults.Suites[0].Tests, 1)
-	assert.Equal(t, "bar", testResults.Suites[0].Tests[0].Name)
-
-	assert.Equal(t, "foo\\zap", testResults.Suites[1].Name)
-	assert.Equal(t, "427236d0-f6f4-3483-a023-95c7fce844b6", testResults.Suites[1].ID)
-
-	assert.Equal(t, "foo\\zup", testResults.Suites[2].Name)
-	assert.Equal(t, "5e761871-975e-34f2-ac3b-88c01a0befb2", testResults.Suites[2].ID)
-
-	require.Len(t, testResults.Suites[0].Tests, 1)
-	assert.Equal(t, "1321beac-9348-371f-a546-464e7d56304b", testResults.Suites[0].Tests[0].ID)
-	assert.Equal(t, "bar", testResults.Suites[0].Tests[0].Name)
-
-	require.Len(t, testResults.Suites[1].Tests, 1)
-	assert.Equal(t, "bd4fab01-8256-314b-861c-511a9c998c7b", testResults.Suites[1].Tests[0].ID)
-	assert.Equal(t, "baz", testResults.Suites[1].Tests[0].Name)
-
-	require.Len(t, testResults.Suites[2].Tests, 1)
-	assert.Equal(t, "c77988eb-a5a0-3a27-a18e-c20f161d09ae", testResults.Suites[2].Tests[0].ID)
-	assert.Equal(t, "bar", testResults.Suites[2].Tests[0].Name)
-
-	require.Len(t, testResults.Suites[3].Tests, 2)
-	assert.Equal(t, "b6215e9b-fc90-3383-a0b9-d2662094c9b2", testResults.Suites[3].Tests[0].ID)
-	assert.Equal(t, "[1] testVirtualMetrics=true", testResults.Suites[3].Tests[0].Name)
-	assert.Equal(t, "efe418a7-61b8-36f8-8073-05353796dc05", testResults.Suites[3].Tests[1].ID)
-	assert.Equal(t, "[2] testVirtualMetrics=false", testResults.Suites[3].Tests[1].Name)
-
-	assert.Equal(t, parser.StateError, testResults.Suites[3].Tests[0].State)
-	assert.Contains(t, testResults.Suites[3].Tests[0].Error.Body, "expected: <true> but was: <false>")
-
+	testCases := buildParserTestCases(commonParserTestCases, parserWants)
+	runParserTests(t, NewEmbedded(), testCases)
 }
 
-func Test_Embedded_ParseInvalidRoot(t *testing.T) {
-	reader := bytes.NewReader([]byte(`
-		<?xml version="1.0"?>
-		<nontestsuites name="em">
-			<testsuite name="foo" id="1234">
-				<testcase name="bar">
-				</testcase>
-				<testsuite name="zap" id="4321">
-					<testcase name="baz">
-					</testcase>
-				</testsuite>
-				<testsuite name="zup" id="54321">
-					<testcase name="bar">
-					</testcase>
-				</testsuite>
-			</testsuite>
-		</nontestsuites>
-	`))
+func Test_Embedded_SpecificParse(t *testing.T) {
+	specificParserTestCases := map[string]string{}
+	parserWants := map[string]parser.TestResults{}
 
-	path := fileloader.Ensure(reader)
-
-	p := NewEmbedded()
-	testResults := p.Parse(path)
-	assert.Equal(t, parser.StatusError, testResults.Status)
-	assert.NotEmpty(t, testResults.StatusMessage)
+	testCases := buildParserTestCases(specificParserTestCases, parserWants)
+	runParserTests(t, NewEmbedded(), testCases)
 }

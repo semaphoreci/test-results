@@ -42,6 +42,10 @@ var genPipelineReportCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+		skipCompression, err := cmd.Flags().GetBool("no-compress")
+		if err != nil {
+			return err
+		}
 
 		var dir string
 
@@ -78,7 +82,7 @@ var genPipelineReportCmd = &cobra.Command{
 			return err
 		}
 
-		fileName, err := cli.WriteToTmpFile(jsonData)
+		fileName, err := cli.WriteToTmpFile(jsonData, !skipCompression)
 		if err != nil {
 			return err
 		}
@@ -94,6 +98,10 @@ var genPipelineReportCmd = &cobra.Command{
 }
 
 func pushSummaries(testResult []parser.TestResults, level, path string, cmd *cobra.Command) error {
+	skipCompression, err := cmd.Flags().GetBool("no-compress")
+	if err != nil {
+		return err
+	}
 	if len(testResult) == 0 {
 		logger.Info("no test results to process")
 		return nil
@@ -111,7 +119,7 @@ func pushSummaries(testResult []parser.TestResults, level, path string, cmd *cob
 		return err
 	}
 
-	summaryFileName, err := cli.WriteToTmpFile(jsonSummary)
+	summaryFileName, err := cli.WriteToTmpFile(jsonSummary, !skipCompression)
 	if err != nil {
 		return err
 	}

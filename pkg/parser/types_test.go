@@ -341,10 +341,83 @@ func Test_Summary_Merge(t *testing.T) {
 }
 
 func Test_NewTest(t *testing.T) {
-	test := NewTest()
+	t.Setenv("IP", "192.168.0.1")
+	t.Setenv("SEMAPHORE_PIPELINE_ID", "1")
+	t.Setenv("SEMAPHORE_WORKFLOW_ID", "2")
+	t.Setenv("SEMAPHORE_JOB_NAME", "Test job")
+	t.Setenv("SEMAPHORE_JOB_ID", "3")
+	t.Setenv("SEMAPHORE_PROJECT_ID", "123")
+	t.Setenv("SEMAPHORE_AGENT_MACHINE_TYPE", "t1-awsm")
+	t.Setenv("SEMAPHORE_AGENT_MACHINE_OS_IMAGE", "w95")
+	t.Setenv("SEMAPHORE_JOB_CREATION_TIME", "1693481195")
 
-	assert.Equal(t, test.State, StatePassed, "is in passed state by default")
-	assert.IsType(t, test, Test{})
+	// For branch
+	t.Setenv("SEMAPHORE_GIT_REF_TYPE", "branch")
+	t.Setenv("SEMAPHORE_GIT_BRANCH", "awsm-w95")
+	t.Setenv("SEMAPHORE_GIT_SHA", "1234567890abcdef")
+	branchTest := NewTest()
+
+	// For PR
+	t.Setenv("SEMAPHORE_GIT_REF_TYPE", "pull-request")
+	t.Setenv("SEMAPHORE_GIT_PR_BRANCH", "pr-awsm-w95")
+	t.Setenv("SEMAPHORE_GIT_PR_SHA", "fedcba0987654321")
+	prTest := NewTest()
+
+	// For tag
+	t.Setenv("SEMAPHORE_GIT_REF_TYPE", "tag")
+	t.Setenv("SEMAPHORE_GIT_TAG", "v1.0.0")
+	tagTest := NewTest()
+
+	t.Run("T", func(t *testing.T) {
+		// branch
+		assert.Equal(t, branchTest.State, StatePassed, "is in passed state by default")
+		assert.Equal(t, branchTest.SemEnv, SemEnv{
+			PipelineId:   "1",
+			ProjectId:    "123",
+			WorkflowId:   "2",
+			JobId:        "3",
+			JobStartedAt: "1693481195",
+			JobName:      "Test job",
+			AgentType:    "t1-awsm",
+			AgentOsImage: "w95",
+			GitRefType:   "branch",
+			GitRefName:   "awsm-w95",
+			GitRefSha:    "1234567890abcdef",
+		})
+
+		// pr
+		assert.Equal(t, prTest.State, StatePassed, "is in passed state by default")
+		assert.Equal(t, prTest.SemEnv, SemEnv{
+			PipelineId:   "1",
+			ProjectId:    "123",
+			WorkflowId:   "2",
+			JobId:        "3",
+			JobStartedAt: "1693481195",
+			JobName:      "Test job",
+			AgentType:    "t1-awsm",
+			AgentOsImage: "w95",
+			GitRefType:   "pull-request",
+			GitRefName:   "pr-awsm-w95",
+			GitRefSha:    "fedcba0987654321",
+		})
+
+		// tag
+		assert.Equal(t, tagTest.State, StatePassed, "is in passed state by default")
+		assert.Equal(t, tagTest.SemEnv, SemEnv{
+			PipelineId:   "1",
+			ProjectId:    "123",
+			WorkflowId:   "2",
+			JobId:        "3",
+			JobStartedAt: "1693481195",
+			JobName:      "Test job",
+			AgentType:    "t1-awsm",
+			AgentOsImage: "w95",
+			GitRefType:   "tag",
+			GitRefName:   "awsm-w95",
+			GitRefSha:    "1234567890abcdef",
+		})
+	})
+
 }
 
 func Test_NewError(t *testing.T) {

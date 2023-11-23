@@ -4,17 +4,17 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"sync"
 	"testing"
 
 	"github.com/semaphoreci/test-results/pkg/parser"
-	"github.com/stretchr/testify/require"
 
 	"github.com/semaphoreci/test-results/pkg/cli"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func Test_LoadFiles(t *testing.T) {
-
 	t.Run("with invalid path to file", func(t *testing.T) {
 		filePath := generateFile(t)
 		paths, err := cli.LoadFiles([]string{fmt.Sprintf("%s1", filePath)}, ".xml")
@@ -72,20 +72,22 @@ func generateDir(t *testing.T) string {
 }
 
 func generateDirWithFilesAndNestedDir(t *testing.T, fNumber, dirNumber int) string {
-	dirPath, err := os.MkdirTemp("", "")
+	dirPath, err := os.MkdirTemp("", "random-dir-*")
 	assert.Nil(t, err)
 
-	nestedDir, err := os.MkdirTemp(dirPath, "xml-*")
+	xmlNestedDir, err := os.MkdirTemp(dirPath, "xml-*")
+	assert.Nil(t, err)
+
+	jsonNestedDir, err := os.MkdirTemp(dirPath, "json-*")
 	assert.Nil(t, err)
 
 	for i := 0; i < fNumber; i++ {
-		_, err = os.CreateTemp(nestedDir, "file-*.xml")
+		_, err = os.CreateTemp(xmlNestedDir, "file-*.xml")
 		assert.Nil(t, err)
 	}
 
-	nestedDir, _ = os.MkdirTemp(dirPath, "json-*")
 	for i := 0; i < dirNumber; i++ {
-		_, err := os.MkdirTemp(nestedDir, "file-*.json")
+		_, err := os.CreateTemp(jsonNestedDir, "file-*.json")
 		assert.Nil(t, err)
 	}
 
@@ -115,24 +117,36 @@ func TestWriteToTmpFile(t *testing.T) {
 	jsonData, _ := json.Marshal(&result)
 
 	t.Run("Write to one tmp file", func(t *testing.T) {
-		file, err := cli.WriteToTmpFile(jsonData)
+		file, err := cli.WriteToTmpFile(jsonData, false)
 		assert.NoError(t, err)
 		os.Remove(file)
 	})
 
 	t.Run("Write to three thousand tmp files", func(t *testing.T) {
 		fileNumber := 3000
-		files := make([]string, 0, fileNumber)
+
+		var wg sync.WaitGroup
+		errChan := make(chan error, fileNumber)
+
+		wg.Add(fileNumber)
 
 		for i := 0; i < fileNumber; i++ {
-			file, err := cli.WriteToTmpFile(jsonData)
-			assert.NoError(t, err)
-
-			files = append(files, file)
+			go func(i int) {
+				defer wg.Done()
+				file, err := cli.WriteToTmpFile(jsonData, false)
+				defer os.Remove(file)
+				if err != nil {
+					errChan <- err
+					return
+				}
+			}(i)
 		}
 
-		for _, file := range files {
-			os.Remove(file)
+		wg.Wait()
+		close(errChan)
+
+		for err := range errChan {
+			require.NoError(t, err)
 		}
 	})
 }
@@ -160,7 +174,7 @@ func TestWriteToFilePath(t *testing.T) {
 	jsonData, _ := json.Marshal(&result)
 
 	t.Run("Write to one file", func(t *testing.T) {
-		file, err := cli.WriteToFilePath(jsonData, "out")
+		file, err := cli.WriteToFilePath(jsonData, "out", false)
 		assert.NoError(t, err)
 		os.Remove(file)
 	})
@@ -172,12 +186,88 @@ func TestWriteToFilePath(t *testing.T) {
 
 		defer os.RemoveAll(dirPath)
 
-		for i := 0; i < fileNumber; i++ {
-			tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
-			require.NoError(t, err)
+		var wg sync.WaitGroup
+		errChan := make(chan error, fileNumber)
 
-			_, err = cli.WriteToFilePath(jsonData, tmpFile.Name())
+		wg.Add(fileNumber)
+
+		for i := 0; i < fileNumber; i++ {
+			go func(i int) {
+				defer wg.Done()
+				tmpFile, err := os.CreateTemp(dirPath, "result-*.json")
+				if err != nil {
+					errChan <- err
+					return
+				}
+
+				_, err = cli.WriteToFilePath(jsonData, tmpFile.Name(), false)
+				if err != nil {
+					errChan <- err
+					return
+				}
+			}(i)
+		}
+
+		wg.Wait()
+		close(errChan)
+
+		for err := range errChan {
 			require.NoError(t, err)
 		}
 	})
+}
+
+func Test_IsGzipCompressed(t *testing.T) {
+	testCases := []struct {
+		Name  string
+		Input string
+		Want  bool
+	}{
+		{
+			Name:  "Empty input",
+			Input: ``,
+			Want:  false,
+		},
+		{
+			Name:  "Empty compressed input",
+			Input: string([]byte{0x1f, 0x8b, 0x8, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0xff}),
+			Want:  true,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("IsGzipCompressed(%s)", tc.Name), func(t *testing.T) {
+			assert.Equal(t, tc.Want, cli.IsGzipCompressed([]byte(tc.Input)))
+		})
+	}
+}
+
+func Test_GzipCompression(t *testing.T) {
+	testCases := []struct {
+		Name  string
+		Input string
+	}{
+		{
+			Name:  "Empty input",
+			Input: ``,
+		},
+		{
+			Name:  "Some text",
+			Input: `Some text`,
+		},
+		{
+			Name:  "Some bytes",
+			Input: string([]byte{0x1, 0x2, 0x3, 0x4, 0x5}),
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(fmt.Sprintf("Compress -> Decompress is working (%s)", tc.Name), func(t *testing.T) {
+			compressed, err := cli.GzipCompress([]byte(tc.Input))
+			assert.NoError(t, err)
+			decompressed, err := cli.GzipDecompress(compressed)
+			assert.NoError(t, err)
+			assert.Equal(t, tc.Input, string(decompressed))
+		})
+	}
 }

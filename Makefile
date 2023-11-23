@@ -4,13 +4,14 @@ run:
 	go run main.go $(arg)
 
 regen:
-	go run main.go compile priv/parsers/generic/in.xml priv/parsers/generic/out.json
-	go run main.go compile priv/parsers/rspec/in.xml priv/parsers/rspec/out.json
-	go run main.go compile priv/parsers/exunit/in.xml priv/parsers/exunit/out.json
-	go run main.go compile priv/parsers/golang/in.xml priv/parsers/golang/out.json
-	go run main.go compile -p phpunit priv/parsers/phpunit/in.xml priv/parsers/phpunit/out.json
-	go run main.go compile -p embedded priv/parsers/embedded/in.xml priv/parsers/embedded/out.json
-	go run main.go compile priv/merging priv/merging/out.json
+	go run main.go compile --no-compress priv/parsers/generic/in.xml priv/parsers/generic/out.json
+	go run main.go compile --no-compress priv/parsers/rspec/in.xml priv/parsers/rspec/out.json
+	go run main.go compile --no-compress priv/parsers/exunit/in.xml priv/parsers/exunit/out.json
+	go run main.go compile --no-compress priv/parsers/golang/in.xml priv/parsers/golang/out.json
+	go run main.go compile --no-compress -p phpunit priv/parsers/phpunit/in.xml priv/parsers/phpunit/out.json
+	go run main.go compile --no-compress -p embedded priv/parsers/embedded/in.xml priv/parsers/embedded/out.json
+	go run main.go compile --no-compress priv/merging priv/merging/out.json
+
 test:
 	gotestsum ./...
 

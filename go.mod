@@ -3,6 +3,7 @@ module github.com/semaphoreci/test-results
 go 1.20
 
 require (
+	github.com/google/go-cmp v0.5.7
 	github.com/google/uuid v1.3.0
 	github.com/mitchellh/go-homedir v1.1.0
 	github.com/sirupsen/logrus v1.8.1

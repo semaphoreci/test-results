@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"os"
 	"sort"
 	"time"
 
@@ -106,10 +107,10 @@ type TestResults struct {
 	Name          string  `json:"name"`
 	Framework     string  `json:"framework"`
 	IsDisabled    bool    `json:"isDisabled"`
-	Suites        []Suite `json:"suites"`
 	Summary       Summary `json:"summary"`
 	Status        Status  `json:"status"`
 	StatusMessage string  `json:"statusMessage"`
+	Suites        []Suite `json:"suites"`
 }
 
 // NewTestResults ...
@@ -245,11 +246,11 @@ type Suite struct {
 	Timestamp  string     `json:"timestamp"`
 	Hostname   string     `json:"hostname"`
 	Package    string     `json:"package"`
-	Tests      []Test     `json:"tests"`
 	Properties Properties `json:"properties"`
 	Summary    Summary    `json:"summary"`
 	SystemOut  string     `json:"systemOut"`
 	SystemErr  string     `json:"systemErr"`
+	Tests      []Test     `json:"tests"`
 }
 
 // NewSuite ...
@@ -363,6 +364,55 @@ func (me *Suite) AppendTest(test Test) {
 	me.Aggregate()
 }
 
+type SemEnv struct {
+	ProjectId string `json:"projectId"`
+
+	PipelineId string `json:"pipelineId"`
+	WorkflowId string `json:"workflowId"`
+
+	JobStartedAt string `json:"pipelineStartedAt"`
+
+	JobName string `json:"jobName"`
+	JobId   string `json:"jobId"`
+
+	AgentType    string `json:"agentType"`
+	AgentOsImage string `json:"agentOsImage"`
+
+	GitRefType string `json:"gitRefType"`
+	GitRefName string `json:"gitRefName"`
+	GitRefSha  string `json:"gitRefSha"`
+}
+
+func NewSemEnv() SemEnv {
+	refName := ""
+	refSha := ""
+	switch os.Getenv("SEMAPHORE_GIT_REF_TYPE") {
+	case "branch":
+		refName = os.Getenv("SEMAPHORE_GIT_BRANCH")
+		refSha = os.Getenv("SEMAPHORE_GIT_SHA")
+	case "tag":
+		refName = os.Getenv("SEMAPHORE_GIT_BRANCH")
+		refSha = os.Getenv("SEMAPHORE_GIT_SHA")
+	case "pull-request":
+		refName = os.Getenv("SEMAPHORE_GIT_PR_BRANCH")
+		refSha = os.Getenv("SEMAPHORE_GIT_PR_SHA")
+	}
+
+	return SemEnv{
+		ProjectId:    os.Getenv("SEMAPHORE_PROJECT_ID"),
+		PipelineId:   os.Getenv("SEMAPHORE_PIPELINE_ID"),
+		JobStartedAt: os.Getenv("SEMAPHORE_JOB_CREATION_TIME"),
+		WorkflowId:   os.Getenv("SEMAPHORE_WORKFLOW_ID"),
+		JobName:      os.Getenv("SEMAPHORE_JOB_NAME"),
+		JobId:        os.Getenv("SEMAPHORE_JOB_ID"),
+		AgentType:    os.Getenv("SEMAPHORE_AGENT_MACHINE_TYPE"),
+		AgentOsImage: os.Getenv("SEMAPHORE_AGENT_MACHINE_OS_IMAGE"),
+		GitRefType:   os.Getenv("SEMAPHORE_GIT_REF_TYPE"),
+		GitRefName:   refName,
+		GitRefSha:    refSha,
+	}
+}
+
 // Test ...
 type Test struct {
 	ID        string        `json:"id"`
@@ -376,34 +426,23 @@ type Test struct {
 	Error     *Error        `json:"error"`
 	SystemOut string        `json:"systemOut"`
 	SystemErr string        `json:"systemErr"`
+	SemEnv    SemEnv        `json:"semaphoreEnv"`
 }
 
 // NewTest ...
 func NewTest() Test {
 	return Test{
-		State: StatePassed,
+		State:  StatePassed,
+		SemEnv: NewSemEnv(),
 	}
 }
 
 // EnsureID ...
 func (me *Test) EnsureID(s Suite) {
-	if me.ID == "" {
-		me.ID = me.Name
-	}
+	// Determine the ID based on the various test details
+	testIdentity := fmt.Sprintf("%s.%s.%s.%s.%s", me.ID, me.Name, me.Classname, me.Package, me.File)
 
-	if me.Classname != "" {
-		me.ID = fmt.Sprintf("%s.%s", me.Classname, me.ID)
-	}
-
-	if me.Failure != nil {
-		me.ID = fmt.Sprintf("%s.%s", "Failure", me.ID)
-	}
-
-	if me.Error != nil {
-		me.ID = fmt.Sprintf("%s.%s", "Error", me.ID)
-	}
-
-	me.ID = UUID(uuid.MustParse(s.ID), me.ID).String()
+	me.ID = UUID(uuid.MustParse(s.ID), testIdentity).String()
 }
 
 type err struct {
@@ -439,7 +478,7 @@ type Summary struct {
 	Duration time.Duration `json:"duration"`
 }
 
-//Merge merges two summaries together summing each field
+// Merge merges two summaries together summing each field
 func (s *Summary) Merge(withSummary *Summary) {
 	s.Total += withSummary.Total
 	s.Passed += withSummary.Passed
@@ -448,6 +487,18 @@ func (s *Summary) Merge(withSummary *Summary) {
 	s.Failed += withSummary.Failed
 	s.Disabled += withSummary.Disabled
 	s.Duration += withSummary.Duration
+}
+
+type TestResult struct {
+	TestId   string
+	GitSha   string
+	Duration time.Duration
+	JobId    string
+	State    State
+}
+
+func (t *TestResult) String() []string {
+	return []string{t.TestId, t.GitSha, fmt.Sprintf("%d", t.Duration.Milliseconds()), t.JobId, string(t.State)}
 }
 
 // UUID ...

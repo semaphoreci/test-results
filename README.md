@@ -13,6 +13,14 @@ The main purpose of the CLI is to:
 - compile and publish JUnit XML files into a JSON report
 - merge multiple JSON reports into a single summary report
 
+> [!NOTE]
+>
+> Starting from version `0.7.0`, test reports are compressed using gzip to optimize storage and handling. To maintain backward compatibility with existing systems and processes, the compressed files will continue to use the `.json` file extension. This approach ensures seamless integration with tools and workflows that expect files in this format.
+>
+> However, please be aware that while these files retain the `.json` extension, they are in a compressed format and will need to be decompressed using gzip-compatible tools before they can be read as standard JSON.
+>
+> For users who prefer to work with uncompressed reports or for systems that require non-compressed files, we've introduced a `--no-compress` option. This can be used to generate and upload test reports in the traditional, uncompressed JSON format.
+
 ## Compiling and publishing JUnit XML files
 
 Given your JUnit XML report is named `results.xml` you can run the following command to generate a report:

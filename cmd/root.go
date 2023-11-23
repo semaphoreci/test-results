@@ -30,7 +30,7 @@ import (
 
 var cfgFile string
 
-var versionString = "0.6.8"
+var versionString = "0.7.0"
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -59,6 +59,7 @@ func init() {
 	rootCmd.PersistentFlags().StringP("name", "N", "", "name of the suite")
 	rootCmd.PersistentFlags().StringP("suite-prefix", "S", "", "prefix for each suite")
 	rootCmd.PersistentFlags().StringP("parser", "p", "auto", "override parser to be used")
+	rootCmd.PersistentFlags().Bool("no-compress", false, "skip gzip compression for the output")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
