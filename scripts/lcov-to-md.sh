@@ -60,75 +60,31 @@ LINES=($(tail -n 30 /tmp/system-metrics))
 
 CPU_VALUES=()
 MEM_VALUES=()
-SYSTEM_DISK_VALUES=()
-DOCKER_DISK_VALUES=()
-SHM_VALUES=()
 
 for line in "${LINES[@]}"; do
-  CPU_VALUES+=("$(echo "$line" | grep -oP 'cpu:\K[0-9.]+')")
-  MEM_VALUES+=("$(echo "$line" | grep -oP 'mem:\s*\K[0-9.]+')")
-  SYSTEM_DISK_VALUES+=("$(echo "$line" | grep -oP 'system_disk:\s*\K[0-9.]+')")
-  DOCKER_DISK_VALUES+=("$(echo "$line" | grep -oP 'docker_disk:\s*\K[0-9.]+')")
-  shm=$(echo "$line" | grep -oP 'shared_memory:\s*\K[0-9]+')
-  SHM_VALUES+=("$(awk "BEGIN { printf \"%.2f\", ($shm/512)*100 }")")
+  cpu=$(echo "$line" | grep -oP 'cpu:\K[0-9.]+' | tr -d '%')
+  mem=$(echo "$line" | grep -oP 'mem:\s*\K[0-9.]+' | tr -d '%')
+  CPU_VALUES+=("$cpu")
+  MEM_VALUES+=("$mem")
 done
 
-print_ascii_chart() {
-  local label="$1"
-  local -n values=$2
-  local height=10
-  local max_width=60
-  local total=${#values[@]}
+# Generate X axis: 0..N
+X_AXIS=$(seq 0 $((${#CPU_VALUES[@]} - 1)) | paste -sd',' -)
 
-  # Downsample if too wide
-  local step=$(( total > max_width ? total / max_width : 1 ))
+# Format for Mermaid xychart-beta block
+MERMAID_XYCHART=$(cat <<EOF
+## 📊 System Metrics
 
-  local downsampled=()
-  local timestamps=()
-
-  for ((i=0; i<total; i+=step)); do
-    downsampled+=("${values[i]}")
-    timestamps+=("$((i))")  # Could use actual times if stored
-  done
-
-  local width=${#downsampled[@]}
-
-  echo "## 📊 $label Usage (last ${#values[@]} samples)"
-  echo '```text'
-
-  for ((level=height; level>=0; level--)); do
-    threshold=$((level * 10))
-    printf "%4d%% |" "$threshold"
-    for val in "${downsampled[@]}"; do
-      val_int=$(awk "BEGIN { print int($val) }")
-      if (( val_int >= threshold )); then
-        printf " █"
-      else
-        printf "  "
-      fi
-    done
-    echo
-  done
-
-  # Axis
-  printf "      +"
-  for ((i=0; i<width; i++)); do
-    printf "--"
-  done
-  echo
-
-  # Label every 10th tick
-  printf "       "
-  for ((i=0; i<width; i++)); do
-    if (( i % 10 == 0 )); then
-      printf "%-2d" $((i * step))
-    else
-      printf "  "
-    fi
-  done
-  echo
-  echo '```'
-}
+\`\`\`mermaid
+xychart-beta
+title "CPU and Memory Usage Over Time"
+x-axis [${X_AXIS}]
+y-axis "Usage (%)" 0 --> 150
+line CPU [$(IFS=,; echo "${CPU_VALUES[*]}")]
+line Memory [$(IFS=,; echo "${MEM_VALUES[*]}")]
+\`\`\`
+EOF
+)
 
 # Write markdown report
 {
@@ -141,14 +97,8 @@ print_ascii_chart() {
   echo "- **Date**: $DATE"
   echo "- **Message**: _${MESSAGE}_"
   echo
-
-  # ASCII usage graphs
-  print_ascii_chart "CPU" CPU_VALUES
-  print_ascii_chart "Memory" MEM_VALUES
-  print_ascii_chart "System Disk" SYSTEM_DISK_VALUES
-  print_ascii_chart "Docker Disk" DOCKER_DISK_VALUES
-  print_ascii_chart "Shared Memory (as % of 512MB)" SHM_VALUES
-
+  echo "$MERMAID_XYCHART"
+  echo
   echo "---"
   echo
   echo "## 🧵 Workflow Debug Info"
