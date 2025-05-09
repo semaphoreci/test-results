@@ -4,6 +4,7 @@ agent:
   machine:
     type: e2-standard-2
     os_image: ubuntu2004
+
 blocks:
   - name: Unit tests
     dependencies: []
@@ -19,6 +20,11 @@ blocks:
           commands:
             - "export SUITE_NAME=\"\U0001F9EA Go tests\""
             - gotestsum --junitfile results.xml
+        - name: "\U0001F9EA Go coverage"
+          commands:
+            - "export SUITE_NAME=\"\U0001F9EA Go coverage\""
+            - make test.cover
+            - artifact push workflow -d .semaphore/REPORT.md COVERAGE.md
       epilogue:
         always:
           commands:
@@ -48,8 +54,8 @@ blocks:
             - '[[ -f results.xml ]] && test-results publish --name "$SUITE_NAME" results.xml'
   - name: Build
     dependencies:
-      - Security checks
       - Unit tests
+      - Security checks
     task:
       prologue:
         commands:
