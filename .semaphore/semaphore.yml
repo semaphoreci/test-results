@@ -19,6 +19,11 @@ blocks:
           commands:
             - "export SUITE_NAME=\"\U0001F9EA Go tests\""
             - gotestsum --junitfile results.xml
+        - name: "\U0001F9EA Go coverage"
+          commands:
+            - "export SUITE_NAME=\"\U0001F9EA Go coverage\""
+            - make test.cover
+            - artifact push workflow -d .semaphore/REPORT.md COVERAGE.md
       epilogue:
         always:
           commands:
