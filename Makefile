@@ -23,9 +23,9 @@ test.cover:
 	go install github.com/securego/gosec/v2/cmd/gosec@v2.19.0
 	go install golang.org/x/lint/golint@latest
 	go test -coverprofile=c.out ./...
-	gcov2lcov -infile=c.out -outfile=COVERAGE.lcov
+	gcov2lcov -infile=c.out -outfile=coverage.lcov
 	rm c.out
-	scripts/lcov-to-md.sh COVERAGE.lcov
+	scripts/lcov-to-md.sh
 
 build:
 	go build -o bin/test-results
