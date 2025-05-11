@@ -52,9 +52,7 @@ blocks:
           commands:
             - '[[ -f results.xml ]] && test-results publish --name "$SUITE_NAME" results.xml'
   - name: Build
-    dependencies:
-      - Security checks
-      - Unit tests
+    dependencies: []
     task:
       prologue:
         commands:
@@ -67,6 +65,18 @@ blocks:
           commands:
             - make build
             - artifact push workflow bin/test-results -d bin/test-results
+        - name: "\U0001F3D7️ Job metrics"
+          commands:
+            - make build
+            - bin/test-results job-metrics job-report.md
+            - artifact push job -d .semaphore/REPORT.md job-report.md
+        - name: "\U0001F3D7️ Command metrics"
+          commands:
+            - make build
+            - bin/test-results command-metrics job-report.md
+            - artifact push job -d .semaphore/REPORT.md job-report.md
+            - cat /tmp/job_log_*.json
+            - artifact push job -d .semaphore/logs.json /tmp/job_log_*.json
 after_pipeline:
   task:
     jobs:
