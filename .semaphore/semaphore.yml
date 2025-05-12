@@ -75,11 +75,11 @@ after_pipeline:
       - name: Submit Reports
         commands:
           - test-results gen-pipeline-report
-          - echo $SEMAPHORE_PIPELINE_CREATED_AT
-          - echo $SEMAPHORE_PIPELINE_INIT_DURATION
-          - echo $SEMAPHORE_PIPELINE_QUEUEING_DURATION
-          - echo $SEMAPHORE_PIPELINE_RUNNING_DURATION
-          - echo $SEMAPHORE_PIPELINE_ID
+          - 'checkout '
+          - chmod +x .semaphore/update_report.sh
+          - artifact pull workflow .semaphore/REPORT.md
+          - .semaphore/update_report.sh
+          - artifact push workflow -d .semaphore/REPORT.md REPORT.md
 promotions:
   - name: Integration tests
     pipeline_file: integration.yml
