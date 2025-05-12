@@ -18,6 +18,15 @@ test:
 test.watch:
 	gotestsum --watch ./...
 
+test.cover:
+	go install github.com/jandelgado/gcov2lcov@latest
+	go install github.com/securego/gosec/v2/cmd/gosec@v2.19.0
+	go install golang.org/x/lint/golint@latest
+	go test -coverprofile=c.out ./...
+	gcov2lcov -infile=c.out -outfile=coverage.lcov
+	rm c.out
+	scripts/lcov-to-md.sh
+
 build:
 	go build -o bin/test-results
 
