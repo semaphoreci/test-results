@@ -40,10 +40,9 @@ RUN_FINISH=$(format_time "$RUN_END")
 # Timeline entry
 read -r -d '' TIMELINE_ENTRY <<EOF || true
     section Pipeline ${PIPELINE_ID}
-    ${START} : Init started
-    ${INIT_FINISH} : Queue started
-    ${QUEUE_FINISH} : Run started
-    ${RUN_FINISH} : Run finished
+    Init started : ${START}, ${INIT_DURATION}s
+    Queue started : ${INIT_FINISH}, ${QUEUE_DURATION}s
+    Run started : ${QUEUE_FINISH}, ${RUN_DURATION}s
 EOF
 
 # Ensure Pipeline metrics section exists
