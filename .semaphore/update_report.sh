@@ -1,81 +1,76 @@
 #!/bin/bash
-
 set -euo pipefail
-set -x
 
 ARTIFACT_PATH="REPORT.md"
 TMP_FILE=$(mktemp)
 
-# Print input values for debug
-echo "SEMAPHORE_PIPELINE_CREATED_AT: $SEMAPHORE_PIPELINE_CREATED_AT"
-echo "SEMAPHORE_PIPELINE_ID: $SEMAPHORE_PIPELINE_ID"
-echo "SEMAPHORE_PIPELINE_INIT_DURATION: $SEMAPHORE_PIPELINE_INIT_DURATION"
-echo "SEMAPHORE_PIPELINE_QUEUEING_DURATION: $SEMAPHORE_PIPELINE_QUEUEING_DURATION"
-echo "SEMAPHORE_PIPELINE_RUNNING_DURATION: $SEMAPHORE_PIPELINE_RUNNING_DURATION"
-
-# Check artifact
-if [ ! -f "$ARTIFACT_PATH" ]; then
-  echo "❌ $ARTIFACT_PATH not found!"
-  exit 1
-fi
-
-echo "📄 Current REPORT.md:"
+# Print current report
+echo "📄 Current $ARTIFACT_PATH:"
 cat "$ARTIFACT_PATH"
 
-# Extract durations and time
+# Capture environment variables
 PIPELINE_TIME=${SEMAPHORE_PIPELINE_CREATED_AT}
 PIPELINE_ID=${SEMAPHORE_PIPELINE_ID}
 INIT_DURATION=${SEMAPHORE_PIPELINE_INIT_DURATION}
 QUEUE_DURATION=${SEMAPHORE_PIPELINE_QUEUEING_DURATION}
 RUN_DURATION=${SEMAPHORE_PIPELINE_RUNNING_DURATION}
 
-START_TS=$PIPELINE_TIME
+# Skip if all durations are zero
+if [[ "$INIT_DURATION" == "0" && "$QUEUE_DURATION" == "0" && "$RUN_DURATION" == "0" ]]; then
+  echo "ℹ️ Skipping chart entry due to zero durations"
+  exit 0
+fi
 
-# Convert to ISO 8601
+# Format UNIX timestamp to ISO
 format_time() {
   date -u -d "@$1" +"%Y-%m-%dT%H:%M:%S"
 }
 
+# Compute timeline timestamps
+START_TS=$PIPELINE_TIME
+INIT_END=$((START_TS + INIT_DURATION))
+QUEUE_END=$((INIT_END + QUEUE_DURATION))
+RUN_END=$((QUEUE_END + RUN_DURATION))
+
 START=$(format_time "$START_TS")
+INIT_FINISH=$(format_time "$INIT_END")
+QUEUE_FINISH=$(format_time "$QUEUE_END")
+RUN_FINISH=$(format_time "$RUN_END")
 
-# Mermaid entry
-CHART_ENTRY=$(cat <<EOF
-    section Pipeline $PIPELINE_ID
-    Init       :active, init$PIPELINE_ID, $START, ${INIT_DURATION}s
-    Queue      :active, queue$PIPELINE_ID, after init$PIPELINE_ID, ${QUEUE_DURATION}s
-    Run        :active, run$PIPELINE_ID, after queue$PIPELINE_ID, ${RUN_DURATION}s
+# Timeline entry
+read -r -d '' TIMELINE_ENTRY <<EOF || true
+    section Pipeline ${PIPELINE_ID}
+    ${START} : Init started
+    ${INIT_FINISH} : Queue started
+    ${QUEUE_FINISH} : Run started
+    ${RUN_FINISH} : Run finished
 EOF
-)
 
-# Create or update chart
-if ! grep -q "# Pipeline metrics" "$ARTIFACT_PATH"; then
+# Ensure Pipeline metrics section exists
+if ! grep -q "## Pipeline metrics" "$ARTIFACT_PATH"; then
   {
-    echo "# Pipeline metrics"
-    echo
+    echo -e "\n## 📊 Pipeline metrics\n"
     echo '```mermaid'
-    echo "gantt"
-    echo "    title Pipeline durations"
-    echo "$CHART_ENTRY"
+    echo 'timeline'
+    echo "$TIMELINE_ENTRY"
     echo '```'
-    echo
-    cat "$ARTIFACT_PATH"
-  } > "$TMP_FILE"
-  mv "$TMP_FILE" "$ARTIFACT_PATH"
+  } >> "$ARTIFACT_PATH"
 else
-  awk -v entry="$CHART_ENTRY" '
-    BEGIN {in_chart=0}
-    /```mermaid/ {in_chart=1; print; next}
-    /```/ {
-      if (in_chart) {
-        print entry
-        in_chart=0
-      }
+  # Append entry to existing mermaid block
+  awk -v entry="$TIMELINE_ENTRY" '
+    BEGIN { inside = 0 }
+    {
       print
-      next
+      if ($0 ~ /```mermaid/) {
+        inside = 1
+      } else if (inside && $0 ~ /^```$/) {
+        print entry
+        inside = 0
+      }
     }
-    {print}
   ' "$ARTIFACT_PATH" > "$TMP_FILE"
   mv "$TMP_FILE" "$ARTIFACT_PATH"
 fi
 
-echo "✅ Updated REPORT.md with pipeline metrics"
+echo "✅ Updated $ARTIFACT_PATH:"
+cat "$ARTIFACT_PATH"
