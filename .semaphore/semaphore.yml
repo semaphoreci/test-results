@@ -78,7 +78,7 @@ after_pipeline:
           - chmod +x .semaphore/update_report.sh
           - artifact pull workflow .semaphore/REPORT.md
           - .semaphore/update_report.sh
-          - artifact push workflow -d .semaphore/REPORT.md REPORT.md
+          - artifact push workflow --force -d .semaphore/REPORT.md REPORT.md
 promotions:
   - name: Integration tests
     pipeline_file: integration.yml
