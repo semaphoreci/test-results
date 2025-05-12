@@ -46,7 +46,7 @@ read -r -d '' GANTT_ENTRY <<EOF || true
 EOF
 
 # Ensure Pipeline metrics section exists
-if ! grep -q "## Pipeline metrics" "$ARTIFACT_PATH"; then
+if ! grep -q "## 📊 Pipeline metrics" "$ARTIFACT_PATH"; then
   {
     echo -e "\n## 📊 Pipeline metrics\n"
     echo "```mermaid"
@@ -56,14 +56,18 @@ if ! grep -q "## Pipeline metrics" "$ARTIFACT_PATH"; then
     echo "```"
   } >> "$ARTIFACT_PATH"
 else
-  # Append entry to existing mermaid block
+  # Append or update the mermaid chart inside the Pipeline metrics section
   awk -v entry="$GANTT_ENTRY" '
     BEGIN { inside = 0 }
     {
       print
-      if ($0 ~ /gantt/) {
+      if ($0 ~ /## 📊 Pipeline metrics/) {
         inside = 1
-      } else if (inside && $0 ~ /^$/) {
+      }
+      if (inside && $0 ~ /```mermaid/) {
+        print "```mermaid"
+        print "gantt"
+        print "    title Pipeline durations"
         print entry
         inside = 0
       }
