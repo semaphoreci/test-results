@@ -30,15 +30,15 @@ blocks:
           commands:
             - test-results publish --no-compress priv/parsers/$PARSER/in.xml -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . /tmp/junit.json) > /tmp/junit.json
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json'
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . /tmp/junit.json) > /tmp/junit.json'
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
         - name: Merging - directory as input
           commands:
             - test-results publish --no-compress priv/merging
             - artifact pull job test-results/junit.json -d /tmp/junit.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . priv/merging/out.json) > priv/merging/out.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . /tmp/junit.json) > /tmp/junit.json
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . priv/merging/out.json) > priv/merging/out.json'
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . /tmp/junit.json) > /tmp/junit.json'
             - diff priv/merging/out.json /tmp/junit.json
   - name: Integration tests - generate pipeline report
     dependencies:
@@ -55,7 +55,7 @@ blocks:
       jobs:
         - name: Generate pipeline summary
           commands:
-            - "artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json"
+            - 'artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json'
             - cat <<< $(jq --sort-keys . priv/workflow/summary-out.json) > priv/workflow/summary-out.json
             - cat <<< $(jq --sort-keys . /tmp/summary.json) > /tmp/summary.json
             - diff /tmp/summary.json priv/workflow/summary-out.json

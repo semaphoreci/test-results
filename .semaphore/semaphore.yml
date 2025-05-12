@@ -2,8 +2,8 @@ version: v1.0
 name: Build
 agent:
   machine:
-    type: e2-standard-2
-    os_image: ubuntu2004
+    type: f1-standard-2
+    os_image: ubuntu2204
 blocks:
   - name: Unit tests
     dependencies: []
@@ -31,8 +31,6 @@ blocks:
   - name: Security checks
     dependencies: []
     task:
-      secrets:
-        - name: security-toolbox-shared-read-access
       prologue:
         commands:
           - checkout
