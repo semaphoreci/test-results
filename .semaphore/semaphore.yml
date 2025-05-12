@@ -68,6 +68,7 @@ blocks:
         - name: "\U0001F3D7️ Job metrics"
           commands:
             - make build
+            - echo test
             - bin/test-results job-metrics job-report.md
             - artifact push job -d .semaphore/REPORT.md job-report.md
         - name: "\U0001F3D7️ Command metrics"
