@@ -113,3 +113,4 @@ test-results publish --force other-results.xml
 ## Using the CLI on a local machine
 
 Latest CLI binaries are available [here](https://github.com/semaphoreci/test-results/releases/latest).
+test
