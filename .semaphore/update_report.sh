@@ -34,8 +34,8 @@ RUN_END=$((QUEUE_END + RUN_DURATION))
 
 START=$(format_time "$START_TS")
 INIT_FINISH=$(format_time "$INIT_END")
-QUEUE_FINISH=$(format_time "$QUEUE_END"))
-RUN_FINISH=$(format_time "$RUN_END"))
+QUEUE_FINISH=$(format_time "$QUEUE_END")
+RUN_FINISH=$(format_time "$RUN_END")
 
 # Gantt chart entry
 read -r -d '' GANTT_ENTRY <<EOF || true
