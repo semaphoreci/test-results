@@ -49,9 +49,11 @@ EOF
 if ! grep -q "## Pipeline metrics" "$ARTIFACT_PATH"; then
   {
     echo -e "\n## 📊 Pipeline metrics\n"
+    echo "```mermaid"
     echo "gantt"
     echo "    title Pipeline durations"
     echo "$GANTT_ENTRY"
+    echo "```"
   } >> "$ARTIFACT_PATH"
 else
   # Append entry to existing mermaid block
