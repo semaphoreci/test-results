@@ -55,37 +55,6 @@ else
   OVERALL_COVERAGE="0.00"
 fi
 
-# 🧮 Extract metrics
-LINES=($(tail -n 30 /tmp/system-metrics))
-
-CPU_VALUES=()
-MEM_VALUES=()
-
-for line in "${LINES[@]}"; do
-  cpu=$(echo "$line" | grep -oP 'cpu:\K[0-9.]+' | tr -d '%')
-  mem=$(echo "$line" | grep -oP 'mem:\s*\K[0-9.]+' | tr -d '%')
-  CPU_VALUES+=("$cpu")
-  MEM_VALUES+=("$mem")
-done
-
-# Generate X axis: 0..N
-X_AXIS=$(seq 0 $((${#CPU_VALUES[@]} - 1)) | paste -sd',' -)
-
-# Format for Mermaid xychart-beta block
-MERMAID_XYCHART=$(cat <<EOF
-## 📊 System Metrics
-
-\`\`\`mermaid
-xychart-beta
-title "CPU and Memory Usage Over Time"
-x-axis [${X_AXIS}]
-y-axis "Usage (%)" 0 --> 150
-line CPU [$(IFS=,; echo "${CPU_VALUES[*]}")]
-line Memory [$(IFS=,; echo "${MEM_VALUES[*]}")]
-\`\`\`
-EOF
-)
-
 # Write markdown report
 {
   echo "# 📈 Code Coverage Report"
