@@ -26,7 +26,7 @@ format_time() {
   date -u -d "@$1" +"%Y-%m-%dT%H:%M:%S"
 }
 
-# Compute timeline timestamps
+# Compute timestamps for each stage
 START_TS=$PIPELINE_TIME
 INIT_END=$((START_TS + INIT_DURATION))
 QUEUE_END=$((INIT_END + QUEUE_DURATION))
@@ -34,35 +34,34 @@ RUN_END=$((QUEUE_END + RUN_DURATION))
 
 START=$(format_time "$START_TS")
 INIT_FINISH=$(format_time "$INIT_END")
-QUEUE_FINISH=$(format_time "$QUEUE_END")
-RUN_FINISH=$(format_time "$RUN_END")
+QUEUE_FINISH=$(format_time "$QUEUE_END"))
+RUN_FINISH=$(format_time "$RUN_END"))
 
-# Timeline entry
-read -r -d '' TIMELINE_ENTRY <<EOF || true
+# Gantt chart entry
+read -r -d '' GANTT_ENTRY <<EOF || true
     section Pipeline ${PIPELINE_ID}
-    Init started : ${START}, ${INIT_DURATION}s
-    Queue started : ${INIT_FINISH}, ${QUEUE_DURATION}s
-    Run started : ${QUEUE_FINISH}, ${RUN_DURATION}s
+    Init :active, init_${PIPELINE_ID}, ${START}, ${INIT_DURATION}s
+    Queue :active, queue_${PIPELINE_ID}, ${INIT_FINISH}, ${QUEUE_DURATION}s
+    Run :active, run_${PIPELINE_ID}, ${QUEUE_FINISH}, ${RUN_DURATION}s
 EOF
 
 # Ensure Pipeline metrics section exists
 if ! grep -q "## Pipeline metrics" "$ARTIFACT_PATH"; then
   {
     echo -e "\n## 📊 Pipeline metrics\n"
-    echo '```mermaid'
-    echo 'timeline'
-    echo "$TIMELINE_ENTRY"
-    echo '```'
+    echo "gantt"
+    echo "    title Pipeline durations"
+    echo "$GANTT_ENTRY"
   } >> "$ARTIFACT_PATH"
 else
   # Append entry to existing mermaid block
-  awk -v entry="$TIMELINE_ENTRY" '
+  awk -v entry="$GANTT_ENTRY" '
     BEGIN { inside = 0 }
     {
       print
-      if ($0 ~ /```mermaid/) {
+      if ($0 ~ /gantt/) {
         inside = 1
-      } else if (inside && $0 ~ /^```$/) {
+      } else if (inside && $0 ~ /^$/) {
         print entry
         inside = 0
       }
