@@ -69,13 +69,6 @@ blocks:
             - echo test
             - bin/test-results job-metrics job-report.md
             - artifact push job -d .semaphore/REPORT.md job-report.md
-        - name: "\U0001F3D7️ Command metrics"
-          commands:
-            - make build
-            - bin/test-results command-metrics job-report.md
-            - artifact push job -d .semaphore/REPORT.md job-report.md
-            - cat /tmp/job_log_*.json
-            - artifact push job -d .semaphore/logs.json /tmp/job_log_*.json
 after_pipeline:
   task:
     jobs:
