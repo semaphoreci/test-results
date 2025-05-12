@@ -1,24 +1,35 @@
 #!/bin/bash
 
 set -euo pipefail
+set -x  # Enable debugging
 
 ARTIFACT_PATH="REPORT.md"
 TMP_FILE=$(mktemp)
 
-# Ensure the artifact exists
+# Debug: Print input environment variables
+echo "SEMAPHORE_PIPELINE_CREATED_AT: $SEMAPHORE_PIPELINE_CREATED_AT"
+echo "SEMAPHORE_PIPELINE_ID: $SEMAPHORE_PIPELINE_ID"
+echo "SEMAPHORE_PIPELINE_INIT_DURATION: $SEMAPHORE_PIPELINE_INIT_DURATION"
+echo "SEMAPHORE_PIPELINE_QUEUEING_DURATION: $SEMAPHORE_PIPELINE_QUEUEING_DURATION"
+echo "SEMAPHORE_PIPELINE_RUNNING_DURATION: $SEMAPHORE_PIPELINE_RUNNING_DURATION"
+
+# Verify artifact exists
 if [ ! -f "$ARTIFACT_PATH" ]; then
-  echo "Artifact $ARTIFACT_PATH not found!"
+  echo "❌ $ARTIFACT_PATH not found!"
   exit 1
 fi
 
-# Read pipeline timing data
+echo "📄 Current REPORT.md:"
+cat "$ARTIFACT_PATH"
+
+# Time variables
 PIPELINE_TIME=${SEMAPHORE_PIPELINE_CREATED_AT}
 PIPELINE_ID=${SEMAPHORE_PIPELINE_ID}
 INIT_DURATION=${SEMAPHORE_PIPELINE_INIT_DURATION}
 QUEUE_DURATION=${SEMAPHORE_PIPELINE_QUEUEING_DURATION}
 RUN_DURATION=${SEMAPHORE_PIPELINE_RUNNING_DURATION}
 
-# Calculate phase boundaries
+# Calculate timestamps
 START_TS=$PIPELINE_TIME
 INIT_END=$((START_TS + INIT_DURATION))
 QUEUE_END=$((INIT_END + QUEUE_DURATION))
@@ -31,7 +42,7 @@ format_time() {
 
 START=$(format_time "$START_TS")
 
-# Create Mermaid Gantt entry
+# Mermaid Gantt entry
 read -r -d '' CHART_ENTRY <<EOF
     section Pipeline $PIPELINE_ID
     Init       :active, init$PIPELINE_ID, $START, ${INIT_DURATION}s
@@ -39,7 +50,7 @@ read -r -d '' CHART_ENTRY <<EOF
     Run        :active, run$PIPELINE_ID, after queue$PIPELINE_ID, ${RUN_DURATION}s
 EOF
 
-# Insert into or create REPORT.md
+# Create or append to chart
 if ! grep -q "# Pipeline metrics" "$ARTIFACT_PATH"; then
   {
     echo "# Pipeline metrics"
@@ -54,21 +65,21 @@ if ! grep -q "# Pipeline metrics" "$ARTIFACT_PATH"; then
   } > "$TMP_FILE"
   mv "$TMP_FILE" "$ARTIFACT_PATH"
 else
-  # Append to existing chart before closing ```
+  # Append new section into the existing chart
   awk -v entry="$CHART_ENTRY" '
-  BEGIN {in_chart=0}
-  /```mermaid/ {in_chart=1; print; next}
-  /```/ {
-    if (in_chart) {
-      print entry
-      in_chart=0
+    BEGIN {in_chart=0}
+    /```mermaid/ {in_chart=1; print; next}
+    /```/ {
+      if (in_chart) {
+        print entry
+        in_chart=0
+      }
+      print
+      next
     }
-    print
-    next
-  }
-  {print}
+    {print}
   ' "$ARTIFACT_PATH" > "$TMP_FILE"
   mv "$TMP_FILE" "$ARTIFACT_PATH"
 fi
 
-echo "✅ REPORT.md updated with pipeline metrics for $PIPELINE_ID"
+echo "✅ Updated REPORT.md with pipeline metrics"
