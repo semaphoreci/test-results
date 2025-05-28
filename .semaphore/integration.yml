@@ -30,15 +30,15 @@ blocks:
           commands:
             - test-results publish --no-compress priv/parsers/$PARSER/in.xml -p $PARSER
             - artifact pull job test-results/junit.json -d /tmp/junit.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . /tmp/junit.json) > /tmp/junit.json
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . priv/parsers/$PARSER/out.json) > priv/parsers/$PARSER/out.json'
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . /tmp/junit.json) > /tmp/junit.json'
             - diff priv/parsers/$PARSER/out.json /tmp/junit.json
         - name: Merging - directory as input
           commands:
             - test-results publish --no-compress priv/merging
             - artifact pull job test-results/junit.json -d /tmp/junit.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . priv/merging/out.json) > priv/merging/out.json
-            - cat <<< $(jq 'walk(if type == "object" then del(.type, .semaphoreEnv) else . end)' --sort-keys . /tmp/junit.json) > /tmp/junit.json
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . priv/merging/out.json) > priv/merging/out.json'
+            - 'cat <<< $(jq ''walk(if type == "object" then del(.type, .semaphoreEnv) else . end)'' --sort-keys . /tmp/junit.json) > /tmp/junit.json'
             - diff priv/merging/out.json /tmp/junit.json
   - name: Integration tests - generate pipeline report
     dependencies:
@@ -47,18 +47,45 @@ blocks:
       jobs:
         - name: generate pipeline report
           commands:
+            - test-results resource-metrics REPORT.md
             - test-results gen-pipeline-report --no-compress
   - name: Integration tests - workflow level
     dependencies:
       - Integration tests - generate pipeline report
+      - Integration tests- generate pipeline report Ubuntu 22.04
+      - Integration tests- generate pipeline report Ubuntu 24.04
     task:
       jobs:
         - name: Generate pipeline summary
           commands:
-            - "artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json"
+            - 'artifact pull workflow test-results/${SEMAPHORE_PIPELINE_ID}-summary.json -d /tmp/summary.json'
             - cat <<< $(jq --sort-keys . priv/workflow/summary-out.json) > priv/workflow/summary-out.json
             - cat <<< $(jq --sort-keys . /tmp/summary.json) > /tmp/summary.json
             - diff /tmp/summary.json priv/workflow/summary-out.json
+  - name: Integration tests- generate pipeline report Ubuntu 24.04
+    dependencies:
+      - Integration tests
+    task:
+      agent:
+        machine:
+          type: f1-standard-2
+          os_image: ubuntu2404
+      jobs:
+        - name: generate pipeline report
+          commands:
+            - test-results resource-metrics REPORT.md
+  - name: Integration tests- generate pipeline report Ubuntu 22.04
+    dependencies:
+      - Integration tests
+    task:
+      agent:
+        machine:
+          type: f1-standard-2
+          os_image: ubuntu2204
+      jobs:
+        - name: generate pipeline report
+          commands:
+            - test-results resource-metrics REPORT.md
 promotions:
   - name: Release
     pipeline_file: goreleaser.yml
